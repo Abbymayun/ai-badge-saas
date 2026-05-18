@@ -31,7 +31,7 @@
           <template #default="{row}"><span style="font-weight:bold;color:#409EFF">{{ row.score }}</span></template>
         </el-table-column>
         <el-table-column label="操作" width="120" fixed="right">
-          <template #default><el-button type="primary" link size="small">查看详情</el-button></template>
+          <template #default><el-button type="primary" link size="small" @click="$router.push('/audio/detail/1')">查看详情</el-button></template>
         </el-table-column>
       </el-table>
       <div style="margin-top:16px;text-align:right;">

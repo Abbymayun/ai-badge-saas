@@ -16,6 +16,7 @@ const routes = [
       { path: 'device/list', name: 'DeviceList', component: () => import('../views/device/DeviceList.vue'), meta: { title: '设备列表', icon: 'Monitor' } },
       { path: 'device/setting', name: 'DeviceSetting', component: () => import('../views/device/DeviceSetting.vue'), meta: { title: '设备设置', icon: 'Setting' } },
       { path: 'audio/list', name: 'AudioList', component: () => import('../views/audio/AudioList.vue'), meta: { title: '听记管理', icon: 'Headset' } },
+      { path: 'audio/detail/:id', name: 'AudioDetail', component: () => import('../views/audio/AudioDetail.vue'), meta: { title: '听记详情', icon: 'Headset' } },
       { path: 'audio/template', name: 'TemplateManage', component: () => import('../views/audio/TemplateManage.vue'), meta: { title: '评价模板管理', icon: 'Document' } },
       { path: 'audio/strategy', name: 'StrategyList', component: () => import('../views/audio/StrategyList.vue'), meta: { title: '我的评价策略', icon: 'Tickets' } },
       { path: 'audio/product', name: 'ProductSelling', component: () => import('../views/audio/ProductSelling.vue'), meta: { title: '产品卖点配置', icon: 'Goods' } },
