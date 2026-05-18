@@ -426,7 +426,8 @@
           </el-tab-pane>
           <el-tab-pane name="customer">
             <template #label><span>👤 客户分析总结</span></template>
-            <CustomerReport :data="previewData.customer" :template="previewTpl" />
+            <CustomerReport v-if="!isBankPreview" :data="previewData.customer" :template="previewTpl" />
+            <BankVisitReport v-else :data="previewData.bankVisit" />
           </el-tab-pane>
           <el-tab-pane name="product">
             <template #label><span>⭐ 产品力总结</span></template>
@@ -449,6 +450,7 @@ import SalesReport from './reports/SalesReport.vue'
 import CustomerReport from './reports/CustomerReport.vue'
 import ProductReport from './reports/ProductReport.vue'
 import ComprehensiveReport from './reports/ComprehensiveReport.vue'
+import BankVisitReport from './reports/BankVisitReport.vue'
 import { generatePreviewData } from './reportData.js'
 
 // ============ 筛选状态 ============
@@ -748,6 +750,10 @@ const previewTemplate = (tpl) => {
   previewTab.value = tpl.templateType === 'report' ? 'customer' : 'sales'
   showPreview.value = true
 }
+
+const isBankPreview = computed(() => {
+  return previewTpl.value?.industries?.some(i => i.includes('银行'))
+})
 
 const handleBulkAction = (cmd) => {
   if (cmd === 'enable') ElMessage.success('已批量启用选中模板')

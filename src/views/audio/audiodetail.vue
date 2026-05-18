@@ -92,6 +92,10 @@
               <template #label><span>📋 综合分析总结</span></template>
               <ComprehensiveReport :data="reportData.comprehensive" :template="activeTemplate" />
             </el-tab-pane>
+            <el-tab-pane name="bankVisit" v-if="record.industry === '银行金融'">
+              <template #label><span>🏦 银行拜访报告</span></template>
+              <BankVisitReport :data="reportData.bankVisit" />
+            </el-tab-pane>
           </el-tabs>
 
           <!-- 模板选择器 -->
@@ -124,6 +128,7 @@ import SalesReport from './reports/SalesReport.vue'
 import CustomerReport from './reports/CustomerReport.vue'
 import ProductReport from './reports/ProductReport.vue'
 import ComprehensiveReport from './reports/ComprehensiveReport.vue'
+import BankVisitReport from './reports/BankVisitReport.vue'
 import { generateRecordData } from './reportData.js'
 
 const route = useRoute()

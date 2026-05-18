@@ -142,6 +142,103 @@ export function generateRecordData(id) {
         { step: '第7-14天', action: '签署试用协议，启动试点' },
         { step: '试用后', action: '根据数据报告推进正式合作' }
       ]
+    },
+    // 银行拜访调查报告（银行业专属）
+    bankVisit: mockBankData()
+  }
+}
+
+// ============ 银行拜访调查报告 Mock 数据 ============
+function mockBankData() {
+  return {
+    salesPerson: '王志华', visitDate: '2026-05-17', reportNo: 'BANK-2026-0517-001',
+    profile: { name: '杭州智联金融科技 · 张总', position: '总经理' },
+    company: {
+      name: '杭州智联金融科技有限公司', registeredAddress: '杭州市滨江区XX路188号', actualAddress: '同注册地',
+      landArea: 15, buildingArea: 8000, propertyType: '租赁', hasPropertyCert: false, assessedValue: 0, mortgageTo: null,
+      establishedYear: 2018, operationYears: 8, industry: '金融科技', envSensitive: false, localStatus: '好',
+      mainProducts: 'AI智能风控系统、大数据征信平台、金融客户画像引擎',
+      registeredCapital: 5000, paidCapital: 5000,
+      legalPerson: '张XX', legalPersonNationality: '中国',
+      actualController: '张XX', controllerNationality: '中国',
+      shareholders: [
+        { name: '张XX', amount: 3000, ratio: '60%', remark: '实际控制人' },
+        { name: '杭州智联投资合伙企业', amount: 1500, ratio: '30%', remark: '员工持股平台' },
+        { name: '李XX', amount: 500, ratio: '10%', remark: '联合创始人' }
+      ],
+      vcInfo: [
+        { name: '红杉资本中国基金', background: '国际知名风投', round: 'B轮', date: '2024-03', method: '增资扩股', amount: '2亿/估值8亿', ratio: '20%', terms: '2027年IPO对赌，董事会一席' },
+        { name: '杭州高新创投', background: '地方政府投资平台', round: 'A轮', date: '2022-06', method: '增资扩股', amount: '5000万/估值3亿', ratio: '12%', terms: '无对赌，优先清算权' }
+      ]
+    },
+    risk: { envCompliant: true, privateLending: false, adminPenalty: false, courtExecution: false },
+    financing: {
+      otherBankTotal: 3000,
+      otherBankDetails: [
+        { bank: '招商银行杭州分行', amount: 1500, term: '1年', type: '流动资金贷款', guarantee: '张XX保证担保' },
+        { bank: '杭州银行科技支行', amount: 1000, term: '6个月', type: '银行承兑汇票', guarantee: '50%保证金' },
+        { bank: '南京银行杭州分行', amount: 500, term: '1年', type: '科技信用贷', guarantee: '信用' }
+      ],
+      personalTotal: 200, personalDetails: '张XX个人经营性贷款200万，抵押方式'
+    },
+    relatedCompanies: '关联企业2家：杭州智联数据服务有限公司（张XX持股80%），主营大数据服务，2025年营收约1200万，经营正常；上海智联信息科技有限公司（张XX持股60%），主营软件外包，2025年营收约800万。上述关联企业均无诉讼及被执行信息。',
+    externalInvestment: '拟投资"智能风控3.0平台"研发项目，总投资约2000万元。目前已投入自有资金800万元，需再投入1200万元。预计2027年上线，新增年营收3000万元。资金缺口拟通过银行融资解决。',
+    finance: {
+      dataReliable: true,
+      years: ['2023', '2024', '2025', '2026.04'],
+      financialTable: [
+        { item: '一、资产总额', '2023': '8200', '2024': '12500', '2025': '17800', '2026.04': '19200', note: '稳步增长' },
+        { item: '其中:货币资金', '2023': '1200', '2024': '1800', '2025': '2800', '2026.04': '3200', note: '含保证金500万' },
+        { item: '应收账款', '2023': '1500', '2024': '2800', '2025': '4200', '2026.04': '4500', note: '银行客户，账期3-6月' },
+        { item: '二、负债总额', '2023': '2800', '2024': '4500', '2025': '6200', '2026.04': '6800', note: '' },
+        { item: '其中:银行借款', '2023': '1200', '2024': '2000', '2025': '3000', '2026.04': '3000', note: '3家银行' },
+        { item: '三、所有者权益', '2023': '5400', '2024': '8000', '2025': '11600', '2026.04': '12400', note: '' },
+        { item: '四、主营业务收入', '2023': '6200', '2024': '9800', '2025': '14800', '2026.04': '5200', note: '同比+15%' },
+        { item: '五、利润总额', '2023': '1200', '2024': '1800', '2025': '2600', '2026.04': '900', note: '同比+18%' },
+        { item: '资产负债率', '2023': '34%', '2024': '36%', '2025': '35%', '2026.04': '35%', note: '合理区间' },
+        { item: '销售利润率', '2023': '19%', '2024': '18%', '2025': '18%', '2026.04': '17%', note: '' },
+        { item: '银行融资总量', '2023': '1200', '2024': '2000', '2025': '3000', '2026.04': '3000', note: '' },
+        { item: '我行融资占比', '2023': '0%', '2024': '0%', '2025': '0%', '2026.04': '0%', note: '新建信贷关系' }
+      ],
+      assetAnalysis: '货币资金中含银承保证金500万元；应收账款主要对象为招商银行(1800万)、工商银行(1200万)、杭州银行(900万)，均属正常结算期内款项；存货1500万为软件研发项目成本，属正常投入。',
+      liabilityAnalysis: '主要应付账款为阿里云技术服务费800万、华为硬件采购500万，均为正常经营往来；无异常负债。',
+      equityAnalysis: '资本公积2000万系B轮融资溢价部分，占所有者权益16%，结构合理。',
+      financingConsistency: '企业银行融资总额与人行征信系统一致。近三年融资从1200万增至3000万（+150%），我行融资为0，拟拓展业务。'
+    },
+    operations: {
+      mainProducts: 'AI智能风控系统、大数据征信平台', brand: '自有品牌', marketPosition: '较好',
+      salesRegion: '华东区为主，覆盖全国', mainSuppliers: '阿里云、华为研究所、海康威视',
+      mainCustomers: '招商银行、工商银行、杭州银行等约20家金融机构',
+      salesProfitTable: [
+        { label: '上年度可佐证销售收入', value: '14800万元', change: '同比+51%', trend: 'up', note: '新客户拓展+存量续约' },
+        { label: '上年度应税销售收入', value: '14500万元', change: '同比+50%', trend: 'up', note: '与可佐证收入一致' },
+        { label: '上年度利润总额', value: '2600万元', change: '同比+44%', trend: 'up', note: '研发投入增加略拉低利润率' },
+        { label: '本年度截至上月收入', value: '5200万元', change: '同比+15%', trend: 'up', note: '一季度季节性放缓' },
+        { label: '本年度截至上月利润', value: '900万元', change: '同比+18%', trend: 'up', note: '利润率稳定' }
+      ],
+      salesReturn: '前12个月我行销售回笼为0（新建关系）。他行（招商银行）回笼约6000万/年。拟争取30%以上回笼份额。'
+    },
+    guarantee: {
+      corporateTotal: 500, personalTotal: 0, type: '一般担保', creditMatch: true,
+      details: [{ target: '杭州智联数据服务有限公司', amount: 500, bank: '杭州银行科技支行', creditStatus: '正常', operationStatus: '正常', legalStatus: '无' }]
+    },
+    assessment: {
+      strengths: [
+        'AI金融科技赛道，核心技术壁垒强，行业前景好',
+        '红杉资本B轮背书，股权结构清晰',
+        '营收3年CAGR约50%，利润持续增长',
+        '客户基础优质（招行、工行等头部银行），客户粘性强',
+        '资产负债率仅35%，财务结构健康'
+      ],
+      risks: [
+        '应收账款集中度较高（前三大客户占75%）',
+        '营收增速呈放缓趋势，需验证可持续性',
+        '风投对赌条款（2027年IPO），有退出压力',
+        '轻资产企业，传统抵质押物不足',
+        '与关联企业存在担保关系'
+      ],
+      conclusion: '企业为AI金融科技优质标的，技术强、客户好、财务健康。实控人经验丰富，团队稳定。风投背书良好。整体经营稳健，成长性突出，具备合作价值。',
+      creditSuggestion: '建议给予综合授信2000万元：流动资金贷款1000万（1年期，按月付息到期还本）+ 银承500万（50%保证金）+ 非融资性保函500万。担保：实控人夫妇连带责任保证+核心专利质押+应收账款质押(≥2000万)。利率基准上浮10%。首贷1500万，合作半年后视情况增加。'
     }
   }
 }
@@ -236,6 +333,8 @@ export function generatePreviewData(template) {
       ]
     },
     templateName: tpl.name || '未命名模板',
-    templateType: tpl.templateType || 'scoring'
+    templateType: tpl.templateType || 'scoring',
+    // 银行专属：拜访调查报告
+    bankVisit: mockBankData()
   }
 }
