@@ -419,25 +419,31 @@
     <!-- ============ 预览效果弹窗 ============ -->
     <el-dialog v-model="showPreview" :title="'预览效果 - ' + (previewTpl?.name || '')" width="95%" top="2vh" destroy-on-close>
       <div v-if="previewData" class="preview-container">
-        <el-tabs v-model="previewTab" type="border-card">
-          <el-tab-pane name="sales">
-            <template #label><span>📊 销售能力总结</span></template>
-            <SalesReport :data="previewData.sales" :template="previewTpl" />
-          </el-tab-pane>
-          <el-tab-pane name="customer">
-            <template #label><span>👤 客户分析总结</span></template>
-            <CustomerReport v-if="!isBankPreview" :data="previewData.customer" :template="previewTpl" />
-            <BankVisitReport v-else :data="previewData.bankVisit" />
-          </el-tab-pane>
-          <el-tab-pane name="product">
-            <template #label><span>⭐ 产品力总结</span></template>
-            <ProductReport :data="previewData.product" :template="previewTpl" />
-          </el-tab-pane>
-          <el-tab-pane name="comprehensive">
-            <template #label><span>📋 综合分析总结</span></template>
-            <ComprehensiveReport :data="previewData.comprehensive" :template="previewTpl" />
-          </el-tab-pane>
-        </el-tabs>
+        <!-- 评分模板 → 仅显示销售能力总结 -->
+        <SalesReport v-if="isScoringPreview" :data="previewData.sales" :template="previewTpl" class="preview-focused" />
+        <!-- 银行报告模板 → 银行拜访报告 -->
+        <BankVisitReport v-else-if="isBankPreview" :data="previewData.bankVisit" />
+        <!-- 其他报告模板 → 客户分析 + 可选切换 -->
+        <template v-else>
+          <el-tabs v-model="previewTab" type="border-card">
+            <el-tab-pane :name="previewDefaultTab">
+              <template #label><span>{{ previewDefaultLabel }}</span></template>
+              <CustomerReport v-if="!isBankPreview" :data="previewData.customer" :template="previewTpl" />
+            </el-tab-pane>
+            <el-tab-pane name="sales" v-if="previewTpl?.templateType === 'summary'">
+              <template #label><span>📊 销售能力</span></template>
+              <SalesReport :data="previewData.sales" :template="previewTpl" />
+            </el-tab-pane>
+            <el-tab-pane name="product" v-if="previewTpl?.templateType === 'summary'">
+              <template #label><span>⭐ 产品力</span></template>
+              <ProductReport :data="previewData.product" :template="previewTpl" />
+            </el-tab-pane>
+            <el-tab-pane name="comprehensive" v-if="previewTpl?.templateType === 'summary'">
+              <template #label><span>📋 综合分析</span></template>
+              <ComprehensiveReport :data="previewData.comprehensive" :template="previewTpl" />
+            </el-tab-pane>
+          </el-tabs>
+        </template>
       </div>
     </el-dialog>
   </div>
@@ -452,6 +458,7 @@ import ProductReport from './reports/ProductReport.vue'
 import ComprehensiveReport from './reports/ComprehensiveReport.vue'
 import BankVisitReport from './reports/BankVisitReport.vue'
 import { generatePreviewData } from './reportData.js'
+import { getScenarioPreviewData } from './scenarioData.js'
 
 // ============ 筛选状态 ============
 const search = ref('')
@@ -739,20 +746,23 @@ const previewTab = ref('sales')
 
 const previewTemplate = (tpl) => {
   previewTpl.value = tpl
-  previewData.value = generatePreviewData({
-    name: tpl.name,
-    templateType: tpl.templateType,
-    hasScore: tpl.hasScore,
-    industries: tpl.industries,
-    dimensionConfig: tpl.dimensionConfig,
-    sections: tpl.sections
-  })
-  previewTab.value = tpl.templateType === 'report' ? 'customer' : 'sales'
+  const industries = tpl.industries || []
+  // 使用场景数据生成器
+  previewData.value = getScenarioPreviewData(tpl.name, tpl.templateType, industries)
+  // 根据模板类型自动聚焦
+  if (tpl.templateType === 'scoring') previewTab.value = 'sales'
+  else if (industries.some(i => i.includes('银行'))) previewTab.value = 'bank'
+  else previewTab.value = 'customer'
   showPreview.value = true
 }
 
-const isBankPreview = computed(() => {
-  return previewTpl.value?.industries?.some(i => i.includes('银行'))
+const isBankPreview = computed(() => previewTpl.value?.industries?.some(i => i.includes('银行')))
+const isScoringPreview = computed(() => previewTpl.value?.templateType === 'scoring')
+const previewDefaultTab = computed(() => isScoringPreview.value ? 'sales' : 'customer')
+const previewDefaultLabel = computed(() => {
+  if (isScoringPreview.value) return '📊 销售能力总结'
+  if (isBankPreview.value) return '🏦 银行拜访报告'
+  return '👤 客户分析总结'
 })
 
 const handleBulkAction = (cmd) => {
