@@ -118,19 +118,21 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import SalesReport from './reports/SalesReport.vue'
 import CustomerReport from './reports/CustomerReport.vue'
 import ProductReport from './reports/ProductReport.vue'
 import ComprehensiveReport from './reports/ComprehensiveReport.vue'
+import { generateRecordData } from './reportData.js'
 
-// ============ 录音基础信息 ============
-const record = ref({
-  name: '王志华-银行客户拜访-兴业银行张总',
-  industry: '银行金融', scene: '客户拜访',
-  salesPerson: '王志华', duration: '18:30',
-  date: '2026-05-17 14:30', device: '1B012617000045'
-})
+const route = useRoute()
+
+// 根据路由参数生成对应行业数据
+const recordId = computed(() => parseInt(route.params.id) || 1)
+const recordData = computed(() => generateRecordData(recordId.value))
+
+const record = computed(() => recordData.value.record)
 
 const playSpeed = ref(1)
 const currentTime = ref(0)
@@ -190,108 +192,10 @@ const onTemplateChange = (id) => {
 // 初始化默认模板
 activeTemplate.value = templateGroups.value[0].templates[0]
 
-const onReportChange = () => {} // report tab switch
+const onReportChange = () => {}
 
-// ============ 四份报告数据 ============
-const reportData = reactive({
-  // 一、销售能力总结
-  sales: {
-    totalScore: 93.3,
-    dimensions: [
-      { name: '客户洞察', score: 95.5, weight: 44, color: '#409EFF', subDimensions: [
-        { name: '需求挖掘能力', weight: 22, score: 95.9 }, { name: '客户互动能力', weight: 8, score: 95.0 }
-      ]},
-      { name: '产品介绍', score: 94.4, weight: 34, color: '#67C23A', subDimensions: [
-        { name: '产品介绍完整度', weight: 22, score: 91.4 }, { name: '需求与产品匹配度', weight: 12, score: 96.7 }, { name: '异议处理能力', weight: 10, score: 93.0 }
-      ]},
-      { name: '推进控单', score: 90.0, weight: 22, color: '#E6A23C', subDimensions: [
-        { name: '购买决策对齐', weight: 8, score: 90.0 }, { name: '推进成交能力', weight: 10, score: 87.0 }, { name: '沟通逻辑清晰度', weight: 8, score: 95.0 }
-      ]}
-    ],
-    conversationLogic: {
-      goal: ['了解AI助聊实际价值', '对比普通录音设备', '关注硬件/数据安全/系统对接', '多场景适配', '合作模式'],
-      painPoints: ['新人成长慢', '优秀经验难复制', '沟通数据不透明', '隐私安全', '系统不通', '外勤使用不便'],
-      logicFlow: '价值澄清 → 差异对比 → 场景落地 → 硬件保障 → 安全合规 → 系统对接 → 全场景覆盖 → 产品矩阵 → 试用方案',
-      result: '客户认可产品价值，约定内部商议后确定试用岗位与人数，进入意向跟进阶段。'
-    },
-    highlights: [
-      '需求挖掘精准，完整锁定客户管理痛点、场景痛点、安全痛点',
-      '产品介绍贴合线下销售门市/会议全场景，价值传递清晰',
-      '异议处理专业，覆盖价格、安全、硬件、对接、适配等全部顾虑',
-      '互动性强、共情到位、专业度高，客户沟通意愿强'
-    ],
-    improvements: [
-      '可主动增加具体案例数据佐证，增强说服力',
-      '可更主动确认决策人、预算范围、采购周期，加速成交',
-      '可主动给出明确下一步动作（如试用方案、时间节点）'
-    ],
-    overall: '本次销售沟通综合评分93.3分，整体表现优秀、专业、高效。销售在客户洞察、产品介绍、异议处理、场景匹配等核心维度表现突出，精准捕捉客户真实痛点与决策顾虑，价值传递清晰，客户认可度高。客户已进入深度意向阶段，整体判断：客户意向极强，成单概率极高，属于高质量有效沟通。'
-  },
-  // 二、客户分析总结
-  customer: {
-    profile: {
-      name: '张总', position: '零售银行部总经理', industry: '银行金融',
-      estimatedAge: '45-50岁', decisionRole: '关键决策人',
-      traits: ['理性务实', '关注合规', '重视ROI', '决策审慎']
-    },
-    assetLevel: { level: '高净值', confidence: '高' },
-    needAnalysis: {
-      explicit: [
-        { need: '提升外拓拜访效率', urgency: '高', priority: 1 },
-        { need: '客户经理过程管理', urgency: '高', priority: 2 },
-        { need: '数据安全合规', urgency: '高', priority: 3 },
-        { need: 'CRM系统对接', urgency: '中', priority: 4 }
-      ],
-      implicit: [
-        { need: '降低新人培训成本', urgency: '中', confidence: 85 },
-        { need: '建立标准化销售流程', urgency: '中', confidence: 78 },
-        { need: '销售团队数字化管理', urgency: '高', confidence: 92 }
-      ]
-    },
-    intentLevel: { level: '高意向', score: 88, signal: '明确表示内部商议后确定试用方案' },
-    competitorInfo: ['已在考察某竞品普通录音笔方案', '对AI分析能力差异化优势感兴趣'],
-    budgetRange: '预估60-80万/年（200人规模）',
-    decisionChain: ['零售银行部总经理（张总）→ 信息科技部 → 行领导审批'],
-    nextSteps: ['发送详细方案和招商银行案例', '约定下周三/四带样机现场演示', '确认试用岗位和人数']
-  },
-  // 三、产品力总结
-  product: {
-    score: 94.4,
-    clarity: { score: 96, comment: '产品介绍逻辑清晰，从硬件→软件→AI分析→案例，层层递进' },
-    match: { score: 97, comment: '精准匹配银行外拓场景需求，针对合规、安全等痛点给出明确方案' },
-    objection: { score: 93, comment: '逐一回应价格、安全、对接、适配等异议，专业且诚恳' },
-    competitorHandling: { score: 90, comment: '通过"AI分析能力"差异化定位，与竞品普通录音笔形成区隔' },
-    keySellingPoints: [
-      'AI智能胸牌3S增强版：双麦阵列降噪芯片，5米清晰拾音',
-      '等保三级+私有化部署，金融行业合规无忧',
-      'AI自动转写+智能分析报告，无需人工整理',
-      '招商银行案例：有效拜访量+40%，销售能力评分+12分',
-      '新人上手周期从3个月→1个月，话术自动沉淀'
-    ]
-  },
-  // 四、综合总结
-  comprehensive: {
-    totalScore: 93.3,
-    scoreBreakdown: [
-      { label: '销售能力', score: 93.3, max: 100 },
-      { label: '客户意向', score: 88, max: 100 },
-      { label: '产品力', score: 94.4, max: 100 },
-      { label: '成单概率', score: 91, max: 100 }
-    ],
-    radarData: [
-      { name: '需求挖掘', value: 95.9 }, { name: '产品介绍', value: 91.4 },
-      { name: '异议处理', value: 93.0 }, { name: '推进成交', value: 87.0 },
-      { name: '客户互动', value: 95.0 }, { name: '沟通逻辑', value: 95.0 }
-    ],
-    conclusion: '综合评估：本次客户拜访属于高质量有效沟通。销售表现优秀（93.3分），客户意向极强（88分），成单概率高（91%）。建议尽快推进试用方案，明确决策链各环节时间节点，争取2周内完成试用签约。',
-    timeline: [
-      { step: '第1天', action: '发送详细方案+招商银行案例' },
-      { step: '第3-5天', action: '带样机现场演示，确认试用方案' },
-      { step: '第7-14天', action: '确定试用岗位和人数，签署试用协议' },
-      { step: '试用结束后', action: '根据数据分析报告，推进正式签约' }
-    ]
-  }
-})
+// 报告数据从生成器获取（根据录音ID不同而变化）
+const reportData = computed(() => recordData.value)
 </script>
 
 <style scoped>

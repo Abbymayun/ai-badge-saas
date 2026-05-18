@@ -415,12 +415,41 @@
         </div>
       </template>
     </el-drawer>
+
+    <!-- ============ 预览效果弹窗 ============ -->
+    <el-dialog v-model="showPreview" :title="'预览效果 - ' + (previewTpl?.name || '')" width="95%" top="2vh" destroy-on-close>
+      <div v-if="previewData" class="preview-container">
+        <el-tabs v-model="previewTab" type="border-card">
+          <el-tab-pane name="sales">
+            <template #label><span>📊 销售能力总结</span></template>
+            <SalesReport :data="previewData.sales" :template="previewTpl" />
+          </el-tab-pane>
+          <el-tab-pane name="customer">
+            <template #label><span>👤 客户分析总结</span></template>
+            <CustomerReport :data="previewData.customer" :template="previewTpl" />
+          </el-tab-pane>
+          <el-tab-pane name="product">
+            <template #label><span>⭐ 产品力总结</span></template>
+            <ProductReport :data="previewData.product" :template="previewTpl" />
+          </el-tab-pane>
+          <el-tab-pane name="comprehensive">
+            <template #label><span>📋 综合分析总结</span></template>
+            <ComprehensiveReport :data="previewData.comprehensive" :template="previewTpl" />
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import SalesReport from './reports/SalesReport.vue'
+import CustomerReport from './reports/CustomerReport.vue'
+import ProductReport from './reports/ProductReport.vue'
+import ComprehensiveReport from './reports/ComprehensiveReport.vue'
+import { generatePreviewData } from './reportData.js'
 
 // ============ 筛选状态 ============
 const search = ref('')
@@ -701,12 +730,23 @@ const deleteTemplate = (id) => {
   ElMessage.success('模板已删除')
 }
 
+const showPreview = ref(false)
+const previewTpl = ref(null)
+const previewData = ref(null)
+const previewTab = ref('sales')
+
 const previewTemplate = (tpl) => {
-  ElMessageBox.alert(
-    `模板【${tpl.name}】的AI分析效果预览功能即将开放。届时可上传测试录音查看实际分析效果。`,
-    '预览效果',
-    { confirmButtonText: '知道了' }
-  )
+  previewTpl.value = tpl
+  previewData.value = generatePreviewData({
+    name: tpl.name,
+    templateType: tpl.templateType,
+    hasScore: tpl.hasScore,
+    industries: tpl.industries,
+    dimensionConfig: tpl.dimensionConfig,
+    sections: tpl.sections
+  })
+  previewTab.value = tpl.templateType === 'report' ? 'customer' : 'sales'
+  showPreview.value = true
 }
 
 const handleBulkAction = (cmd) => {
