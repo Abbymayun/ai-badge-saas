@@ -1,0 +1,3 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body, #app { height: 100%; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; }
+:root { --sidebar-width: 220px; --sidebar-collapsed-width: 64px; --header-height: 60px; --primary-color: #409EFF; --sidebar-bg: #304156; --sidebar-text: #bfcbd9; --sidebar-active: #409EFF; }

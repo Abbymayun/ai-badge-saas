@@ -1,0 +1,67 @@
+<template>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <img src="https://img.icons8.com/bubbles/80/artificial-intelligence.png" alt="AI" style="width:64px;height:64px" />
+        <h1>AI智能胸牌管理平台</h1>
+        <p>SaaS Management System</p>
+      </div>
+      <el-form ref="formRef" :model="form" :rules="rules" size="large">
+        <el-form-item prop="username">
+          <el-input v-model="form.username" placeholder="请输入账号" prefix-icon="User" />
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input v-model="form.password" type="password" placeholder="请输入密码" prefix-icon="Lock" show-password @keyup.enter="handleLogin" />
+        </el-form-item>
+        <el-form-item>
+          <div style="display:flex;justify-content:space-between;width:100%">
+            <el-checkbox v-model="rememberPwd">记住密码</el-checkbox>
+            <el-link type="primary">忘记密码？</el-link>
+          </div>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" style="width:100%" :loading="loading" @click="handleLogin">登 录</el-button>
+        </el-form-item>
+      </el-form>
+      <p class="login-footer">© 2026 利尔达集团 · AI智能胸牌</p>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+
+const router = useRouter()
+const loading = ref(false)
+const rememberPwd = ref(false)
+const formRef = ref(null)
+const form = reactive({ username: '', password: '' })
+const rules = {
+  username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+}
+
+const handleLogin = () => {
+  formRef.value.validate((valid) => {
+    if (valid) {
+      loading.value = true
+      setTimeout(() => {
+        loading.value = false
+        ElMessage.success('登录成功')
+        router.push('/')
+      }, 800)
+    }
+  })
+}
+</script>
+
+<style scoped>
+.login-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.login-card { width: 400px; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.login-header { text-align: center; margin-bottom: 30px; }
+.login-header h1 { font-size: 24px; color: #303133; margin: 12px 0 4px; }
+.login-header p { color: #909399; font-size: 14px; }
+.login-footer { text-align: center; color: #c0c4cc; font-size: 12px; margin-top: 20px; }
+</style>
