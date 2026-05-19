@@ -54,13 +54,86 @@ const scenarioData = {
     customer: { name: '周女士', age: 32, occupation: '白领' },
     behavior: { browsingTime: '25分钟', purchased: '精华液+面霜', totalSpend: '1280元', memberLevel: '金卡会员' }
   },
-  insurance: {
-    customer: { name: '赵经理', age: 38, family: '配偶+1个孩子', income: '家庭年收入约50万' },
-    gapAnalysis: [
-      { gap: '重疾保障缺失', risk: '无商业重疾险', suggestion: '配置重疾险保额150-250万' },
-      { gap: '寿险保额不足', risk: '仅50万团险', suggestion: '补充定期寿险200-300万' },
-      { gap: '子女教育金无储备', risk: '教育费用无储备', suggestion: '配置教育年金，年缴2-3万' }
+  // 汽车销售
+  auto: {
+    totalScore: 87, customer: { name: '李先生', family: '三口之家' }, budget: '25-35万', targetCar: 'XX SUV 豪华版', competitors: '丰田RAV4、本田CR-V',
+    useCase: '家庭日常通勤+周末自驾游', concerns: '安全性 > 空间 > 油耗 > 保值率', decisionFactors: '试驾体验(40%) > 品牌口碑(25%) > 价格优惠(20%) > 售后服务(15%)', familyInfo: '一家三口+偶尔带父母出行，需要大空间',
+    salesStrategies: [
+      { point: '试驾路线设计', effective: true, detail: '精心设计包含高速+城市+颠簸路段，全面展示底盘和隔音性能' },
+      { point: '竞品对比', effective: true, detail: '客观对比三款竞品，突出安全配置和空间优势而非贬低对手' },
+      { point: '家庭需求挖掘', effective: true, detail: '注意到客户带家人看车，主动展示儿童安全座椅接口和后排空间' },
+      { point: '价格谈判', effective: false, detail: '客户询问优惠时只给了官方优惠，未主动提及赠品和金融方案' },
+      { point: '跟进节奏', effective: false, detail: '试驾后仅留了电话，未约定具体跟进时间和方式' }
+    ],
+    quotes: [
+      { text: '这台车开起来很稳，高速上噪音小多了', signal: 'positive' },
+      { text: '后排很宽敞，爸妈坐着应该舒服', signal: 'positive' },
+      { text: '就是价格方面，比RAV4贵了不少', signal: 'negative' }
+    ],
+    dealProbability: 72, dealSignal: '客户意向明确，但价格比较敏感', followUps: [
+      { time: '次日', action: '发送竞品对比表和金融方案' }, { time: '3天后', action: '邀约带配偶二次试驾' }, { time: '周末', action: '以周末活动名义提供额外赠品方案' }
     ]
+  },
+  // 产品力
+  product: {
+    totalScore: 88, productName: 'AI智能胸牌3S增强版', industry: '银行金融',
+    productDims: [
+      { name: '介绍完整度', score: 94, color: '#409EFF', desc: '从硬件规格到软件能力再到AI分析，覆盖完整', tags: ['硬件','软件','AI','案例'] },
+      { name: '场景匹配度', score: 91, color: '#67C23A', desc: '精准匹配银行外拓+会议双场景', tags: ['外拓','会议','合规'] },
+      { name: '竞品对比力', score: 82, color: '#E6A23C', desc: '突出AI差异化优势，有效区隔竞品', tags: ['AI分析','合规认证'] },
+      { name: '异议应对', score: 89, color: '#909399', desc: '价格/安全/对接三大异议均给出可信回应', tags: ['案例佐证','数据支撑'] }
+    ],
+    sellingHeatmap: [
+      { name: 'AI语音转写', coverage: 95 }, { name: '智能分析报告', coverage: 92 }, { name: '等保三级安全', coverage: 88 },
+      { name: '私有化部署', coverage: 85 }, { name: '招商银行案例', coverage: 90 }, { name: '投资回报率', coverage: 65 },
+      { name: '售后服务体系', coverage: 45 }, { name: '扩展能力', coverage: 35 }
+    ],
+    competitorCompare: [
+      { dim: 'AI分析能力', us: 95, them: 10 }, { dim: '合规认证', us: 90, them: 30 },
+      { dim: '价格竞争力', us: 65, them: 80 }, { dim: '品牌知名度', us: 40, them: 85 }
+    ]
+  },
+  // 教育课程(扩展)
+  education: {
+    parent: { name: '陈家长', child: { name: '小明', grade: '五年级', subjects: ['数学','英语'] }},
+    needs: { goal: '提升数学成绩准备小升初', painPoint: '应用题理解困难计算粗心', budget: '8000-12000元/年', schedule: '周末可安排2小时' },
+    recommendation: { course: '小学数学思维训练班（高级）', teacher: '张老师10年教龄85%学员考入重点初中', price: '9600元/年' },
+    salesAnalysis: ['与家长建立良好信任，充分了解孩子学习情况', '精准匹配课程与孩子薄弱环节', '用数据（升学率85%）和师资背书增强说服力'],
+    nextStep: '安排本周六免费试听，试听后确定报名',
+    expectedOutcomes: ['应用题正确率从60%提升至85%+', '计算速度提升50%', '建立系统解题思维框架', '小升初数学达到重点学校录取水平']
+  },
+  // 地产(扩展)
+  realestate: {
+    customer: { name: '刘总', family: '三口之家', budget: '400-500万', urgency: '计划3个月内购房' },
+    property: { name: '滨江·春江花月', type: '三房两厅两卫', area: '128m2', price: '468万', floor: '12层/总18层', school: '实验小学（步行5分钟）' },
+    visitAnalysis: {
+      liked: ['南北通透户型', '12楼黄金楼层采光好', '实验小学学区', '精装修拎包入住', '小区环境好'],
+      concerns: ['总价略超预算', '离地铁站1.2公里', '车位配比偏低'],
+      objections: [
+        { concern: '价格偏高', response: '对比同小区同户型成交均价480万，468万已低于市场价。首付20%约94万，月供约1.6万' },
+        { concern: '交通不便', response: '小区门口有公交直达地铁站，18号线规划中预计2027年通车' }
+      ]
+    },
+    dealProbability: { score: 75, signal: '愿意带家人第二次看房，意向明确' }
+  },
+  // 保险(扩展)
+  insurance: {
+    customer: { name: '赵经理', age: 38, family: '配偶+1个孩子（8岁）', income: '家庭年收入约50万' },
+    gapAnalysis: [
+      { gap: '重疾保障缺失', risk: '家庭成员无商业重疾险，一旦发生重大疾病医疗费用+收入损失将构成重大经济负担', suggestion: '建议配置重疾险保额≥年收入3-5倍（150万-250万）' },
+      { gap: '寿险保额不足', risk: '仅50万团险，若发生极端风险，房贷+子女教育费用远超此额度', suggestion: '建议补充定期寿险200-300万，覆盖房贷+子女教育金' },
+      { gap: '子女教育金无储备', risk: '孩子8岁，10年后大学教育费用约50-100万目前无专项储备', suggestion: '建议配置教育年金或增额终身寿，年缴2-3万' }
+    ],
+    coverageCompare: [
+      { name: '重疾保障', current: '无', suggested: '100-250万' }, { name: '寿险保障', current: '50万（团险）', suggested: '200-300万' },
+      { name: '意外保障', current: '30万（团险）', suggested: '100万' }, { name: '教育金储备', current: '无', suggested: '年缴2-3万' }
+    ],
+    recommendation: [
+      { product: 'XX重疾险', coverage: '100万', premium: '约8000元/年', reason: '覆盖70种重疾+30种轻症含轻症豁免' },
+      { product: 'XX定期寿险', coverage: '200万', premium: '约3000元/年', reason: '保障至60岁覆盖房贷+子女教育关键期' },
+      { product: 'XX教育年金', coverage: '年缴2万', premium: '2万/年', reason: '18-21岁每年领取5万教育金' }
+    ],
+    totalPremium: '约3.1万/年'
   },
   serviceHall: {
     customer: { name: '王先生', type: 'VIP客户' },
@@ -79,7 +152,8 @@ export function getScenarioPreviewData(templateName, templateType, industries) {
   else if (templateName.includes('保险')) scenario = 'insurance'
   else if (templateName.includes('营业厅') || templateName.includes('服务')) scenario = 'serviceHall'
   else if (templateName.includes('银行')) scenario = 'meeting'
-  else if (templateName.includes('汽车')) scenario = 'realestate'
+  else if (templateName.includes('汽车')) scenario = 'auto'
+  else if (templateName.includes('产品力')) scenario = 'product'
   else if (templateName.includes('销售复盘')) scenario = 'meeting'
 
   const baseScore = 82 + Math.floor(Math.random() * 12)
