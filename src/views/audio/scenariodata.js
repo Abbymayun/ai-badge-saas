@@ -6,23 +6,38 @@ function vary(score, delta = 5) { return Math.min(100, Math.max(50, score + (Mat
 
 const scenarioData = {
   meeting: {
-    title: 'AI智能胸牌产品方案讨论会',
-    date: '2026-05-17 09:30-11:00',
-    attendees: '王志华(销售)、张总(客户)、李经理(技术)、王主任(采购)',
-    summary: '本次会议围绕AI智能胸牌在银行客户经理外拓场景的应用展开深入讨论。客户方对产品价值高度认可。',
-    topics: [
-      { topic: '产品功能演示与场景匹配', discussion: '王志华详细演示了AI智能胸牌的录音转写、AI分析和话术提取功能。张总认为产品贴合银行外拓场景。', decision: '产品功能满足需求' },
-      { topic: '数据安全与合规', discussion: '李经理详细询问了数据加密标准和等保认证。我方展示了等保三级证书。', decision: '安全方案满足要求' },
-      { topic: '系统对接方案', discussion: '讨论了与银行现有CRM系统的数据互通方案。确认可在2周内完成对接开发。', decision: 'API对接方案通过' },
-      { topic: '试用计划与商务条款', discussion: '先选20名客户经理试用3个月。讨论了年费方案约70万/年。', decision: '启动20人3个月试用' }
+    meetingTitle: 'AI智能胸牌产品方案讨论会', title: 'AI智能胸牌产品方案讨论会',
+    date: '2026-05-17', duration: '90分钟', location: '兴业银行3楼会议室', organizer: '王志华',
+    attendees: [
+      { name: '王志华', role: 'internal', title: '客户经理' },
+      { name: '张总', role: 'customer', title: '零售银行部总经理' },
+      { name: '李经理', role: 'customer', title: '信息科技部' },
+      { name: '王主任', role: 'customer', title: '采购部' }
     ],
-    decisions: ['产品功能满足需求', '安全方案通过评估', 'API对接确认', '启动试用'],
+    summary: '本次会议围绕AI智能胸牌在银行客户经理外拓场景的应用展开深入讨论。会议重点演示了产品功能，讨论了数据安全合规方案，确认了系统对接技术方案，并就20人3个月免费试用计划达成初步共识。客户方对产品价值高度认可，会议成果显著。',
+    topics: [
+      { topic: '产品功能演示与场景匹配', duration: '约25分钟', decision: '产品功能满足需求，无需二次开发', discussion: '王志华详细演示了AI智能胸牌的录音转写、AI分析报告生成和优秀话术提取三大核心功能。张总认为产品贴合银行客户经理外拓场景，特别是自动生成客户画像和拜访报告的功能能直接解决目前的管理痛点。' },
+      { topic: '数据安全与合规方案', duration: '约20分钟', decision: '安全方案满足银行合规要求，需在合同中明确SLA条款', discussion: '李经理详细询问了数据加密标准、等保认证情况、私有化部署方案和灾备机制。我方展示了等保三级证书和招商银行案例的安全架构方案。确认数据不出行内网、私有化部署的实施方案。' },
+      { topic: '系统对接技术方案', duration: '约15分钟', decision: 'API对接方案确认通过，预计2周完成对接开发', discussion: '讨论了与银行现有CRM系统和移动办公平台的数据互通方案。我方提供了标准RESTful API接口文档和对接手册。李经理确认技术方案可行，双方约定2周内完成对接开发和联调测试。' },
+      { topic: '试用计划与商务条款', duration: '约30分钟', decision: '启动20人3个月免费试用，商务条款进入审批流程', discussion: '王主任提出先选20名客户经理试用3个月，覆盖城区和县域不同类型网点。讨论了正式采购方案（200人规模约70万/年）。张总表示内部审批通过后可快速启动。' }
+    ],
+    decisions: [
+      { text: '确认产品功能满足需求，无需二次开发', impact: '节省定制开发成本约15万元' },
+      { text: '数据安全方案通过评估，SLA条款写入合同' },
+      { text: 'API对接方案确认，预计2周完成' },
+      { text: '启动20人3个月免费试用' }
+    ],
     actionItems: [
-      { task: '提供详细试用方案', owner: '王志华', deadline: '5月18日' },
-      { task: '准备20台试用设备', owner: '运营部', deadline: '5月20日' },
-      { task: '完成API对接开发', owner: '技术部', deadline: '5月30日' },
-      { task: '内部审批商务条款', owner: '张总', deadline: '5月21日' }
-    ]
+      { task: '提供详细试用方案（含评估指标和成功标准）', owner: '王志华', deadline: '5月18日', status: 'done' },
+      { task: '准备20台试用设备并完成预配置', owner: '运营部', deadline: '5月20日', status: 'urgent' },
+      { task: '完成API对接开发与联调测试', owner: '李经理', deadline: '5月30日', status: 'pending' },
+      { task: '内部审批商务条款', owner: '张总', deadline: '5月21日', status: 'pending' },
+      { task: '提供等保三级和ISO27001认证证书', owner: '王志华', deadline: '5月18日', status: 'done' },
+      { task: '确定试用启动日期和培训计划', owner: '王志华', deadline: '5月22日', status: 'pending' }
+    ],
+    nextMeeting: { time: '5月22日 14:00', topic: '签订试用协议并确定启动日期', location: '兴业银行3楼会议室' },
+    insights: '本次会议整体效率较高，4个议题全部达成明确结论，无遗留争议。建议后续重点关注：1)设备准备和API对接进度，确保试用按时启动；2)商务条款审批流程尽早启动，避免影响试用节奏；3)试用期间建立周度沟通机制，及时收集反馈并优化。',
+    generateTime: '2026-05-17 11:30'
   },
   medical: {
     doctor: { name: '王主任', dept: '心内科', hospital: '杭州市第一人民医院', level: '科室主任' },
