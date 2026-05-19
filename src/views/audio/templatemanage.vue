@@ -761,7 +761,10 @@ const previewTemplate = (tpl) => {
   showPreview.value = true
 }
 
-const isBankPreview = computed(() => previewTpl.value?.industries?.some(i => i.includes('银行')))
+const isBankPreview = computed(() => {
+  const name = previewTpl.value?.name || ''
+  return name.includes('银行客户拜访') || name.includes('银行拜访报告')
+})
 const isScoringPreview = computed(() => previewTpl.value?.templateType === 'scoring')
 const isCustomerScoring = computed(() => isScoringPreview.value && (previewTpl.value?.name || '').includes('购买力'))
 const previewDefaultTab = computed(() => isScoringPreview.value ? 'sales' : 'customer')
