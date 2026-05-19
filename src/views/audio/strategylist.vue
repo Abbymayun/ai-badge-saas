@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="page-title">我的评价策略</div>
+    <div class="page-title">我的智能体</div>
     <el-card shadow="hover" style="margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <span style="font-weight:bold;">策略列表</span>

@@ -1,6 +1,6 @@
 <template>
   <div class="template-manage">
-    <div class="page-title">模板配置中心</div>
+    <div class="page-title">智能体配置中心</div>
 
     <!-- 顶部统计 -->
     <el-row :gutter="16" style="margin-bottom:16px;">
@@ -12,20 +12,20 @@
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'scoring' }" @click="activeTab = 'scoring'">
-          <div class="stat-val" style="color:#409EFF;">7</div>
+          <div class="stat-val" style="color:#409EFF;">4</div>
           <div class="stat-lbl">📊 评分模板</div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'report' }" @click="activeTab = 'report'">
-          <div class="stat-val" style="color:#67C23A;">3</div>
+          <div class="stat-val" style="color:#67C23A;">5</div>
           <div class="stat-lbl">📝 报告模板</div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'summary' }" @click="activeTab = 'summary'">
-          <div class="stat-val" style="color:#E6A23C;">2</div>
-          <div class="stat-lbl">📋 综合分析模板</div>
+          <div class="stat-val" style="color:#E6A23C;">3</div>
+          <div class="stat-lbl">📋 会议模板</div>
         </el-card>
       </el-col>
     </el-row>
@@ -649,7 +649,7 @@ const filteredTemplates = computed(() => {
   // Tab 筛选
   if (activeTab.value === 'scoring') list = list.filter(t => t.templateType === 'scoring')
   else if (activeTab.value === 'report') list = list.filter(t => t.templateType === 'report')
-  else if (activeTab.value === 'summary') list = list.filter(t => t.templateType === 'summary')
+  else if (activeTab.value === 'summary') list = list.filter(t => t.name.includes('会议') || t.name.includes('复盘'))
 
   // 搜索
   if (search.value) {
@@ -671,6 +671,10 @@ const filteredTemplates = computed(() => {
   // 状态
   if (filterStatus.value === 'on') list = list.filter(t => t.enabled)
   else if (filterStatus.value === 'off') list = list.filter(t => !t.enabled)
+
+  // 按指定顺序排列: 前3评分 → 会议 → 银行 → 其他场景
+  const order = [1, 3, 7, 4, 6, 2, 5, 8, 9, 10, 11, 12]
+  list.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
 
   return list
 })

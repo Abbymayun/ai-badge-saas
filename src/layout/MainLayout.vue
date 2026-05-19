@@ -29,8 +29,8 @@
         <el-sub-menu index="audio">
           <template #title><el-icon><Headset /></el-icon><span>AI听记</span></template>
           <el-menu-item index="/audio/list">听记管理</el-menu-item>
-          <el-menu-item index="/audio/template">评价模板管理</el-menu-item>
-          <el-menu-item index="/audio/strategy">我的评价策略</el-menu-item>
+          <el-menu-item index="/audio/template">智能体配置</el-menu-item>
+          <el-menu-item index="/audio/strategy">我的智能体</el-menu-item>
           <el-menu-item index="/audio/product">产品卖点配置</el-menu-item>
         </el-sub-menu>
 
