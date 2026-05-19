@@ -423,7 +423,9 @@
         <SalesReport v-if="isScoringPreview" :data="previewData.sales" :template="previewTpl" class="preview-focused" />
         <!-- 银行报告模板 → 银行拜访报告 -->
         <BankVisitReport v-else-if="isBankPreview" :data="previewData.bankVisit" />
-        <!-- 其他报告模板 → 客户分析 + 可选切换 -->
+        <!-- 会议/医疗/教育/地产/零售/保险/营业厅 → 场景专属报告 -->
+        <ScenarioReport v-else-if="previewData.scenario && previewData.scenario !== 'generic'" :data="previewData" :scenario="previewData.scenario" />
+        <!-- 综合分析模板 → 多Tab -->
         <template v-else>
           <el-tabs v-model="previewTab" type="border-card">
             <el-tab-pane :name="previewDefaultTab">
@@ -457,6 +459,7 @@ import CustomerReport from './reports/CustomerReport.vue'
 import ProductReport from './reports/ProductReport.vue'
 import ComprehensiveReport from './reports/ComprehensiveReport.vue'
 import BankVisitReport from './reports/BankVisitReport.vue'
+import ScenarioReport from './reports/ScenarioReport.vue'
 import { generatePreviewData } from './reportData.js'
 import { getScenarioPreviewData } from './scenarioData.js'
 
