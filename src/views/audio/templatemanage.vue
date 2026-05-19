@@ -419,8 +419,10 @@
     <!-- ============ 预览效果弹窗 ============ -->
     <el-dialog v-model="showPreview" :title="'预览效果 - ' + (previewTpl?.name || '')" width="95%" top="2vh" destroy-on-close>
       <div v-if="previewData" class="preview-container">
+        <!-- 客户购买力模板 → 客户购买力评估报告 -->
+        <CustomerReport v-if="isCustomerScoring" :data="previewData.customer" :template="previewTpl" class="preview-focused" />
         <!-- 评分模板 → 仅显示销售能力总结 -->
-        <SalesReport v-if="isScoringPreview" :data="previewData.sales" :template="previewTpl" class="preview-focused" />
+        <SalesReport v-else-if="isScoringPreview" :data="previewData.sales" :template="previewTpl" class="preview-focused" />
         <!-- 银行报告模板 → 银行拜访报告 -->
         <BankVisitReport v-else-if="isBankPreview" :data="previewData.bankVisit" />
         <!-- 会议/医疗/教育/地产/零售/保险/营业厅 → 场景专属报告 -->
@@ -761,6 +763,7 @@ const previewTemplate = (tpl) => {
 
 const isBankPreview = computed(() => previewTpl.value?.industries?.some(i => i.includes('银行')))
 const isScoringPreview = computed(() => previewTpl.value?.templateType === 'scoring')
+const isCustomerScoring = computed(() => isScoringPreview.value && (previewTpl.value?.name || '').includes('购买力'))
 const previewDefaultTab = computed(() => isScoringPreview.value ? 'sales' : 'customer')
 const previewDefaultLabel = computed(() => {
   if (isScoringPreview.value) return '📊 销售能力总结'
