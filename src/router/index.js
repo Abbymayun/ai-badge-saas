@@ -30,6 +30,7 @@ const routes = [
       { path: 'system/employee', name: 'EmployeeManage', component: () => import('../views/system/EmployeeManage.vue'), meta: { title: '员工管理', icon: 'User' } },
       { path: 'system/role', name: 'RoleManage', component: () => import('../views/system/RoleManage.vue'), meta: { title: '角色管理', icon: 'UserFilled' } },
       { path: 'system/permission', name: 'PermissionManage', component: () => import('../views/system/PermissionManage.vue'), meta: { title: '权限管理', icon: 'Lock' } },
+      { path: 'miniapp', name: 'MiniApp', component: () => import('../views/miniapp/MiniApp.vue'), meta: { title: '小程序预览', icon: 'Iphone' } },
     ]
   }
 ]

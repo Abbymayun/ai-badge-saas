@@ -62,6 +62,11 @@
           <el-menu-item index="/system/role">角色管理</el-menu-item>
           <el-menu-item index="/system/permission">权限管理</el-menu-item>
         </el-sub-menu>
+
+        <el-menu-item index="/miniapp">
+          <el-icon><Iphone /></el-icon>
+          <template #title>小程序预览</template>
+        </el-menu-item>
       </el-menu>
     </el-aside>
 
