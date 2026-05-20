@@ -99,7 +99,7 @@ const enterpriseAgents = computed(() => {
 })
 
 const allCount = computed(() => enterpriseAgents.value.length)
-const scoringCount = computed(() => enterpriseAgents.value.filter(a => a.templateType==='scoring').length)
+const scoringCount = computed(() => enterpriseAgents.value.filter(a => a.templateType==='scoring' && !a.isMine).length)
 const publicCount = computed(() => enterpriseAgents.value.filter(a => a.templateType!=='scoring' && !a.isMine && a.enabled).length)
 const mineCount = computed(() => enterpriseAgents.value.filter(a => a.isMine).length)
 
@@ -121,7 +121,21 @@ const filteredAgents = computed(() => {
 const cloneAgent = (agent) => {
   const newId = Date.now()
   myAgents.value.push({ ...JSON.parse(JSON.stringify(agent)), id: newId, name: agent.name + ' - 我的', isMine: true, enabled: true, useCount: 0, avgScore: '-' })
-  ElMessage.success(`已克隆到「我的智能体」`)
+  ElMessage({
+    message: '已克隆到我的智能体里，',
+    type: 'success',
+    dangerouslyUseHTMLString: true,
+    duration: 4000,
+    customClass: 'clone-toast',
+    showClose: true
+  })
+  // Use a separate notification with action
+  ElMessage({
+    message: '已克隆到我的智能体，点击去查看',
+    type: 'success',
+    duration: 3000,
+    onClick: () => { activeTab.value = 'mine' }
+  })
 }
 
 // 编辑我的智能体
@@ -138,7 +152,7 @@ const useAgent = (agent) => { ElMessage.success(`已选择：${agent.name}`) }
 </script>
 
 <style scoped>
-.my-agents{max-width:1100px;margin:0 auto;padding:8px}
+.my-agents{padding:8px}
 .ma-header{margin-bottom:20px}.ma-subtitle{font-size:13px;color:#909399;margin-top:6px}
 
 .stat-card{cursor:pointer;text-align:center;padding:8px 0;border:2px solid transparent;transition:.2s}.stat-card:hover{border-color:#409EFF}.stat-card.active{border-color:#409EFF;background:#ecf5ff}.stat-val{font-size:28px;font-weight:700;color:#303133}.stat-lbl{font-size:13px;color:#909399;margin-top:4px}
