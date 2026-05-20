@@ -18,13 +18,13 @@
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'report' }" @click="activeTab = 'report'">
-          <div class="stat-val" style="color:#67C23A;">7</div>
+          <div class="stat-val" style="color:#67C23A;">6</div>
           <div class="stat-lbl">📝 行业报告智能体</div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'summary' }" @click="activeTab = 'summary'">
-          <div class="stat-val" style="color:#E6A23C;">3</div>
+          <div class="stat-val" style="color:#E6A23C;">2</div>
           <div class="stat-lbl">📋 会议纪要智能体</div>
         </el-card>
       </el-col>
@@ -655,7 +655,7 @@ const filteredTemplates = computed(() => {
 
   // Tab 筛选
   if (activeTab.value === 'scoring') list = list.filter(t => t.templateType === 'scoring')
-  else if (activeTab.value === 'report') list = list.filter(t => t.templateType === 'report')
+  else if (activeTab.value === 'report') list = list.filter(t => t.templateType === 'report' && !t.name.includes('会议') && !t.name.includes('复盘'))
   else if (activeTab.value === 'summary') list = list.filter(t => t.name.includes('会议') || t.name.includes('复盘'))
 
   // 搜索
