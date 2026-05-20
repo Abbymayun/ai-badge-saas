@@ -36,7 +36,7 @@
           <div class="mac-tags"><el-tag v-for="i in agent.industries" :key="i" size="small" effect="plain" type="warning" style="margin:2px;">{{ i }}</el-tag></div>
           <div class="mac-stats"><div class="macs-item"><span class="macs-val">{{ agent.useCount }}</span><span class="macs-lbl">使用次数</span></div><div class="macs-item"><span class="macs-val">{{ agent.avgScore||'-' }}</span><span class="macs-lbl">{{ agent.templateType==='report'?'报告':'均分' }}</span></div></div>
           <div class="mac-actions">
-            <el-button size="small" :disabled="agent.isMine" @click="cloneAgent(agent)">克隆</el-button>
+            <el-button size="small" @click="cloneAgent(agent)">克隆</el-button>
             <el-button size="small" @click="previewAgent(agent)">预览效果</el-button>
             <el-button size="small" v-if="agent.isMine" type="warning" @click="editMine(agent)">编辑</el-button>
             <el-button size="small" type="danger" v-if="agent.isMine" @click="deleteMine(agent.id)">删除</el-button>
@@ -56,12 +56,22 @@
       </el-form>
       <template #footer><el-button @click="showEdit=false">取消</el-button><el-button type="primary" @click="saveEdit">保存</el-button></template>
     </el-dialog>
+
+    <!-- 预览弹窗 -->
+    <el-dialog v-model="showPreview" :title="'预览效果 - ' + (previewTpl?.name || '')" width="95%" top="2vh" destroy-on-close>
+      <div v-if="previewData" class="preview-container">
+        <SalesReport v-if="previewTpl?.templateType==='scoring'" :data="previewData.sales" :template="previewTpl" />
+        <CustomerReport v-else :data="previewData.customer" :template="previewTpl" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
+import SalesReport from './reports/SalesReport.vue'
+import CustomerReport from './reports/CustomerReport.vue'
 
 const enterpriseName = ref('杭州智联金融科技')
 const enterpriseIndustry = ref('银行金融')
@@ -121,15 +131,6 @@ const filteredAgents = computed(() => {
 })
 
 // 克隆
-const cloneAgent = (agent) => {
-  const newId = Date.now()
-  const newAgent = { ...JSON.parse(JSON.stringify(agent)), id: newId, name: agent.name, isMine: true, enabled: true, useCount: 0, avgScore: '-' }
-  myAgents.value.push(newAgent)
-  saveMyAgents(myAgents.value)
-  ElMessage({ message: '已克隆到我的智能体', type: 'success', duration: 3000, onClick: () => { activeTab.value = 'mine' } })
-}
-
-// 编辑我的智能体
 const showEdit = ref(false); const editingAgent = ref(null)
 const editMine = (agent) => { editingAgent.value = { ...agent }; showEdit.value = true }
 const saveEdit = () => {
@@ -140,7 +141,22 @@ const saveEdit = () => {
 }
 const deleteMine = (id) => { myAgents.value = myAgents.value.filter(a => a.id !== id); saveMyAgents(myAgents.value); ElMessage.success('已删除') }
 
-const useAgent = (agent) => { ElMessage.success(`已选择：${agent.name}`) }
+// 预览效果
+const showPreview = ref(false); const previewTpl = ref(null); const previewData = ref(null)
+const previewAgent = (agent) => {
+  previewTpl.value = agent
+  previewData.value = { scenario: agent.templateType === 'scoring' ? 'scoring' : agent.industries?.[0]?.includes('银行') ? 'bank' : 'generic', scenarioData: {}, sales: { totalScore: 82, dimensions: [{ name:'综合', score:82, weight:100, color:'#409EFF', subDimensions:[] }], conversationLogic: { goal:[], painPoints:[], logicFlow:'', result:'' }, highlights:[], improvements:[], overall:'预览效果' }, customer: { profile:{ name:'客户', position:'', industry:agent.industries?.[0]||'通用', estimatedAge:'', decisionRole:'', traits:[] }, needAnalysis:{ explicit:[], implicit:[] }, intentLevel:{ level:'', score:0, signal:'' }, competitorInfo:[], budgetRange:'', decisionChain:[], nextSteps:[] }, product: { score:80, clarity:{ score:80, comment:'' }, match:{ score:80, comment:'' }, objection:{ score:80, comment:'' }, competitorHandling:{ score:80, comment:'' }, keySellingPoints:[] }, comprehensive: { totalScore:80, scoreBreakdown:[], radarData:[], conclusion:'', timeline:[] }, bankVisit: null }
+  showPreview.value = true
+}
+
+const cloneAgent = (agent) => {
+  const newId = Date.now()
+  const suffix = agent.isMine ? ' - 副本' : ''
+  const newAgent = { ...JSON.parse(JSON.stringify(agent)), id: newId, name: agent.name + suffix, isMine: true, enabled: true, useCount: 0, avgScore: '-' }
+  myAgents.value.push(newAgent)
+  saveMyAgents(myAgents.value)
+  ElMessage({ message: '已克隆到我的智能体', type: 'success', duration: 3000, onClick: () => { activeTab.value = 'mine' } })
+}
 </script>
 
 <style scoped>
