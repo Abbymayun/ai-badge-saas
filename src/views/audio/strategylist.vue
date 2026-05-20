@@ -107,7 +107,7 @@ const visibleCount = computed(() => enterpriseAgents.value.filter(a => a.enabled
 
 const filteredAgents = computed(() => {
   let list = enterpriseAgents.value
-  if (activeTab.value === 'scoring') list = list.filter(a => a.templateType === 'scoring')
+  if (activeTab.value === 'scoring') list = list.filter(a => a.templateType === 'scoring' && !a.isMine)
   else if (activeTab.value === 'public') list = list.filter(a => a.templateType !== 'scoring' && !a.isMine && a.enabled)
   else if (activeTab.value === 'mine') list = list.filter(a => a.isMine)
   if (search.value) { const kw = search.value.toLowerCase(); list = list.filter(a => a.name.toLowerCase().includes(kw)) }
@@ -120,22 +120,8 @@ const filteredAgents = computed(() => {
 // 克隆
 const cloneAgent = (agent) => {
   const newId = Date.now()
-  myAgents.value.push({ ...JSON.parse(JSON.stringify(agent)), id: newId, name: agent.name + ' - 我的', isMine: true, enabled: true, useCount: 0, avgScore: '-' })
-  ElMessage({
-    message: '已克隆到我的智能体里，',
-    type: 'success',
-    dangerouslyUseHTMLString: true,
-    duration: 4000,
-    customClass: 'clone-toast',
-    showClose: true
-  })
-  // Use a separate notification with action
-  ElMessage({
-    message: '已克隆到我的智能体，点击去查看',
-    type: 'success',
-    duration: 3000,
-    onClick: () => { activeTab.value = 'mine' }
-  })
+  myAgents.value.push({ ...JSON.parse(JSON.stringify(agent)), id: newId, name: agent.name, isMine: true, enabled: true, useCount: 0, avgScore: '-' })
+  ElMessage({ message: '已克隆到我的智能体', type: 'success', duration: 3000, onClick: () => { activeTab.value = 'mine' } })
 }
 
 // 编辑我的智能体
