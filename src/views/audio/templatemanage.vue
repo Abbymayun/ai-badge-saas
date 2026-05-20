@@ -6,26 +6,26 @@
     <el-row :gutter="16" style="margin-bottom:16px;">
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">
-          <div class="stat-val">12</div>
-          <div class="stat-lbl">全部模板</div>
+          <div class="stat-val">13</div>
+          <div class="stat-lbl">全部智能体</div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'scoring' }" @click="activeTab = 'scoring'">
-          <div class="stat-val" style="color:#409EFF;">4</div>
-          <div class="stat-lbl">📊 评分模板</div>
+          <div class="stat-val" style="color:#409EFF;">3</div>
+          <div class="stat-lbl">📊 公用评分智能体</div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'report' }" @click="activeTab = 'report'">
-          <div class="stat-val" style="color:#67C23A;">5</div>
-          <div class="stat-lbl">📝 报告模板</div>
+          <div class="stat-val" style="color:#67C23A;">7</div>
+          <div class="stat-lbl">📝 行业报告智能体</div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'summary' }" @click="activeTab = 'summary'">
           <div class="stat-val" style="color:#E6A23C;">3</div>
-          <div class="stat-lbl">📋 会议模板</div>
+          <div class="stat-lbl">📋 会议纪要智能体</div>
         </el-card>
       </el-col>
     </el-row>
@@ -636,10 +636,17 @@ const templateList = ref([
     ],
     aiPrompt: '你是一位医疗合规专家。请检查学术推广对话中的合规表现...'
   },
-  { id: 9, name: '保险需求分析模板', icon: '🛡️', color: '#ecf5ff', templateType: 'scoring', hasScore: true, description: '保险行业专属评分模板', industries: ['保险'], scenes: ['需求调研'], totalDims: 3, totalWeight: 100, scoreRange: '50-100', enterpriseCount: 1, useCount: 88, avgScore: '74分', enabled: false, dimensionConfig: [], sections: [], aiPrompt: '分析保险销售对话...' },
+  { id: 9, name: '保险需求分析模板', icon: '🛡️', color: '#fdf6ec', templateType: 'report', hasScore: false, description: '保险行业专属需求分析报告模板，识别家庭保障缺口并推荐方案', industries: ['保险'], scenes: ['需求调研'], totalDims: 0, totalWeight: 0, scoreRange: '-', enterpriseCount: 1, useCount: 88, avgScore: '-', enabled: false, dimensionConfig: [], sections: [], aiPrompt: '分析保险销售对话...' },
   { id: 10, name: '教育课程推荐分析', icon: '📚', color: '#f0f9eb', templateType: 'report', hasScore: false, description: '教育行业课程推荐分析报告', industries: ['教育培训'], scenes: ['需求调研', '客户拜访'], totalDims: 0, totalWeight: 0, scoreRange: '-', enterpriseCount: 1, useCount: 45, avgScore: '-', enabled: true, dimensionConfig: [], sections: [], aiPrompt: '分析家长需求并推荐课程...' },
   { id: 11, name: '地产看房跟进分析', icon: '🏠', color: '#fdf6ec', templateType: 'summary', hasScore: true, description: '地产行业看房跟进的评分+报告模板', industries: ['房地产'], scenes: ['客户拜访'], totalDims: 3, totalWeight: 100, scoreRange: '55-100', enterpriseCount: 1, useCount: 32, avgScore: '78分', enabled: true, dimensionConfig: [], sections: [], aiPrompt: '分析看房跟进对话...' },
-  { id: 12, name: '零售客户画像模板', icon: '🛒', color: '#fef0f0', templateType: 'report', hasScore: false, description: '零售行业客户画像和购买倾向分析', industries: ['零售消费'], scenes: ['客户拜访'], totalDims: 0, totalWeight: 0, scoreRange: '-', enterpriseCount: 0, useCount: 0, avgScore: '-', enabled: false, dimensionConfig: [], sections: [], aiPrompt: '分析零售客户画像...' }
+  { id: 12, name: '零售客户画像模板', icon: '🛒', color: '#fef0f0', templateType: 'report', hasScore: false, description: '零售行业客户画像和购买倾向分析', industries: ['零售消费'], scenes: ['客户拜访'], totalDims: 0, totalWeight: 0, scoreRange: '-', enterpriseCount: 0, useCount: 0, avgScore: '-', enabled: false, dimensionConfig: [], sections: [], aiPrompt: '分析零售客户画像...' },
+  { id: 13, name: '面包店零售分析', icon: '🍞', color: '#fdf6ec', templateType: 'report', hasScore: false, description: '面包店零售场景专属分析模板，覆盖客流分析、产品推荐、客单价提升、会员复购等维度', industries: ['零售消费'], scenes: ['客户拜访', '售后跟进'], totalDims: 0, totalWeight: 0, scoreRange: '-', enterpriseCount: 0, useCount: 0, avgScore: '-', enabled: true, dimensionConfig: [], sections: [
+    { title: '客流分析', type: 'summary', prompt: '分析进店客流时段分布和客户画像', icon: 'Document' },
+    { title: '热销产品', type: 'stats', prompt: '统计热销产品排行和连带购买情况', icon: 'Goods' },
+    { title: '客单价分析', type: 'custom', prompt: '分析客单价分布和提升空间', icon: 'TrendCharts' },
+    { title: '会员复购', type: 'custom', prompt: '分析会员复购率和流失预警', icon: 'User' },
+    { title: '经营建议', type: 'suggestions', prompt: '基于数据分析给出具体经营改善建议', icon: 'Connection' }
+  ], aiPrompt: '你是一位零售行业数据分析专家。请根据面包店销售数据分析客流、产品、客单价和会员复购情况...' }
 ])
 
 // ============ 计算属性：筛选后的模板 ============
@@ -673,7 +680,7 @@ const filteredTemplates = computed(() => {
   else if (filterStatus.value === 'off') list = list.filter(t => !t.enabled)
 
   // 按指定顺序排列: 前3评分 → 会议 → 银行 → 其他场景
-  const order = [1, 3, 7, 4, 6, 2, 5, 8, 9, 10, 11, 12]
+  const order = [1, 3, 7, 4, 6, 2, 5, 8, 9, 10, 11, 12, 13]
   list.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
 
   return list
