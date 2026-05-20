@@ -274,42 +274,50 @@ const unbindDevice = () => { if (confirm('确定解绑设备？')) alert('设备
 // 操作说明数据
 const guideSections = [
   { title:'快速绑定', items:[
-    { label:'步骤', content:'扫胸牌二维码 → 进入小程序 → 确认员工信息并提交 → <b>非充电状态下长按按键＞10秒</b> → 绿灯闪烁 → 屏幕显示姓名 → 绑定成功', type:'step' }
+    { label:'步骤1', content:'扫胸牌背面二维码 → 自动跳转进入小程序', type:'step' },
+    { label:'步骤2', content:'确认员工姓名、部门、工号等信息 → 点击提交', type:'step' },
+    { label:'步骤3', content:'确保胸牌<b>非充电状态</b>（未连接充电线）→ 长按胸牌顶部<b>按键＞10秒</b>', type:'warn' },
+    { label:'步骤4', content:'胸牌<b>绿灯闪烁</b> → 屏幕显示绑定员工<b>姓名</b> → 绑定成功 ✓', type:'done' }
   ]},
   { title:'开始 / 停止录音', items:[
-    { label:'开启', content:'开关<b>上拨</b>（显示绿点）→ 绿灯长亮2秒 → 开始录音', type:'on' },
-    { label:'关闭', content:'开关<b>下拨</b>（隐藏绿点）→ 绿灯闪2次 → 停止录音', type:'off' },
-    { label:'隐私保护', content:'仅工作时段可录音，私人时间开关无效', type:'warn' }
+    { label:'开启录音', content:'开关<b>向上拨动</b>（红色开关底座显示<b>绿点</b>）→ 指示灯<b>绿灯长亮2秒</b> → 开始录音', type:'on' },
+    { label:'关闭录音', content:'开关<b>向下拨动</b>（红色开关底座<b>隐藏绿点</b>）→ 指示灯<b>绿灯闪烁2次</b> → 停止录音', type:'off' },
+    { label:'隐私保护', content:'仅<b>工作时段</b>内可正常录音，<b>私人时间</b>内开关上下拨动均无效，保障个人隐私', type:'warn' }
   ]},
   { title:'快捷按键', items:[
-    { label:'POI标记', content:'录音中（开关ON）→ <b>单击按键</b> → POI重点标记', type:'action' },
-    { label:'手动上传', content:'未录音（开关OFF）→ <b>单击按键</b> → 手动上传数据', type:'action' },
-    { label:'设备信息', content:'开关OFF + <b>长按＞5秒</b> → 屏幕显示 SN / 软硬件版本', type:'info' }
+    { label:'POI标记', content:'录音中（开关拨至<b>ON</b>档位）→ <b>单击按键</b> → 时间轴添加POI重点标记，方便后续快速定位关键对话', type:'action' },
+    { label:'手动上传', content:'未录音状态（开关拨至<b>OFF</b>档位）→ <b>单击按键</b> → 立即上传本机未同步的录音数据', type:'upload' },
+    { label:'查版本信息', content:'开关拨至<b>OFF</b>档位 + <b>长按按键＞5秒</b> → 屏幕依次显示：<b>SN序列号</b> / <b>固件版本</b> / <b>硬件版本</b>', type:'info' }
   ]},
   { title:'更新 / 解绑员工信息', items:[
-    { label:'步骤', content:'开关拨到OFF（隐藏绿点）→ 非充电状态 → 长按按键＞10秒 → 绿灯闪烁等待平台同步 → 成功：屏幕更新 / 恢复二维码', type:'step' }
+    { label:'第1步', content:'将录音开关拨到<b>OFF</b>位置（红色底座上<b>隐藏绿点</b>）', type:'step' },
+    { label:'第2步', content:'确认胸牌<b>非充电状态</b>（未连接充电线）→ 长按顶部按键<b>＞10秒</b>', type:'step' },
+    { label:'第3步', content:'指示灯<b>绿灯闪烁</b> → 胸牌进入解绑模式 → 等待平台端同步数据', type:'step' },
+    { label:'成功', content:'屏幕自动更新显示<b>新绑定员工姓名</b> / 屏幕<b>恢复显示二维码</b>（可重新扫码绑定）', type:'done' }
   ]},
   { title:'数据上传（3种方式）', items:[
-    { label:'方式1', content:'平台配置自动周期上传', type:'upload' },
-    { label:'方式2', content:'充电时自动上传', type:'upload' },
-    { label:'方式3', content:'开关OFF → 单击按键立即上传', type:'upload' }
+    { label:'方式一', content:'平台SaaS端配置<b>自动周期上传</b>（可设置每日/每周/自定义时段），胸牌在设定时间自动上传录音数据', type:'upload' },
+    { label:'方式二', content:'连接充电线 → 胸牌<b>充电时自动触发上传</b>，无需人工干预，充满电的同时完成数据同步', type:'upload' },
+    { label:'方式三', content:'开关拨至<b>OFF</b>档位 → <b>单击按键</b> → 立即手动触发上传，适用于需要紧急查看录音分析的场景', type:'upload' }
   ]},
   { title:'指示灯一看就懂', items:[
-    { label:'绿灯快闪', content:'上传 / 绑定中', type:'led green' },
-    { label:'绿灯慢闪', content:'录音中', type:'led green' },
-    { label:'绿灯长亮2秒', content:'开始录音', type:'led green' },
-    { label:'绿灯闪2次', content:'停止录音', type:'led green' },
-    { label:'红灯慢闪', content:'电量低（＜10%）', type:'led red' },
-    { label:'红灯快闪', content:'温度异常', type:'led red' },
-    { label:'红灯常亮', content:'充电中', type:'led red' },
-    { label:'绿灯常亮', content:'充电完成', type:'led green' }
+    { label:'绿灯快闪', content:'数据上传中 / 设备绑定流程进行中', type:'led green' },
+    { label:'绿灯慢闪', content:'正在录音中（正常工作状态）', type:'led green' },
+    { label:'绿灯长亮2秒', content:'录音功能已启动，开始采集音频', type:'led green' },
+    { label:'绿灯闪烁2次', content:'录音功能已停止，音频采集结束', type:'led green' },
+    { label:'红灯慢闪', content:'电量不足（＜10%），请尽快连接充电线', type:'led red' },
+    { label:'红灯快闪', content:'设备温度异常（过高或过低），暂停工作等待温度恢复正常', type:'led red' },
+    { label:'红灯常亮', content:'正在充电中，请勿拔掉充电线', type:'led red' },
+    { label:'绿灯常亮', content:'充电已完成，电池已充满，可拔掉充电线正常使用', type:'led green' }
   ]},
   { title:'充电与复位', items:[
-    { label:'充电', content:'红灯亮 → 充满绿灯亮', type:'charge' },
-    { label:'复位', content:'连接充电 → 长按＞10秒（不删录音）', type:'warn' }
+    { label:'正常充电', content:'连接Type-C充电线 → 指示灯<b>红灯常亮</b>（充电中）→ 充满后<b>绿灯常亮</b> → 拔掉充电线即可使用', type:'charge' },
+    { label:'设备复位', content:'连接充电线确保供电 → <b>长按按键＞10秒</b> → 设备自动重启复位（<b>录音数据不会删除</b>，仅重置系统状态）', type:'warn' }
   ]},
   { title:'到期提醒', items:[
-    { label:'提醒', content:'胸牌无提示 · 小程序/SaaS平台显示到期日 · 到期后仅可充电、解绑，<b>无法录音</b>', type:'warn' }
+    { label:'胸牌端', content:'胸牌设备<b>无到期提示</b>，到期后仅可充电和解绑操作', type:'info' },
+    { label:'管理端', content:'<b>小程序</b>和<b>SaaS平台</b>的设备管理页面会显示<b>设备到期日</b>，到期前30天开始提醒', type:'warn' },
+    { label:'到期后', content:'设备<b>仅可充电</b>和<b>解绑</b>，<b>无法启动录音</b>功能。请联系管理员续费或更换设备', type:'off' }
   ]}
 ]
 </script>
