@@ -83,6 +83,12 @@
               <div class="ppd-detail"><div>XXXXXXXX设备</div><div>sin27342</div><div>电量: 80%</div><div>绑定时间: 2023-01-23</div><div class="ppd-unbind" @click="unbindDevice">解绑设备</div></div>
             </div>
           </div>
+          <div class="pp-menu">
+            <div class="ppm-item" @click="goPage('guide')"><span class="ppm-icon">📖</span><span>操作使用说明</span><span class="ppm-arrow">›</span></div>
+            <div class="ppm-item"><span class="ppm-icon">🔔</span><span>消息通知</span><span class="ppm-arrow">›</span></div>
+            <div class="ppm-item"><span class="ppm-icon">ℹ️</span><span>关于我们</span><span class="ppm-arrow">›</span></div>
+          </div>
+        </div>
         </div>
 
         <!-- ========== 数据概览 ========== -->
@@ -148,7 +154,32 @@
           </div>
         </div>
 
-        <!-- ========== 客户详情 ========== -->
+        <!-- ========== 操作说明 ========== -->
+        <div v-if="currentPage==='guide'" class="page-guide">
+          <div class="pg-device-visual">
+            <div class="pgdv-body">
+              <div class="pgdv-btn">①</div>
+              <div class="pgdv-switch">②</div>
+              <div class="pgdv-led">③</div>
+              <div class="pgdv-mic1">④</div>
+              <div class="pgdv-mic2">⑤</div>
+              <div class="pgdv-screen-label">⑥ 显示屏</div>
+              <div class="pgdv-pin">⑦ 别针(背)</div>
+              <div class="pgdv-charge">⑧ 充电口(底)</div>
+            </div>
+            <div class="pgdv-label">产品外观说明</div>
+          </div>
+
+          <div class="pg-section" v-for="(sec, idx) in guideSections" :key="idx">
+            <div class="pgs-header"><span class="pgs-num">{{ ['一','二','三','四','五','六','七','八'][idx] }}</span><span class="pgs-title">{{ sec.title }}</span></div>
+            <div class="pgs-body">
+              <div v-for="(item, iidx) in sec.items" :key="iidx" class="pgsi-item">
+                <div class="pgsi-label" :class="item.type">{{ item.label }}</div>
+                <div class="pgsi-content" v-html="item.content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div v-if="currentPage==='customer-detail'" class="page-cust-detail">
           <div class="pcd-header">{{ detailCustomer?.name }}</div>
           <div class="pcd-avatar-big">{{ detailCustomer?.name?.[0] }}</div>
@@ -184,7 +215,7 @@ const detailCustomer = ref(null)
 const showSetting = ref(false)
 
 const pageTitle = computed(() => {
-  const m = { home:'首页', recording:'录音列表', customers:'客户线索', profile:'我的', dataOverview:'数据概览', 'recording-detail':'录音详情', 'customer-detail':'客户详情' }
+  const m = { home:'首页', recording:'录音列表', customers:'客户线索', profile:'我的', dataOverview:'数据概览', 'recording-detail':'录音详情', 'customer-detail':'客户详情', guide:'操作使用说明' }
   return m[currentPage.value] || ''
 })
 
@@ -240,6 +271,48 @@ const chapters = [
 const seekChapter = (ch) => { detailTab.value = 'transcript' }
 
 const unbindDevice = () => { if (confirm('确定解绑设备？')) alert('设备已解绑') }
+
+// 操作说明数据
+const guideSections = [
+  { title:'快速绑定', items:[
+    { label:'步骤', content:'扫胸牌二维码 → 进入小程序 → 确认员工信息并提交 → <b>非充电状态下长按按键＞10秒</b> → 绿灯闪烁 → 屏幕显示姓名 → 绑定成功', type:'step' }
+  ]},
+  { title:'开始 / 停止录音', items:[
+    { label:'开启', content:'开关<b>上拨</b>（显示绿点）→ 绿灯长亮2秒 → 开始录音', type:'on' },
+    { label:'关闭', content:'开关<b>下拨</b>（隐藏绿点）→ 绿灯闪2次 → 停止录音', type:'off' },
+    { label:'隐私保护', content:'仅工作时段可录音，私人时间开关无效', type:'warn' }
+  ]},
+  { title:'快捷按键', items:[
+    { label:'POI标记', content:'录音中（开关ON）→ <b>单击按键</b> → POI重点标记', type:'action' },
+    { label:'手动上传', content:'未录音（开关OFF）→ <b>单击按键</b> → 手动上传数据', type:'action' },
+    { label:'设备信息', content:'开关OFF + <b>长按＞5秒</b> → 屏幕显示 SN / 软硬件版本', type:'info' }
+  ]},
+  { title:'更新 / 解绑员工信息', items:[
+    { label:'步骤', content:'开关拨到OFF（隐藏绿点）→ 非充电状态 → 长按按键＞10秒 → 绿灯闪烁等待平台同步 → 成功：屏幕更新 / 恢复二维码', type:'step' }
+  ]},
+  { title:'数据上传（3种方式）', items:[
+    { label:'方式1', content:'平台配置自动周期上传', type:'upload' },
+    { label:'方式2', content:'充电时自动上传', type:'upload' },
+    { label:'方式3', content:'开关OFF → 单击按键立即上传', type:'upload' }
+  ]},
+  { title:'指示灯一看就懂', items:[
+    { label:'绿灯快闪', content:'上传 / 绑定中', type:'led green' },
+    { label:'绿灯慢闪', content:'录音中', type:'led green' },
+    { label:'绿灯长亮2秒', content:'开始录音', type:'led green' },
+    { label:'绿灯闪2次', content:'停止录音', type:'led green' },
+    { label:'红灯慢闪', content:'电量低（＜10%）', type:'led red' },
+    { label:'红灯快闪', content:'温度异常', type:'led red' },
+    { label:'红灯常亮', content:'充电中', type:'led red' },
+    { label:'绿灯常亮', content:'充电完成', type:'led green' }
+  ]},
+  { title:'充电与复位', items:[
+    { label:'充电', content:'红灯亮 → 充满绿灯亮', type:'charge' },
+    { label:'复位', content:'连接充电 → 长按＞10秒（不删录音）', type:'warn' }
+  ]},
+  { title:'到期提醒', items:[
+    { label:'提醒', content:'胸牌无提示 · 小程序/SaaS平台显示到期日 · 到期后仅可充电、解绑，<b>无法录音</b>', type:'warn' }
+  ]}
+]
 </script>
 
 <style scoped>
@@ -294,4 +367,26 @@ const unbindDevice = () => { if (confirm('确定解绑设备？')) alert('设备
 
 /* 客户详情 */
 .pcd-header{font-size:18px;font-weight:700;margin-bottom:16px}.pcd-avatar-big{width:70px;height:70px;border-radius:50%;background:#007AFF;color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}.pcd-info{text-align:center;font-size:14px;color:#606266;line-height:1.8;margin-bottom:16px}.pcd-actions{display:flex;gap:12px;justify-content:center}.pcd-actions span{background:#fff;border-radius:10px;padding:12px 20px;font-size:14px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+
+/* 我的菜单 */
+.pp-menu{margin-top:12px;background:#fff;border-radius:16px;overflow:hidden}.ppm-item{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #f5f5f7;cursor:pointer;font-size:14px;color:#1a1a2e}.ppm-item:last-child{border-bottom:none}.ppm-icon{font-size:18px}.ppm-arrow{margin-left:auto;color:#c7c7cc;font-size:16px}
+
+/* 操作说明 */
+.page-guide{padding-bottom:20px}
+.pg-device-visual{padding:16px;margin-bottom:16px}
+.pgdv-body{position:relative;width:200px;height:280px;margin:0 auto 8px;border:2px solid #e0e0e0;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fafafa}
+.pgdv-btn{position:absolute;top:16px;right:16px;font-size:11px;color:#666}
+.pgdv-switch{position:absolute;top:45px;right:14px;font-size:11px;color:#666}
+.pgdv-led{position:absolute;top:75px;right:16px;font-size:11px;color:#666}
+.pgdv-mic1{position:absolute;top:16px;left:14px;font-size:11px;color:#666}
+.pgdv-mic2{position:absolute;top:45px;left:14px;font-size:11px;color:#666}
+.pgdv-screen-label{font-size:13px;font-weight:700;color:#1a1a2e}
+.pgdv-pin{position:absolute;bottom:50px;font-size:11px;color:#666}
+.pgdv-charge{position:absolute;bottom:20px;font-size:11px;color:#666}
+.pgdv-label{text-align:center;font-size:12px;color:#8e8e93;margin-top:4px}
+
+.pg-section{margin-bottom:16px}.pgs-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}.pgs-num{width:24px;height:24px;border-radius:6px;background:#007AFF;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}.pgs-title{font-size:15px;font-weight:700;color:#1a1a2e}
+.pgsi-item{display:flex;gap:8px;padding:8px 10px;margin-bottom:4px;background:#fff;border-radius:10px;align-items:flex-start}.pgsi-label{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;flex-shrink:0;min-width:55px;text-align:center}
+.pgsi-label.step{background:#E8F0FE;color:#007AFF}.pgsi-label.on{background:#E8F8ED;color:#34C759}.pgsi-label.off{background:#f5f5f7;color:#8e8e93}.pgsi-label.warn{background:#FFF3E0;color:#E65100}.pgsi-label.action{background:#F3E5F5;color:#7B1FA2}.pgsi-label.info{background:#E3F2FD;color:#1565C0}.pgsi-label.upload{background:#E8F5E9;color:#2E7D32}.pgsi-label.charge{background:#FFF8E1;color:#F57F17}.pgsi-label.led{background:#f5f5f7;color:#666}.pgsi-label.green{border-left:3px solid #34C759}.pgsi-label.red{border-left:3px solid #FF3B30}
+.pgsi-content{font-size:12px;color:#606266;line-height:1.7;padding-top:2px}
 </style>
