@@ -1,109 +1,145 @@
 <template>
-  <div class="med-report">
+  <div class="pt-report">
     <!-- Hero -->
-    <div class="mr-hero">
+    <div class="pt-hero">
       <el-row :gutter="20" align="middle">
-        <el-col :span="10"><div class="mr-hero-badge" :class="overall"><span class="mhb-icon">{{ overall==='合规'?'✅':'⚠️' }}</span>{{ overall==='合规'?'合规达标':'存在风险' }}</div><h2>🏥 学术拜访合规评估报告</h2><div class="mr-hero-meta"><span>{{ doctor.hospital }}</span><span>{{ doctor.dept }} · {{ doctor.name }}</span><span>{{ doctor.level }}</span><span>{{ visitDate }}</span></div><div style="margin-top:8px;"><el-tag size="small" type="success">产品：{{ product }}</el-tag></div></el-col>
-        <el-col :span="14"><div class="mr-hero-stats"><div class="mrh-stat"><span class="mrh-val" style="color:#67C23A;">{{ complianceRate }}%</span><span class="mrh-lbl">合规通过率</span></div><div class="mrh-stat"><span class="mrh-val" style="color:#409EFF;">{{ qualityScore }}</span><span class="mrh-lbl">拜访质量分</span></div><div class="mrh-stat"><span class="mrh-val">{{ riskLevel }}</span><span class="mrh-lbl">风险等级</span></div></div></el-col>
+        <el-col :span="8" style="text-align:center;">
+          <div class="pt-score-ring">
+            <svg viewBox="0 0 130 130"><circle cx="65" cy="65" r="55" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="6"/><circle cx="65" cy="65" r="55" fill="none" stroke="#409EFF" stroke-width="6" :stroke-dasharray="2*Math.PI*55" :stroke-dashoffset="2*Math.PI*55*(1-totalScore/100)" stroke-linecap="round" transform="rotate(-90 65 65)"/></svg>
+            <div class="pts-center"><span class="pts-score">{{ totalScore }}</span><span class="pts-label">沟通质量分</span></div>
+          </div>
+        </el-col>
+        <el-col :span="16"><h2>🏥 医患沟通质量分析报告</h2>
+          <div class="pt-hero-meta"><span>医生：{{ doctor.name }} · {{ doctor.dept }}</span><span>患者：{{ patient.name }} {{ patient.gender }} {{ patient.age }}岁</span><span>科室：{{ doctor.dept }}</span></div>
+          <div class="pt-hero-meta" style="margin-top:4px;"><span>就诊时间：{{ visitDate }}</span><span>就诊类型：{{ visitType }}</span><span>主诉：{{ chiefComplaint }}</span></div>
+        </el-col>
       </el-row>
     </div>
 
-    <!-- 合规检查清单 -->
-    <el-card shadow="never" class="mr-card"><template #header><span class="mrc-title">🔍 合规检查清单</span><el-tag size="small" type="success" style="margin-left:8px;">{{ passCount }}/{{ checks.length }} 通过</el-tag></template>
-      <div v-for="(c,idx) in checks" :key="idx" class="check-row">
-        <div class="cr-status" :class="c.status">{{ c.status==='pass'?'✓':'✗' }}</div>
-        <div class="cr-body"><div class="cr-name">{{ c.name }}</div><div class="cr-detail">{{ c.detail }}</div></div>
-        <el-tag :type="c.status==='pass'?'success':'danger'" size="small" effect="plain">{{ c.status==='pass'?'通过':'未通过' }}</el-tag>
-      </div>
+    <!-- 五维评估 -->
+    <el-row :gutter="12" class="pt-dims">
+      <el-col :span="Math.floor(24/dims.length)" v-for="d in dims" :key="d.name">
+        <div class="ptd-card" :style="{borderTopColor:d.color}">
+          <div class="ptd-icon">{{ d.icon }}</div>
+          <div class="ptd-score" :style="{color:d.color}">{{ d.score }}</div>
+          <div class="ptd-name">{{ d.name }}</div>
+          <el-progress :percentage="d.score" :color="d.color" :stroke-width="4" :show-text="false" />
+          <div class="ptd-comment">{{ d.comment }}</div>
+        </div>
+      </el-col>
+    </el-row>
+
+    <!-- 诊疗流程回顾 -->
+    <el-card shadow="never" class="pt-card"><template #header><span class="ptc-title">📋 诊疗对话流程回顾</span></template>
+      <el-timeline>
+        <el-timeline-item v-for="(step,idx) in timeline" :key="idx" :timestamp="step.time" placement="top" :color="step.quality==='good'?'#67C23A':step.quality==='normal'?'#409EFF':'#E6A23C'" :icon="step.quality==='good'?'CircleCheckFilled':step.quality==='normal'?'MoreFilled':'WarningFilled'">
+          <el-card shadow="never" size="small">
+            <div class="tl-step-title">{{ step.stage }}<el-tag :type="step.quality==='good'?'success':step.quality==='normal'?'':'warning'" size="small" style="margin-left:6px;">{{ step.quality==='good'?'✓ 规范':step.quality==='normal'?'△ 一般':'⚠ 待改进' }}</el-tag></div>
+            <div class="tl-detail">{{ step.detail }}</div>
+            <div v-if="step.quote" class="tl-quote">"{{ step.quote }}"</div>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
     </el-card>
 
-    <!-- 拜访质量四维 -->
-    <el-card shadow="never" class="mr-card"><template #header><span class="mrc-title">📊 拜访质量评估</span></template>
-      <el-row :gutter="16"><el-col :span="6" v-for="d in qualityDims" :key="d.name"><div class="qd-card"><div class="qd-score" :style="{color:d.score>=90?'#67C23A':d.score>=80?'#409EFF':'#E6A23C'}">{{ d.score }}</div><div class="qd-name">{{ d.name }}</div><el-progress :percentage="d.score" :stroke-width="5" :show-text="false" :color="d.score>=90?'#67C23A':'#409EFF'"/><div class="qd-comment">{{ d.comment }}</div></div></el-col></el-row>
-    </el-card>
-
-    <!-- 沟通内容分析 + 医生反馈 -->
+    <!-- 诊断分析 + 患者理解度 -->
     <el-row :gutter="16">
-      <el-col :span="12"><el-card shadow="never" class="mr-card"><template #header><span class="mrc-title">💬 沟通内容分析</span></template>
-        <div class="content-section"><h4>已传递的关键信息</h4><el-tag v-for="k in keyMessages" :key="k" type="success" effect="plain" style="margin:3px;">{{ k }}</el-tag></div>
-        <div class="content-section"><h4>医生关注的问题</h4><div v-for="q in docQuestions" :key="q.q" class="dq-row"><span class="dq-q">❓ {{ q.q }}</span><span class="dq-a" :class="q.answered">→ {{ q.answered==='yes'?'已解答':'未充分回答' }}</span></div></div>
+      <el-col :span="12"><el-card shadow="never" class="pt-card"><template #header><span class="ptc-title">🩺 诊断与处方分析</span></template>
+        <el-descriptions :column="1" border size="small">
+          <el-descriptions-item label="初步诊断">{{ diagnosis }}</el-descriptions-item>
+          <el-descriptions-item label="诊断依据">{{ diagnosisBasis }}</el-descriptions-item>
+          <el-descriptions-item label="处方药品">{{ prescription }}</el-descriptions-item>
+          <el-descriptions-item label="用法用量">{{ dosage }}</el-descriptions-item>
+          <el-descriptions-item label="用药周期">{{ treatmentCycle }}</el-descriptions-item>
+        </el-descriptions>
+        <el-alert title="处方合理性评估：用药方案符合指南推荐，剂量适宜" type="success" :closable="false" show-icon style="margin-top:12px;" />
       </el-card></el-col>
-      <el-col :span="12"><el-card shadow="never" class="mr-card"><template #header><span class="mrc-title">👨‍⚕️ 医生反馈与意向</span></template>
-        <div class="feedback-box"><el-icon :size="20" color="#409EFF"><ChatDotRound /></el-icon><p>{{ doctorFeedback }}</p></div>
-        <el-divider />
-        <div class="intent-row"><span>处方意向：</span><el-tag type="warning" size="small">{{ intentLevel }}</el-tag></div>
-        <div class="intent-row"><span>关注方向：</span><el-tag v-for="i in interests" :key="i" size="small" effect="plain" style="margin:2px;">{{ i }}</el-tag></div>
+      <el-col :span="12"><el-card shadow="never" class="pt-card"><template #header><span class="ptc-title">👤 患者理解度评估</span></template>
+        <div v-for="(u,idx) in understanding" :key="idx" class="under-row">
+          <div class="ur-icon" :style="{background:u.understood?'#f0f9eb':'#fef0f0'}">{{ u.understood?'✓':'?' }}</div>
+          <div class="ur-body"><div class="ur-question">{{ u.question }}</div><div class="ur-answer" :style="{color:u.understood?'#67C23A':'#E6A23C'}">{{ u.answer }}</div></div>
+        </div>
       </el-card></el-col>
     </el-row>
 
-    <!-- 风险提示 + 改进建议 -->
+    <!-- 亮点 + 改进 -->
     <el-row :gutter="16">
-      <el-col :span="12"><el-card shadow="never" class="mr-card"><template #header><span class="mrc-title">⚠️ 风险提示</span></template>
-        <div v-if="risks.length"><div v-for="(r,idx) in risks" :key="idx" class="risk-item"><el-icon color="#F56C6C"><WarningFilled /></el-icon><span>{{ r }}</span></div></div>
-        <el-empty v-else description="本次拜访无合规风险" :image-size="40" />
+      <el-col :span="12"><el-card shadow="never" class="pt-card"><template #header><span class="ptc-title">⭐ 沟通亮点</span></template>
+        <div v-for="(h,idx) in highlights" :key="idx" class="hl-row"><span class="hl-num">{{ idx+1 }}</span><span>{{ h }}</span></div>
       </el-card></el-col>
-      <el-col :span="12"><el-card shadow="never" class="mr-card"><template #header><span class="mrc-title">📋 改进建议</span></template>
-        <div v-for="(imp,idx) in improvements" :key="idx" class="imp-item"><span class="imp-num">{{ idx+1 }}</span><span>{{ imp }}</span></div>
+      <el-col :span="12"><el-card shadow="never" class="pt-card"><template #header><span class="ptc-title">📈 改进建议</span></template>
+        <div v-for="(imp,idx) in improvements" :key="idx" class="hl-row"><span class="hl-num" style="background:#E6A23C;">{{ idx+1 }}</span><span>{{ imp }}</span></div>
       </el-card></el-col>
     </el-row>
 
-    <div class="mr-footer">报告由 AI智能胸牌 自动生成 · 仅供参考，不作为法律依据</div>
+    <div class="pt-footer">报告由 AI智能胸牌 自动生成 · 医患沟通质量分析</div>
   </div>
 </template>
 
 <script setup>
 defineProps({ data: Object })
 
-const overall = '合规'; const doctor = { hospital:'杭州市第一人民医院', dept:'心内科', name:'王主任', level:'科室主任/主任医师' }; const visitDate = '2026-05-16 15:00'; const product = 'XX降压药（第三代ARB类）'
-const complianceRate = 100; const qualityScore = 88; const riskLevel = '🟢 低风险'; const passCount = 5
-const checks = [
-  { name:'适应症表述合规', detail:'严格按说明书适应症范围介绍，未涉及超适应症推广', status:'pass' },
-  { name:'不良反应告知完整', detail:'主动告知头晕、乏力等常见不良反应及发生率（3%-5%），建议定期监测血压', status:'pass' },
-  { name:'禁忌症询问到位', detail:'详细询问了过敏史、妊娠情况、肝肾功能状况，确认无禁忌', status:'pass' },
-  { name:'竞品比较合规', detail:'与竞品比较时引用公开文献数据（2025 ESC指南），未做不实或贬低性对比', status:'pass' },
-  { name:'用法用量正确', detail:'严格按照说明书推荐剂量（50mg QD），强调餐后服用和固定时间', status:'pass' }
+const totalScore = 86
+const doctor = { name:'王主任', dept:'心内科' }
+const patient = { name:'张先生', gender:'男', age:58 }
+const visitDate = '2026-05-16 09:15'; const visitType = '初诊'; const chiefComplaint = '反复头晕2周，伴心悸'
+const dims = [
+  { name:'问诊完整性', icon:'🔍', score:90, color:'#409EFF', comment:'系统询问了症状、持续时间、诱因、既往史' },
+  { name:'诊断清晰度', icon:'📋', score:85, color:'#67C23A', comment:'明确告知诊断结论和依据，患者表示理解' },
+  { name:'风险告知', icon:'⚠️', score:78, color:'#E6A23C', comment:'告知了药物副作用，但生活方式建议不够具体' },
+  { name:'共情沟通', icon:'💚', score:88, color:'#409EFF', comment:'耐心倾听，对患者的担忧给予了充分回应' },
+  { name:'随访安排', icon:'📅', score:82, color:'#67C23A', comment:'明确了复诊时间，但未书面记录给患者' }
 ]
-const qualityDims = [
-  { name:'学术专业性', score:90, comment:'医学知识准确，引用最新ESC指南和临床研究数据' },
-  { name:'沟通有效性', score:85, comment:'倾听医生临床需求，针对性解答问题，互动良好' },
-  { name:'合规规范性', score:95, comment:'合规表现优秀，各项检查全部通过' },
-  { name:'关系维护', score:82, comment:'关注医生科研需求，主动提供文献支持，建立专业信任' }
+const timeline = [
+  { time:'00:00', stage:'问诊开场', quality:'good', detail:'主动问候，询问就诊原因，语气温和。详细询问了头晕发作频率、持续时间、伴随症状。', quote:'张先生您好，请坐。最近哪里不舒服？这种情况持续多久了？' },
+  { time:'03:20', stage:'既往史采集', quality:'good', detail:'系统询问了高血压病史、用药情况、家族史、生活习惯（吸烟/饮酒/饮食）。', quote:'您之前有量过血压吗？家里人有高血压的吗？平时抽烟喝酒吗？' },
+  { time:'06:40', stage:'体格检查', quality:'normal', detail:'测量了血压（160/95mmHg），听诊心肺。但未记录心率具体数值，检查过程解释偏少。' },
+  { time:'09:15', stage:'诊断告知', quality:'good', detail:'明确告知诊断为"原发性高血压1级"，解释诊断依据，用通俗语言说明病情。', quote:'根据您的症状和今天的血压测量结果，初步判断是高血压，属于1级，不算严重但需要重视。' },
+  { time:'12:30', stage:'治疗方案沟通', quality:'normal', detail:'开具了降压药处方并说明了用法，但对不同药物的选择依据解释不够，患者询问后才补充说明。' },
+  { time:'15:50', stage:'生活方式指导', quality:'normal', detail:'提到要低盐饮食、适当运动，但建议比较笼统（"少盐"没有具体量化），未提供书面指导材料。' },
+  { time:'18:10', stage:'随访安排', quality:'good', detail:'明确告知2周后复诊，建议每天自测血压记录。但复诊细节未书面记录给患者。' }
 ]
-const keyMessages = ['第三代ARB类降压药','24小时平稳降压','不良反应发生率低','对肾功能有保护作用','2025 ESC指南推荐','医保乙类报销']
-const docQuestions = [
-  { q:'长期疗效数据如何？', answered:'yes' },{ q:'与竞品XX相比优势在哪？', answered:'yes' },
-  { q:'医保报销比例是多少？', answered:'yes' },{ q:'对老年患者是否需要调整剂量？', answered:'yes' }
+const diagnosis = '原发性高血压 1级（160/95mmHg）'
+const diagnosisBasis = '反复头晕2周+血压测量160/95mmHg+无心脑血管并发症表现'
+const prescription = '氨氯地平片 5mg QD + 建议低盐饮食+有氧运动'
+const dosage = '氨氯地平 5mg 每日一次，晨起服用'
+const treatmentCycle = '初始4周，2周后复诊评估'
+const understanding = [
+  { question:'是否清楚自己的诊断？', answer:'清楚，能复述"高血压1级"', understood:true },
+  { question:'是否知道如何正确服药？', answer:'知道每天1次早上吃，但不清楚如果漏服怎么办', understood:true },
+  { question:'是否知道需要注意的副作用？', answer:'医生告知了可能头晕、脚踝水肿，患者表示了解', understood:true },
+  { question:'是否清楚复诊时间和目的？', answer:'知道2周后复诊，但对复诊需要准备什么不太清楚', understood:false }
 ]
-const doctorFeedback = '王主任对产品的临床数据和最新研究进展表示认可，特别关注了长期疗效和肾功能保护方面的数据。表示愿意在合适的轻中度高血压患者中试用，并关注后续的上市后临床研究结果。'
-const intentLevel = '愿意试用'; const interests = ['长期疗效数据','肾功能保护','老年患者安全性','医保政策变化']
-const risks = []
-const improvements = ['建议准备针对老年患者的专项临床数据，医生对该人群关注度高','可提前整理竞品头对头研究对比表，提高沟通效率','后续随访时可带最新发表的临床研究文献，持续建立学术信任']
+const highlights = [
+  '问诊系统全面，从症状→持续时间→诱因→既往史逐步深入，专业规范',
+  '用通俗语言解释医学术语（"血管弹性下降"替代"动脉硬化"），患者容易理解',
+  '耐心倾听并回应患者的担忧（"这个药要吃一辈子吗？"给予了合理安抚和解释）',
+  '复诊安排明确，给出了具体的复诊时间节点'
+]
+const improvements = [
+  '生活方式指导可更加量化（如"每日食盐<5g"替代"少吃盐"，建议具体运动方案）',
+  '用药方案可选择依据可前置说明，避免患者提问后才补充',
+  '重要医嘱建议提供书面或电子版记录，方便老年患者记忆和执行',
+  '可增加"teach-back"确认法（让患者复述要点），确保真正理解'
+]
 </script>
 
 <style scoped>
-.med-report{max-width:960px;margin:0 auto;padding:8px}
-.mr-hero{background:linear-gradient(135deg,#1a3a2a,#1e4d35,#1a5c3a);border-radius:16px;padding:28px;color:#fff;margin-bottom:20px}
-.mr-hero-badge{display:inline-block;padding:4px 16px;border-radius:20px;font-size:14px;font-weight:700;margin-bottom:10px}
-.mr-hero-badge.合规{background:rgba(103,194,58,.25)}.mr-hero-badge.不合规{background:rgba(245,108,108,.25)}
-.mhb-icon{margin-right:6px}
-.mr-hero-meta{display:flex;gap:16px;font-size:13px;opacity:.85;margin:8px 0;flex-wrap:wrap}
-.mr-hero-stats{display:flex;gap:20px;justify-content:flex-end}
-.mrh-stat{text-align:center;padding:12px 18px;background:rgba(255,255,255,.1);border-radius:12px}
-.mrh-val{font-size:28px;font-weight:700;display:block}.mrh-lbl{font-size:11px;opacity:.7;margin-top:4px}
+.pt-report{max-width:960px;margin:0 auto;padding:8px}
+.pt-hero{background:linear-gradient(135deg,#1e3a5f,#2563a0,#1e5a8a);border-radius:16px;padding:28px;color:#fff;margin-bottom:20px}
+.pt-score-ring{position:relative;width:120px;height:120px;margin:0 auto}
+.pts-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.pts-score{font-size:38px;font-weight:700;color:#409EFF}.pts-label{font-size:11px;color:#a0aec0;display:block}
+.pt-hero-meta{display:flex;gap:16px;font-size:13px;opacity:.85;flex-wrap:wrap}
 
-.mr-card{border-radius:12px;margin-bottom:14px}.mrc-title{font-size:15px;font-weight:700;color:#1a1a2e}
+.pt-dims{margin-bottom:20px}
+.ptd-card{background:#fff;border-radius:12px;padding:16px;text-align:center;border-top:3px solid;box-shadow:0 2px 8px rgba(0,0,0,.03)}.ptd-icon{font-size:26px}.ptd-score{font-size:30px;font-weight:700;margin:4px 0}.ptd-name{font-size:13px;color:#606266;margin:2px 0 6px}.ptd-comment{font-size:11px;color:#909399;margin-top:6px;line-height:1.4}
 
-.check-row{display:flex;align-items:flex-start;gap:14px;padding:10px;border-bottom:1px solid #f5f7fa}
-.cr-status{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}.cr-status.pass{background:#f0f9eb;color:#67C23A}.cr-status.fail{background:#fef0f0;color:#F56C6C}
-.cr-body{flex:1}.cr-name{font-size:14px;font-weight:600;color:#303133}.cr-detail{font-size:12px;color:#909399;margin-top:3px;line-height:1.5}
+.pt-card{border-radius:12px;margin-bottom:14px}.ptc-title{font-size:15px;font-weight:700;color:#1a1a2e}
+.tl-step-title{font-size:14px;font-weight:600;color:#303133}.tl-detail{font-size:13px;color:#606266;line-height:1.7;margin-top:4px}.tl-quote{font-size:12px;color:#909399;font-style:italic;margin-top:4px;padding-left:8px;border-left:2px solid #e4e7ed}
 
-.qd-card{text-align:center;padding:12px}.qd-score{font-size:36px;font-weight:700}.qd-name{font-size:13px;color:#606266;margin:4px 0 8px}.qd-comment{font-size:11px;color:#909399;margin-top:6px;line-height:1.4}
+.under-row{display:flex;gap:10px;padding:8px;margin-bottom:4px;border-radius:8px}.ur-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}.ur-question{font-size:13px;color:#303133;font-weight:600}.ur-answer{font-size:12px;margin-top:3px}
 
-.content-section{margin-bottom:14px}.content-section h4{font-size:13px;color:#303133;margin:0 0 8px}
-.dq-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}.dq-q{color:#303133}.dq-a{font-size:12px}.dq-a.yes{color:#67C23A}.dq-a.no{color:#F56C6C}
-.feedback-box{display:flex;gap:10px}.feedback-box p{font-size:13px;color:#606266;line-height:1.8;margin:0}
-.intent-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;color:#606266}
-
-.risk-item,.imp-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#606266;line-height:1.6}.imp-num{width:20px;height:20px;border-radius:50%;background:#409EFF;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.mr-footer{text-align:center;padding:20px;color:#ccc;font-size:11px}
+.hl-row{display:flex;align-items:flex-start;gap:10px;padding:6px 0;font-size:13px;color:#606266;line-height:1.6}.hl-num{width:22px;height:22px;border-radius:50%;background:#67C23A;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pt-footer{text-align:center;padding:20px;color:#ccc;font-size:11px}
 </style>
