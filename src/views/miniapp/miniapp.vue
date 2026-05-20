@@ -179,7 +179,6 @@
               </div>
             </div>
           </div>
-        </div>
         <div v-if="currentPage==='customer-detail'" class="page-cust-detail">
           <div class="pcd-header">{{ detailCustomer?.name }}</div>
           <div class="pcd-avatar-big">{{ detailCustomer?.name?.[0] }}</div>
