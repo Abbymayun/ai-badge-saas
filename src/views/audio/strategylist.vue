@@ -36,8 +36,7 @@
           <div class="mac-tags"><el-tag v-for="i in agent.industries" :key="i" size="small" effect="plain" type="warning" style="margin:2px;">{{ i }}</el-tag></div>
           <div class="mac-stats"><div class="macs-item"><span class="macs-val">{{ agent.useCount }}</span><span class="macs-lbl">使用次数</span></div><div class="macs-item"><span class="macs-val">{{ agent.avgScore||'-' }}</span><span class="macs-lbl">{{ agent.templateType==='report'?'报告':'均分' }}</span></div></div>
           <div class="mac-actions">
-            <el-button type="primary" size="small" :disabled="!agent.enabled && !agent.isMine" @click="useAgent(agent)">使用</el-button>
-            <el-button size="small" :disabled="agent.isMine" @click="cloneAgent(agent)">克隆到我的</el-button>
+            <el-button size="small" :disabled="agent.isMine" @click="cloneAgent(agent)">克隆</el-button>
             <el-button size="small" v-if="agent.isMine" type="warning" @click="editMine(agent)">编辑</el-button>
             <el-button size="small" type="danger" v-if="agent.isMine" @click="deleteMine(agent.id)">删除</el-button>
           </div>
@@ -90,8 +89,11 @@ const allAgents = ref([
   { id:3, name:'客户购买力打分', icon:'💰', templateType:'scoring', enabled:true, industries:['银行金融','汽车销售','房地产','保险'], description:'评估客户购买意向和支付能力', useCount:2100, avgScore:'72分', isMine:false },
   { id:7, name:'产品力打分', icon:'⭐', templateType:'scoring', enabled:true, industries:['银行金融','汽车销售','医疗健康','教育培训'], description:'评估产品知识掌握和传达能力', useCount:890, avgScore:'68分', isMine:false }
 ])
-// 我的智能体（克隆后的）
-const myAgents = ref([])
+// 我的智能体（从localStorage加载）
+const STORAGE_KEY = 'my_agents_data'
+const loadMyAgents = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]') } catch { return [] } }
+const saveMyAgents = (data) => { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) }
+const myAgents = ref(loadMyAgents())
 
 const enterpriseAgents = computed(() => {
   const pub = allAgents.value.filter(a => a.industries.includes(enterpriseIndustry.value))
@@ -120,7 +122,9 @@ const filteredAgents = computed(() => {
 // 克隆
 const cloneAgent = (agent) => {
   const newId = Date.now()
-  myAgents.value.push({ ...JSON.parse(JSON.stringify(agent)), id: newId, name: agent.name, isMine: true, enabled: true, useCount: 0, avgScore: '-' })
+  const newAgent = { ...JSON.parse(JSON.stringify(agent)), id: newId, name: agent.name, isMine: true, enabled: true, useCount: 0, avgScore: '-' }
+  myAgents.value.push(newAgent)
+  saveMyAgents(myAgents.value)
   ElMessage({ message: '已克隆到我的智能体', type: 'success', duration: 3000, onClick: () => { activeTab.value = 'mine' } })
 }
 
@@ -130,9 +134,10 @@ const editMine = (agent) => { editingAgent.value = { ...agent }; showEdit.value 
 const saveEdit = () => {
   const idx = myAgents.value.findIndex(a => a.id === editingAgent.value.id)
   if (idx >= 0) myAgents.value[idx] = { ...editingAgent.value }
+  saveMyAgents(myAgents.value)
   showEdit.value = false; ElMessage.success('已保存')
 }
-const deleteMine = (id) => { myAgents.value = myAgents.value.filter(a => a.id !== id); ElMessage.success('已删除') }
+const deleteMine = (id) => { myAgents.value = myAgents.value.filter(a => a.id !== id); saveMyAgents(myAgents.value); ElMessage.success('已删除') }
 
 const useAgent = (agent) => { ElMessage.success(`已选择：${agent.name}`) }
 </script>
