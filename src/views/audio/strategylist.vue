@@ -37,6 +37,7 @@
           <div class="mac-stats"><div class="macs-item"><span class="macs-val">{{ agent.useCount }}</span><span class="macs-lbl">使用次数</span></div><div class="macs-item"><span class="macs-val">{{ agent.avgScore||'-' }}</span><span class="macs-lbl">{{ agent.templateType==='report'?'报告':'均分' }}</span></div></div>
           <div class="mac-actions">
             <el-button size="small" :disabled="agent.isMine" @click="cloneAgent(agent)">克隆</el-button>
+            <el-button size="small" @click="previewAgent(agent)">预览效果</el-button>
             <el-button size="small" v-if="agent.isMine" type="warning" @click="editMine(agent)">编辑</el-button>
             <el-button size="small" type="danger" v-if="agent.isMine" @click="deleteMine(agent.id)">删除</el-button>
           </div>
