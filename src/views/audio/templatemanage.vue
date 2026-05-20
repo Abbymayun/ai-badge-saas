@@ -425,6 +425,8 @@
         <CustomerReport v-else-if="isCustomerScoring" :data="previewData.customer" :template="previewTpl" class="preview-focused" />
         <!-- 评分模板 → 仅显示销售能力总结 -->
         <SalesReport v-else-if="isScoringPreview" :data="previewData.sales" :template="previewTpl" class="preview-focused" />
+        <!-- 销售复盘 → 复盘报告 -->
+        <SalesReviewView v-if="isReviewPreview" :data="previewData" />
         <!-- 面包店零售分析 → 面包店专属报告 -->
         <BakeryView v-if="isBakeryPreview" :data="previewData" />
         <!-- 零售客户画像 → 零售分析报告 -->
@@ -474,6 +476,7 @@ import ProductSceneView from './reports/ProductSceneView.vue'
 import EduView from './reports/EduView.vue'
 import RetailView from './reports/RetailView.vue'
 import BakeryView from './reports/BakeryView.vue'
+import SalesReviewView from './reports/SalesReviewView.vue'
 import { generatePreviewData } from './reportData.js'
 import { getScenarioPreviewData } from './scenarioData.js'
 
@@ -794,6 +797,7 @@ const isProductScoring = computed(() => isScoringPreview.value && (previewTpl.va
 const isEduPreview = computed(() => (previewTpl.value?.name || '').includes('教育') || (previewTpl.value?.name || '').includes('课堂'))
 const isRetailPreview = computed(() => (previewTpl.value?.name || '').includes('零售') || (previewTpl.value?.name || '').includes('面包'))
 const isBakeryPreview = computed(() => (previewTpl.value?.name || '').includes('面包店'))
+const isReviewPreview = computed(() => (previewTpl.value?.name || '').includes('复盘'))
 const previewDefaultTab = computed(() => isScoringPreview.value ? 'sales' : 'customer')
 const previewDefaultLabel = computed(() => {
   if (isScoringPreview.value) return '📊 销售能力总结'
