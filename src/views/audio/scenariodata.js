@@ -161,7 +161,7 @@ export function getScenarioPreviewData(templateName, templateType, industries) {
   let scenario = 'generic'
   if (templateName.includes('会议') || templateName.includes('总结')) scenario = 'meeting'
   else if (templateName.includes('医疗') || templateName.includes('合规')) scenario = 'medical'
-  else if (templateName.includes('教育') || templateName.includes('课程')) scenario = 'education'
+  else if (templateName.includes('教育') || templateName.includes('课堂')) scenario = 'education'
   else if (templateName.includes('地产') || templateName.includes('看房')) scenario = 'realestate'
   else if (templateName.includes('零售') || templateName.includes('客户画像')) scenario = 'retail'
   else if (templateName.includes('保险')) scenario = 'insurance'
