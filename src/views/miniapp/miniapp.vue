@@ -97,31 +97,54 @@
           <div class="pd-card"><div class="pdc-title">📈 设备使用率</div><div class="pdc-big-num">84.3%</div><div class="pdc-sub">已绑定312台 · 在线263台</div></div>
         </div>
 
-        <!-- ========== 录音详情/AI总结 ========== -->
+        <!-- ========== 录音详情 ========== -->
         <div v-if="currentPage==='recording-detail'" class="page-detail">
           <div class="prd-header">{{ detailRecording?.name }}</div>
-          <div class="prd-meta">{{ detailRecording?.date }} · {{ detailRecording?.size }}</div>
+          <div class="prd-meta">{{ detailRecording?.date }} · {{ detailRecording?.size }} · {{ detailRecording?.duration }}</div>
           <div class="prd-tabs">
-            <span :class="{active:detailTab==='transcript'}" @click="detailTab='transcript'">转写</span>
             <span :class="{active:detailTab==='summary'}" @click="detailTab='summary'">AI总结</span>
-          </div>
-          <!-- 转写 -->
-          <div v-if="detailTab==='transcript'" class="prd-transcript">
-            <div v-for="(line,idx) in transcriptLines" :key="idx" class="prdt-line" :class="line.role"><span class="prdt-speaker">{{ line.speaker }}</span><span class="prdt-text">{{ line.text }}</span></div>
+            <span :class="{active:detailTab==='transcript'}" @click="detailTab='transcript'">转写</span>
+            <span :class="{active:detailTab==='chapters'}" @click="detailTab='chapters'">章节速览</span>
+            <span :class="{active:detailTab==='info'}" @click="detailTab='info'">基本信息</span>
           </div>
           <!-- AI总结 -->
           <div v-if="detailTab==='summary'" class="prd-summary">
             <div class="prds-loading" v-if="aiLoading">
-              <div class="prdsl-spinner"></div>
-              <span>AI正在分析中...</span>
+              <div class="prdsl-spinner"></div><span>AI正在分析中...</span>
               <div class="prdsl-steps"><span class="done">✓ 语音转写完成</span><span class="active">⟳ 智能分析中</span><span>客户画像生成</span><span>报告输出</span></div>
             </div>
             <div v-else class="prds-done">
-              <div class="prdsd-score"><span class="prdsds-num">88</span><span class="prdsds-label">综合评分</span></div>
-              <div class="prdsd-section"><h4>客户画像</h4><p>张总，银行零售部总经理，45-50岁，理性务实风格。关注数字化转型和客户经理外拓管理效率。</p></div>
-              <div class="prdsd-section"><h4>需求分析</h4><p>1.提升外拓拜访效率 2.客户经理过程管理 3.数据安全合规</p></div>
-              <div class="prdsd-section"><h4>行动建议</h4><p>发送详细方案+案例，安排样机演示，推动20人试用方案</p></div>
+              <div class="prdsd-score-card">
+                <div class="prdsds-left"><span class="prdsds-num">88</span><span class="prdsds-label">综合评分</span></div>
+                <div class="prdsds-right"><div class="prdsdsr-item"><span>需求挖掘</span><span style="color:#34C759;">95</span></div><div class="prdsdsr-item"><span>产品介绍</span><span style="color:#007AFF;">91</span></div><div class="prdsdsr-item"><span>异议处理</span><span style="color:#FF9500;">82</span></div></div>
+              </div>
+              <div class="prdsd-section"><h4>👤 客户画像</h4><p>张总，银行零售部总经理，45-50岁。理性务实，注重合规和数据安全。当前阶段：数字化转型推进中，对外拓管理效率提升有迫切需求。</p></div>
+              <div class="prdsd-section"><h4>💡 需求洞察</h4><p>1. 提升外拓拜访效率——客户经理外出过程无法量化管理<br>2. 优秀经验复制——新人上手周期长，Top Sales经验难沉淀<br>3. 数据安全合规——金融行业对数据不出行有硬性要求</p></div>
+              <div class="prdsd-section"><h4>🧭 沟通逻辑</h4><div class="prdsd-flow"><span v-for="(s,i) in ['价值澄清','差异对比','场景落地','安全合规','案例佐证','试用推进']" :key="i" class="prdsdf-step">{{ i+1 }}. {{ s }}</span></div></div>
+              <div class="prdsd-section highlight"><h4>⭐ 亮点</h4><p>• 精准识别客户三大痛点，开场3个问题锁定核心需求<br>• 产品介绍贴合银行外拓场景，价值传递清晰<br>• 招商银行案例有效建立信任</p></div>
+              <div class="prdsd-section improve"><h4>📈 提升点</h4><p>• 可补充更多ROI数据增强说服力<br>• 建议更主动确认决策流程和时间节点</p></div>
+              <div class="prdsd-section action"><h4>📝 下一步建议</h4><p>1. 今日发送招商银行详细案例+方案<br>2. 安排下周三带样机现场演示<br>3. 推动20人3个月免费试用方案</p></div>
             </div>
+          </div>
+          <!-- 转写 -->
+          <div v-if="detailTab==='transcript'" class="prd-transcript">
+            <div v-for="(line,idx) in transcriptLines" :key="idx" class="prdt-line" :class="line.role"><span class="prdt-time">{{ line.time }}</span><span class="prdt-speaker">{{ line.speaker }}</span><span class="prdt-text">{{ line.text }}</span></div>
+          </div>
+          <!-- 章节速览 -->
+          <div v-if="detailTab==='chapters'" class="prd-chapters">
+            <div v-for="(ch,idx) in chapters" :key="idx" class="prdc-item" @click="seekChapter(ch)">
+              <span class="prdc-time">{{ ch.time }}</span>
+              <div class="prdc-info"><span class="prdc-title">{{ ch.title }}</span><span class="prdc-desc">{{ ch.desc }}</span></div>
+            </div>
+          </div>
+          <!-- 基本信息 -->
+          <div v-if="detailTab==='info'" class="prd-info">
+            <div class="prdi-row"><span>录音时长</span><span>{{ detailRecording?.duration }}</span></div>
+            <div class="prdi-row"><span>文件大小</span><span>{{ detailRecording?.size }}</span></div>
+            <div class="prdi-row"><span>录制时间</span><span>{{ detailRecording?.date }}</span></div>
+            <div class="prdi-row"><span>设备SN</span><span>1B012617000045</span></div>
+            <div class="prdi-row"><span>绑定人员</span><span>杨旭东</span></div>
+            <div class="prdi-row"><span>AI分析状态</span><span style="color:#34C759;">已完成</span></div>
           </div>
         </div>
 
@@ -198,19 +221,29 @@ const goCustomerDetail = (c) => { detailCustomer.value = c; currentPage.value = 
 
 // 转写内容
 const transcriptLines = [
-  { speaker:'杨旭东', role:'self', text:'张总您好，感谢您抽出时间。我是利尔达AI科技的小杨，今天主要是想跟您聊聊我们AI智能胸牌在银行客户经理外拓场景的应用。' },
-  { speaker:'张总', role:'other', text:'你好小杨。我们行最近确实在推进数字化转型，你们这个产品具体是怎么用的？' },
-  { speaker:'杨旭东', role:'self', text:'我们的AI智能胸牌非常轻便，只有28克，佩戴后全程自动录音，AI会自动转写成文字并生成分析报告。' },
-  { speaker:'张总', role:'other', text:'这个挺有意思。不过我们比较关心数据安全，金融行业对合规要求很高。' },
-  { speaker:'杨旭东', role:'self', text:'张总您放心，我们通过了等保三级认证，数据全程加密传输，支持私有化部署。招商银行就是我们的客户。' }
+  { time:'00:00', speaker:'杨旭东', role:'self', text:'张总您好，感谢您抽出时间。我是利尔达AI科技的小杨，今天主要是想跟您聊聊我们AI智能胸牌在银行客户经理外拓场景的应用。' },
+  { time:'00:45', speaker:'张总', role:'other', text:'你好小杨。我们行最近确实在推进数字化转型，你们这个产品具体是怎么用的？' },
+  { time:'01:20', speaker:'杨旭东', role:'self', text:'我们的AI智能胸牌非常轻便，只有28克，佩戴后全程自动录音，AI会自动转写成文字并生成分析报告。' },
+  { time:'02:10', speaker:'张总', role:'other', text:'这个挺有意思。不过我们比较关心数据安全，金融行业对合规要求很高。' },
+  { time:'03:00', speaker:'杨旭东', role:'self', text:'张总您放心，我们通过了等保三级认证，数据全程加密传输，支持私有化部署。招商银行就是我们的客户，他们上线后拜访量提升了40%。' }
 ]
 
+// 章节速览
+const chapters = [
+  { time:'00:00-02:30', title:'开场破冰', desc:'自我介绍+行业话题切入，建立共鸣' },
+  { time:'02:30-05:00', title:'需求挖掘', desc:'开放式提问锁定客户三大核心痛点' },
+  { time:'05:00-08:00', title:'产品介绍', desc:'从硬件到AI分析全链路展示产品价值' },
+  { time:'08:00-11:00', title:'异议处理', desc:'逐一回应安全、价格、对接等顾虑' },
+  { time:'11:00-15:00', title:'案例佐证', desc:'招商银行案例+ROI数据建立信任' },
+  { time:'15:00-18:00', title:'下一步推进', desc:'约定试用方案和后续跟进时间' }
+]
+const seekChapter = (ch) => { detailTab.value = 'transcript' }
+
 const unbindDevice = () => { if (confirm('确定解绑设备？')) alert('设备已解绑') }
-const newRecording = () => { goPage('recording') }
 </script>
 
 <style scoped>
-.mp-wrapper{display:flex;justify-content:flex-start;padding:16px;min-height:calc(100vh - 100px)}
+.mp-wrapper{display:flex;justify-content:center;align-items:center;padding:16px;min-height:calc(100vh - 100px)}
 .phone-frame{width:390px;height:760px;background:#f5f5f7;border-radius:36px;border:6px solid #1a1a2e;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .pf-statusbar{display:flex;justify-content:space-between;padding:8px 24px 0;font-size:11px;font-weight:600;color:#1a1a2e;background:#fff}
 .pf-navbar{display:flex;align-items:center;justify-content:center;padding:8px 16px;background:#fff;position:relative;border-bottom:1px solid #f0f0f0}
@@ -250,10 +283,14 @@ const newRecording = () => { goPage('recording') }
 
 /* 录音详情 */
 .prd-header{font-size:16px;font-weight:600;margin-bottom:4px}.prd-meta{font-size:12px;color:#8e8e93;margin-bottom:12px}
-.prd-tabs{display:flex;gap:0;margin-bottom:12px;background:#fff;border-radius:10px;overflow:hidden}.prd-tabs span{flex:1;text-align:center;padding:10px;font-size:14px;cursor:pointer;color:#8e8e93}.prd-tabs span.active{color:#007AFF;background:#E8F0FE;font-weight:600}
-.prdt-line{display:flex;gap:8px;padding:8px;margin-bottom:4px;border-radius:8px}.prdt-line.self{background:#E8F0FE}.prdt-line.other{background:#f5f5f7}.prdt-speaker{font-size:12px;font-weight:600;width:50px;flex-shrink:0;color:#007AFF}.prdt-line.other .prdt-speaker{color:#E6A23C}.prdt-text{font-size:13px;color:#1a1a2e;line-height:1.6}
+.prd-tabs{display:flex;gap:0;margin-bottom:12px;background:#fff;border-radius:10px;overflow:hidden}.prd-tabs span{flex:1;text-align:center;padding:8px 4px;font-size:12px;cursor:pointer;color:#8e8e93}.prd-tabs span.active{color:#007AFF;background:#E8F0FE;font-weight:600}
+.prdt-line{display:flex;gap:6px;padding:8px;margin-bottom:4px;border-radius:8px}.prdt-line.self{background:#E8F0FE}.prdt-line.other{background:#f5f5f7}.prdt-time{font-size:10px;color:#c7c7cc;width:36px;flex-shrink:0;padding-top:2px}.prdt-speaker{font-size:11px;font-weight:600;width:44px;flex-shrink:0;color:#007AFF}.prdt-line.other .prdt-speaker{color:#E6A23C}.prdt-text{font-size:12px;color:#1a1a2e;line-height:1.6}
 .prds-loading{text-align:center;padding:40px 20px}.prdsl-spinner{width:36px;height:36px;border:3px solid #e5e5ea;border-top-color:#007AFF;border-radius:50%;margin:0 auto 16px;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.prdsl-steps{display:flex;flex-direction:column;gap:8px;margin-top:16px;font-size:13px}.prdsl-steps span{color:#8e8e93}.prdsl-steps span.done{color:#34C759}.prdsl-steps span.active{color:#007AFF;font-weight:600}
-.prdsd-score{text-align:center;padding:16px}.prdsds-num{font-size:48px;font-weight:700;color:#007AFF}.prdsds-label{font-size:13px;color:#8e8e93;display:block}.prdsd-section{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px}.prdsd-section h4{font-size:14px;color:#1a1a2e;margin:0 0 6px}.prdsd-section p{font-size:13px;color:#606266;line-height:1.6;margin:0}
+.prdsd-score-card{background:linear-gradient(135deg,#f0f5ff,#e8f4fd);border-radius:12px;padding:16px;display:flex;gap:16px;margin-bottom:10px}.prdsds-num{font-size:44px;font-weight:700;color:#007AFF}.prdsds-label{font-size:11px;color:#8e8e93;display:block}.prdsds-right{flex:1;display:flex;flex-direction:column;justify-content:center;gap:6px}.prdsdsr-item{display:flex;justify-content:space-between;font-size:13px;color:#1a1a2e}
+.prdsd-section{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px}.prdsd-section h4{font-size:13px;color:#1a1a2e;margin:0 0 6px}.prdsd-section p{font-size:12px;color:#606266;line-height:1.6;margin:0}.prdsd-section.highlight{border-left:3px solid #34C759}.prdsd-section.improve{border-left:3px solid #FF9500}.prdsd-section.action{border-left:3px solid #007AFF}
+.prdsd-flow{display:flex;flex-wrap:wrap;gap:4px}.prdsdf-step{background:#E8F0FE;color:#007AFF;font-size:11px;padding:2px 8px;border-radius:8px}
+.prd-chapters{}.prdc-item{display:flex;gap:10px;padding:12px;background:#fff;border-radius:10px;margin-bottom:6px;cursor:pointer;align-items:center}.prdc-time{font-size:12px;color:#007AFF;font-weight:600;width:80px;flex-shrink:0}.prdc-title{font-size:14px;font-weight:600;color:#1a1a2e;display:block}.prdc-desc{font-size:11px;color:#8e8e93;margin-top:2px}
+.prd-info{}.prdi-row{display:flex;justify-content:space-between;padding:12px;background:#fff;border-radius:10px;margin-bottom:6px;font-size:13px;color:#1a1a2e}.prdi-row span:first-child{color:#8e8e93}
 
 /* 客户详情 */
 .pcd-header{font-size:18px;font-weight:700;margin-bottom:16px}.pcd-avatar-big{width:70px;height:70px;border-radius:50%;background:#007AFF;color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}.pcd-info{text-align:center;font-size:14px;color:#606266;line-height:1.8;margin-bottom:16px}.pcd-actions{display:flex;gap:12px;justify-content:center}.pcd-actions span{background:#fff;border-radius:10px;padding:12px 20px;font-size:14px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.04)}
