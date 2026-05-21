@@ -83,12 +83,6 @@
               <div class="ppd-detail"><div>XXXXXXXX设备</div><div>sin27342</div><div>电量: 80%</div><div>绑定时间: 2023-01-23</div><div class="ppd-unbind" @click="unbindDevice">解绑设备</div></div>
             </div>
           </div>
-          <div class="pp-menu">
-            <div class="ppm-item" @click="goPage('guide')"><span class="ppm-icon">📖</span><span>操作使用说明</span><span class="ppm-arrow">›</span></div>
-            <div class="ppm-item"><span class="ppm-icon">🔔</span><span>消息通知</span><span class="ppm-arrow">›</span></div>
-            <div class="ppm-item"><span class="ppm-icon">ℹ️</span><span>关于我们</span><span class="ppm-arrow">›</span></div>
-          </div>
-        </div>
         </div>
 
         <!-- ========== 数据概览 ========== -->
@@ -154,43 +148,8 @@
           </div>
         </div>
 
-        <!-- ========== 操作说明 ========== -->
-                <div v-if="currentPage==='guide'" class="page-guide">
-          <div class="pg-device-diagram">
-            <div class="pgdd-title">产品外观</div>
-            <div class="pgdd-body">
-              <div class="pgdd-device">
-                <div class="pgdd-screen">显示屏</div>
-                <span class="pgdd-dot pgdd-d1">③</span>
-                <span class="pgdd-label pgdd-l1">扬声器开关</span>
-                <span class="pgdd-dot pgdd-d2">④</span>
-                <span class="pgdd-label pgdd-l2">拾音孔</span>
-                <span class="pgdd-dot pgdd-d3">⑤</span>
-                <span class="pgdd-label pgdd-l3">按键</span>
-                <span class="pgdd-dot pgdd-d4">⑥</span>
-                <span class="pgdd-label pgdd-l4">MIC 2</span>
-                <span class="pgdd-dot pgdd-d5">⑦</span>
-                <span class="pgdd-label pgdd-l5">指示灯</span>
-                <span class="pgdd-dot pgdd-d6">⑧</span>
-                <span class="pgdd-label pgdd-l6">MIC 1</span>
-                <span class="pgdd-dot pgdd-d7">①</span>
-                <span class="pgdd-label pgdd-l7">充电口</span>
-              </div>
-              <div class="pgdd-legend"><span>⑤按键</span><span>⑥MIC 2</span><span>③扬声器开关</span><span>⑥显示屏</span><span>⑦指示灯</span></div>
-              <div class="pgdd-legend"><span>④拾音孔</span><span>⑧MIC 1</span><span>①充电口</span></div>
-            </div>
-          </div>
-          <div class="pg-section" v-for="(sec, idx) in guideSections" :key="idx">
-            <div class="pgs-header"><span class="pgs-num">{{ ['一','二','三','四','五','六','七','八'][idx] }}</span><span class="pgs-title">{{ sec.title }}</span></div>
-            <div class="pgs-body">
-              <div v-for="(item, iidx) in sec.items" :key="iidx" class="pgsi-item">
-                <span class="pgsi-dot" :class="item.type"></span>
-                <span class="pgsi-text">{{ item.content }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="pg-footer"><span>👍 点赞</span><span>⭐ 收藏</span><p>觉得有用，就鼓励一下作者</p></div>
-        </div><div v-if="currentPage==='customer-detail'" class="page-cust-detail">
+        <!-- ========== 客户详情 ========== -->
+        <div v-if="currentPage==='customer-detail'" class="page-cust-detail">
           <div class="pcd-header">{{ detailCustomer?.name }}</div>
           <div class="pcd-avatar-big">{{ detailCustomer?.name?.[0] }}</div>
           <div class="pcd-info"><div>{{ detailCustomer?.company }}</div><div>{{ detailCustomer?.industry }}</div><div>意向等级：{{ detailCustomer?.level }}</div></div>
@@ -206,6 +165,7 @@
         <div class="pft-item" :class="{active:currentPage==='profile'}" @click="goPage('profile')"><span>👤</span><span>我的</span></div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -224,7 +184,7 @@ const detailCustomer = ref(null)
 const showSetting = ref(false)
 
 const pageTitle = computed(() => {
-  const m = { home:'首页', recording:'录音列表', customers:'客户线索', profile:'我的', dataOverview:'数据概览', 'recording-detail':'录音详情', 'customer-detail':'客户详情', guide:'操作使用说明' }
+  const m = { home:'首页', recording:'录音列表', customers:'客户线索', profile:'我的', dataOverview:'数据概览', 'recording-detail':'录音详情', 'customer-detail':'客户详情' }
   return m[currentPage.value] || ''
 })
 
@@ -280,62 +240,11 @@ const chapters = [
 const seekChapter = (ch) => { detailTab.value = 'transcript' }
 
 const unbindDevice = () => { if (confirm('确定解绑设备？')) alert('设备已解绑') }
-
-// 操作说明数据（用户原文，逐条还原）
-const guideSections = [
-  { title:'快速绑定', items:[
-    { content:'1. 扫描二维码 → 输入小程序', type:'step' },
-    { content:'2. 确认员工信息 → 提交', type:'step' },
-    { content:'3. 非充电状态 → 长按按键 >10 秒', type:'warn' },
-    { content:'4. 绿灯闪烁 → 屏幕显示名称 → 绑定成功', type:'done' }
-  ]},
-  { title:'开始 / 停止录音', items:[
-    { content:'开启录音：关机上拨（显示绿点）→ 绿灯长亮 2 秒 → 开始录音', type:'on' },
-    { content:'关闭录音：关机下拨（隐藏绿点）→ 绿灯闪 2 次 → 停止录音', type:'off' },
-    { content:'隐私保护：仅工作时可录音，私人时间开关无效', type:'warn' }
-  ]},
-  { title:'快捷按键', items:[
-    { content:'录音中（开机 ON）：单击 → POI 重点标记', type:'action' },
-    { content:'未录音（关机 OFF）：单击 → 手动上传数据', type:'upload' },
-    { content:'重置设备联机信息：开关 OFF → 长按 >5 秒 → 显示 SN / 软件版本号', type:'info' }
-  ]},
-  { title:'更新 / 解绑员工信息', items:[
-    { content:'1. 开关切换 OFF（隐匿模式）', type:'step' },
-    { content:'2. 非充电状态 → 长按按键 >10 秒', type:'step' },
-    { content:'3. 绿灯闪烁 → 等待平台同步', type:'step' },
-    { content:'4. 成功：屏幕显示 / 传输二维码', type:'done' }
-  ]},
-  { title:'数据上传（3 种方式）', items:[
-    { content:'1. 平台配置自动回溯上传', type:'upload' },
-    { content:'2. 充电时自动上传', type:'upload' },
-    { content:'3. 开关 OFF → 单击按键立即上传', type:'upload' }
-  ]},
-  { title:'指示灯一看就懂', items:[
-    { content:'绿灯常灭：上传 / 刷屏中', type:'led green' },
-    { content:'绿灯闪烁：录音中', type:'led green' },
-    { content:'绿灯常亮：未录音', type:'led green' },
-    { content:'绿灯快闪 2 次：开始录音', type:'led green' },
-    { content:'绿灯慢闪 2 次：停止录音', type:'led green' },
-    { content:'红灯闪烁：电量低 (<10%)', type:'led red' },
-    { content:'红灯常灭：温度异常', type:'led red' },
-    { content:'红灯常亮：充电中', type:'led red' },
-    { content:'绿灯常亮：充电完成', type:'led green' }
-  ]},
-  { title:'充电与复位', items:[
-    { content:'充电用：红灯亮 → 充满绿灯亮', type:'charge' },
-    { content:'复位：连接电源 → 长按 >10 秒（不插语音）', type:'warn' }
-  ]},
-  { title:'到期提醒', items:[
-    { content:'频繁无显示', type:'info' },
-    { content:'小程序 / SaaS 平台显示到期日', type:'warn' },
-    { content:'到期后：仅可充电、解锁，无法录音', type:'off' }
-  ]}
-]
 </script>
 
 <style scoped>
 .mp-wrapper{display:flex;justify-content:center;align-items:center;padding:16px;min-height:calc(100vh - 100px)}
-.phone-frame{width:390px;max-height:760px;height:100%;background:#f5f5f7;border-radius:36px;border:6px solid #1a1a2e;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.phone-frame{width:390px;height:760px;background:#f5f5f7;border-radius:36px;border:6px solid #1a1a2e;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .pf-statusbar{display:flex;justify-content:space-between;padding:8px 24px 0;font-size:11px;font-weight:600;color:#1a1a2e;background:#fff}
 .pf-navbar{display:flex;align-items:center;justify-content:center;padding:8px 16px;background:#fff;position:relative;border-bottom:1px solid #f0f0f0}
 .pfn-back{position:absolute;left:16px;font-size:28px;color:#007AFF;cursor:pointer;line-height:1}
@@ -385,26 +294,4 @@ const guideSections = [
 
 /* 客户详情 */
 .pcd-header{font-size:18px;font-weight:700;margin-bottom:16px}.pcd-avatar-big{width:70px;height:70px;border-radius:50%;background:#007AFF;color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}.pcd-info{text-align:center;font-size:14px;color:#606266;line-height:1.8;margin-bottom:16px}.pcd-actions{display:flex;gap:12px;justify-content:center}.pcd-actions span{background:#fff;border-radius:10px;padding:12px 20px;font-size:14px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-
-/* 我的菜单 */
-.pp-menu{margin-top:12px;background:#fff;border-radius:16px;overflow:hidden}.ppm-item{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #f5f5f7;cursor:pointer;font-size:14px;color:#1a1a2e}.ppm-item:last-child{border-bottom:none}.ppm-icon{font-size:18px}.ppm-arrow{margin-left:auto;color:#c7c7cc;font-size:16px}
-
-/* 操作说明 */
-.page-guide{padding-bottom:30px}
-.pg-device-diagram{background:#fff;border-radius:14px;padding:16px;margin-bottom:16px}
-.pgdd-title{font-size:16px;font-weight:700;color:#1a1a2e;text-align:center;margin-bottom:14px}
-.pgdd-device{position:relative;width:220px;height:140px;margin:0 auto 12px;border:2px solid #1a1a2e;border-radius:18px;display:flex;align-items:center;justify-content:center}
-.pgdd-screen{width:120px;height:70px;border:1.5px solid #1a1a2e;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#666}
-.pgdd-dot{position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;border:1.5px solid #1a1a2e;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.pgdd-d1{top:8px;left:50%;transform:translateX(-50%)}.pgdd-d2{top:30px;left:8px}.pgdd-d3{top:50px;left:50%;transform:translateX(-50%)}.pgdd-d4{top:8px;right:8px}.pgdd-d5{top:45px;right:8px}.pgdd-d6{bottom:22px;right:12px}.pgdd-d7{bottom:6px;left:50%;transform:translateX(-50%)}
-.pgdd-label{position:absolute;font-size:10px}.pgdd-l1{top:6px;left:56%}.pgdd-l2{top:28px;left:22px}.pgdd-l3{top:66px;left:50%;transform:translateX(-50%)}.pgdd-l4{top:6px;right:24px}.pgdd-l5{top:62px;right:2px}.pgdd-l6{bottom:24px;right:26px}.pgdd-l7{bottom:20px;left:50%;transform:translateX(-50%)}
-.pgdd-legend{display:flex;justify-content:center;gap:14px;font-size:11px;color:#606266;margin-top:4px}
-
-.pg-section{margin-bottom:14px}.pgs-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0f0f0}.pgs-num{width:24px;height:24px;border-radius:6px;background:#1a1a2e;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}.pgs-title{font-size:15px;font-weight:700;color:#1a1a2e}
-.pgsi-item{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;font-size:12px;color:#373737;line-height:1.7}
-.pgsi-dot{width:6px;height:6px;border-radius:50%;margin-top:7px;flex-shrink:0}
-.pgsi-dot.step{background:#007AFF}.pgsi-dot.on{background:#34C759}.pgsi-dot.off{background:#8e8e93}.pgsi-dot.warn{background:#FF9500}.pgsi-dot.action{background:#AF52DE}.pgsi-dot.upload{background:#34C759}.pgsi-dot.info{background:#007AFF}.pgsi-dot.charge{background:#FFCC00}.pgsi-dot.led{background:#8e8e93}.pgsi-dot.green{background:#34C759}.pgsi-dot.red{background:#FF3B30}.pgsi-dot.done{background:#34C759}
-.pg-footer{text-align:center;padding:20px 0 10px;border-top:1px solid #f0f0f0}
-.pg-footer span{display:inline-block;padding:6px 20px;margin:0 8px;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid #e0e0e0;color:#606266}
-.pg-footer p{font-size:11px;color:#c0c4cc;margin-top:8px}
 </style>
