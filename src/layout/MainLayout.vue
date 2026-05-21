@@ -73,6 +73,12 @@
           <el-menu-item index="/legal/saas">SaaS平台法律声明</el-menu-item>
           <el-menu-item index="/legal/miniapp">小程序法律声明</el-menu-item>
         </el-sub-menu>
+
+        <el-sub-menu index="manual">
+          <template #title><el-icon><Notebook /></el-icon><span>使用手册</span></template>
+          <el-menu-item index="/manual/saas">SaaS平台使用手册</el-menu-item>
+          <el-menu-item index="/manual/miniapp">小程序使用手册</el-menu-item>
+        </el-sub-menu>
       </el-menu>
     </el-aside>
 
