@@ -31,8 +31,6 @@ const routes = [
       { path: 'system/role', name: 'RoleManage', component: () => import('../views/system/RoleManage.vue'), meta: { title: '角色管理', icon: 'UserFilled' } },
       { path: 'system/permission', name: 'PermissionManage', component: () => import('../views/system/PermissionManage.vue'), meta: { title: '权限管理', icon: 'Lock' } },
       { path: 'miniapp', name: 'MiniApp', component: () => import('../views/miniapp/MiniApp.vue'), meta: { title: '小程序预览', icon: 'Iphone' } },
-      { path: 'legal/saas', name: 'LegalSaaS', component: () => import('../views/legal/LegalSaaS.vue'), meta: { title: 'SaaS平台法律声明', icon: 'Document' } },
-      { path: 'legal/miniapp', name: 'LegalMiniApp', component: () => import('../views/legal/LegalMiniApp.vue'), meta: { title: '小程序法律声明', icon: 'Document' } },
     ]
   }
 ]

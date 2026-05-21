@@ -67,12 +67,6 @@
           <el-icon><Iphone /></el-icon>
           <template #title>小程序预览</template>
         </el-menu-item>
-
-        <el-sub-menu index="legal">
-          <template #title><el-icon><Document /></el-icon><span>法律声明</span></template>
-          <el-menu-item index="/legal/saas">SaaS平台法律声明</el-menu-item>
-          <el-menu-item index="/legal/miniapp">小程序法律声明</el-menu-item>
-        </el-sub-menu>
       </el-menu>
     </el-aside>
 
