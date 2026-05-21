@@ -335,7 +335,7 @@ const guideSections = [
 
 <style scoped>
 .mp-wrapper{display:flex;justify-content:center;align-items:center;padding:16px;min-height:calc(100vh - 100px)}
-.phone-frame{width:390px;height:760px;background:#f5f5f7;border-radius:36px;border:6px solid #1a1a2e;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.phone-frame{width:390px;max-height:760px;height:100%;background:#f5f5f7;border-radius:36px;border:6px solid #1a1a2e;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .pf-statusbar{display:flex;justify-content:space-between;padding:8px 24px 0;font-size:11px;font-weight:600;color:#1a1a2e;background:#fff}
 .pf-navbar{display:flex;align-items:center;justify-content:center;padding:8px 16px;background:#fff;position:relative;border-bottom:1px solid #f0f0f0}
 .pfn-back{position:absolute;left:16px;font-size:28px;color:#007AFF;cursor:pointer;line-height:1}
