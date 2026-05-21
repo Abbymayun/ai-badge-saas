@@ -206,7 +206,6 @@
         <div class="pft-item" :class="{active:currentPage==='profile'}" @click="goPage('profile')"><span>👤</span><span>我的</span></div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup>
