@@ -198,9 +198,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 <div class="modal-overlay" id="settingsModal" style="display:none">
   <div class="modal">
     <h3>⚙️ API 设置</h3>
-    <label>API 地址（OpenAI兼容格式）</label>
-    <input type="text" id="apiBase" placeholder="https://litellm.xxx.com 或 https://api.xxx.com/v1">
-    <div style="font-size:11px;color:#8b949e;margin-top:3px">常见格式：<code>https://域名/v1</code>（以 /v1 结尾）&nbsp;·&nbsp;如不确定请咨询IT</div>
+    <label>API 地址（OpenAI兼容格式）<span style="color:#f85149">*必填</span></label>
+    <input type="text" id="apiBase" placeholder="例如：https://litellm.lierda.com/v1" style="border-color:#f85149">
+    <div style="font-size:11px;color:#f85149;margin-top:3px">⚠️ 这项是空的，请填入公司API地址。如不确定，查看Token开通邮件或咨询IT</div>
     <label>API Key / Token</label>
     <input type="password" id="apiKey" placeholder="sk-...">
     <label>系统提示词</label>
@@ -251,6 +251,10 @@ function init() {
   document.getElementById('apiBase').value = settings.apiBase || ''
   document.getElementById('apiKey').value = settings.apiKey || 'voVHB960PuPIgHnHK42wb7q84XnJgd6jhACq009RUSeLWRyQ'
   document.getElementById('systemPrompt').value = settings.systemPrompt || '你是一个专业的AI智能助手，隶属于利尔达集团。你擅长代码生成、文档处理、数据分析和多模型协同工作。回答要专业、准确、有条理。'
+  // 首次打开：如果没配API地址，自动弹出设置框
+  if (!settings.apiBase) {
+    setTimeout(() => { document.getElementById('settingsModal').style.display = 'flex' }, 500)
+  }
 }
 
 function renderModelList() {
