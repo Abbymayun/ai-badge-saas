@@ -109,7 +109,7 @@ function init(){
   document.getElementById('apiBaseOpenAI').value = S.apiBaseOpenAI||'http://10.16.11.195/v1'
   document.getElementById('apiBaseClaude').value = S.apiBaseClaude||'http://10.16.11.195'
   document.getElementById('apiKey').value = S.apiKey||'voVHB960PuPIgHnHK42wb7q84XnJgd6jhACq009RUSeLWRyQ'
-  document.getElementById('systemPrompt').value = S.systemPrompt||'你是主控Agent。分析任务后可调用工作模型。'
+  document.getElementById('systemPrompt').value = S.systemPrompt||'你是一个任务分析器。你的唯一职责是分析用户任务并返回JSON执行计划。不要聊天、不要解释你是谁、不要说你做不到——只需返回JSON。'
   document.getElementById('tokenStatus').textContent = S.apiKey?'已配置 ✓':'未配置'
   document.getElementById('tokenStatus').style.color = S.apiKey?'#3fb950':'#484f58'
   if(!S.apiBaseOpenAI) setTimeout(()=>toggleSettings(),600)
@@ -141,15 +141,21 @@ async function sendMessage(){
 
   try{
     addThink(ai,'🔍 主控分析任务...');renderMsgs();await sleep(300)
-    // 主控分析任务
-    const planRaw = await api(orch, `你是主控Agent。可调用: ${workers.map(w=>MODELS.find(m=>m.id===w)?.name||w).join('、')}。分析任务返回JSON: {"plan":[{"step":1,"call":false,"model":"","task":""}],"reason":"原因"}。不需要调模型时 call=false。用户: ${t}`, 800)
-    let plan = {plan:[],reason:''}
-    try{const m=planRaw.match(/\{[\s\S]*\}/);if(m)plan=JSON.parse(m[0])}catch(e){}
-    addThink(ai,`📋 计划: ${plan.reason||'直接回答'}\n${plan.plan.map(p=>`  ${p.step}. ${p.call?'📞调 '+p.model:''}${p.task}`).join('\n')}`)
+    // 主控分析任务 - 强制返回JSON
+    const wlist = workers.map(w=>MODELS.find(m=>m.id===w)?.name||w).join('、')
+    const planRaw = await api(orch, `【系统指令】只返回JSON，不要任何其他文字。\n\n分析用户任务。可用工作模型: ${wlist}。\n\n返回格式: {"steps":[{"call":true或false,"model":"模型名","task":"子任务"}],"reason":"一句话原因"}\n如果不需要调模型: {"steps":[],"reason":"直接回答"}\n\n用户: ${t}`, 1200)
+    let plan = null
+    try{
+      const json = planRaw.replace(/```json\n?/g,'').replace(/```/g,'').trim()
+      const m = json.match(/\{[\s\S]*\}/)
+      if(m) plan = JSON.parse(m[0])
+    }catch(e){}
+    if(!plan) plan = {steps:[],reason:'解析失败,主控直接回答'}
+    addThink(ai,`📋 计划: ${plan.reason||'直接'}\n${(plan.steps||[]).map(p=>`  ${p.call?'📞调 '+p.model+': '+p.task:'直接回答'}`).join('\n')}`)
     renderMsgs();await sleep(200)
 
     let ctx = t; let results = []
-    for(const step of (plan.plan||[])){
+    for(const step of (plan.steps||[])){
       if(step.call){
         const mid = workers.find(w=>MODELS.find(m=>m.id===w)?.name===step.model) || workers[0]
         if(!mid)continue
