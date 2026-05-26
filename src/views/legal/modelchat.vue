@@ -131,20 +131,27 @@ async function send(){
 
   try {
     const base = selected.value.startsWith('claude-') ? (cfg.apiClaude || cfg.apiBase) : cfg.apiBase
+    // 加10秒超时，避免一直挂住
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 10000)
     const res = await fetch(base.replace(/\/$/,'') + '/chat/completions', {
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+cfg.apiKey},
-      body: JSON.stringify({model: selected.value, messages: [{role:'user',content:t}], max_tokens: 2000})
+      body: JSON.stringify({model: selected.value, messages: [{role:'user',content:t}], max_tokens: 2000}),
+      signal: controller.signal
     })
+    clearTimeout(timeout)
     if(!res.ok) throw new Error('HTTP '+res.status)
     const d = await res.json()
     chat[ai] = {role:'ai', content: d.choices?.[0]?.message?.content || '无内容'}
   } catch(e) {
-    // API调用失败 → 显示模拟回复
+    let errMsg = e.message
+    if(e.name === 'AbortError') errMsg = '请求超时(10秒)'
+    else if(errMsg.includes('Failed to fetch')) errMsg = '网络不通·请确认已连公司VPN'
     chat[ai] = {
       role:'ai', 
       content: mockResponse(currentModel.value?.name||'', t),
-      mock: e.message
+      mock: errMsg
     }
   }
   loading.value = false
