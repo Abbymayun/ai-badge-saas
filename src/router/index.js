@@ -35,6 +35,7 @@ const routes = [
       { path: 'legal/miniapp', name: 'LegalMiniApp', component: () => import('../views/legal/LegalMiniApp.vue'), meta: { title: '小程序法律声明', icon: 'Document' } },
       { path: 'manual/saas', name: 'ManualSaaS', component: () => import('../views/legal/ManualSaaS.vue'), meta: { title: 'SaaS平台使用手册', icon: 'Document' } },
       { path: 'manual/miniapp', name: 'ManualMiniApp', component: () => import('../views/legal/ManualMiniApp.vue'), meta: { title: '小程序使用手册', icon: 'Document' } },
+      { path: 'ai-assistant', name: 'AiAssistant', component: () => import('../views/legal/AiAssistant.vue'), meta: { title: 'AI智能助手', icon: 'MagicStick' } },
     ]
   }
 ]
