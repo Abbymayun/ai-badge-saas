@@ -106,8 +106,8 @@ let workers = S.workers||['gpt-5.3-codex','deepseek-v4-pro','qwen3.6-plus']
 function init(){
   renderModels()
   renderMsgs()
-  document.getElementById('apiBaseOpenAI').value = S.apiBaseOpenAI||'http://10.16.11.195/v1'
-  document.getElementById('apiBaseClaude').value = S.apiBaseClaude||'http://10.16.11.195'
+  document.getElementById('apiBaseOpenAI').value = S.apiBaseOpenAI||'http://localhost:9090'
+  document.getElementById('apiBaseClaude').value = S.apiBaseClaude||'http://localhost:9090/claude'
   document.getElementById('apiKey').value = S.apiKey||'voVHB960PuPIgHnHK42wb7q84XnJgd6jhACq009RUSeLWRyQ'
   document.getElementById('systemPrompt').value = S.systemPrompt||'你是一个任务分析器。你的唯一职责是分析用户任务并返回JSON执行计划。不要聊天、不要解释你是谁、不要说你做不到——只需返回JSON。'
   document.getElementById('tokenStatus').textContent = S.apiKey?'已配置 ✓':'未配置'
