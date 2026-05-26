@@ -73,6 +73,11 @@
           <template #title>AI 智能助手</template>
         </el-menu-item>
 
+        <el-menu-item index="/model-chat">
+          <el-icon><Connection /></el-icon>
+          <template #title>AI 模型调用</template>
+        </el-menu-item>
+
         <el-sub-menu index="legal">
           <template #title><el-icon><Document /></el-icon><span>法律声明</span></template>
           <el-menu-item index="/legal/saas">SaaS平台法律声明</el-menu-item>
