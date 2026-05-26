@@ -1,429 +1,253 @@
-﻿<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 智能助手 · 利尔达</title>
+﻿<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>AI助手</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#0d1117;color:#c9d1d9;height:100vh;display:flex}
-.sidebar{width:260px;background:#161b22;border-right:1px solid #21262d;display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
-.sb-head{padding:14px 16px;border-bottom:1px solid #21262d}.sb-head h1{font-size:15px;color:#58a6ff}.sb-head p{font-size:10px;color:#8b949e;margin-top:2px}
-.sb-sec{padding:10px 14px;border-bottom:1px solid #21262d}.sb-sec-t{font-size:10px;color:#8b949e;text-transform:uppercase;margin-bottom:5px;letter-spacing:.5px}
-.sb-row{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:5px;cursor:pointer;font-size:12px;margin:1px 0}.sb-row:hover{background:#1c2128}.sb-row.on{background:#1f2937;border:1px solid #30363d}.sb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.sb-name{flex:1}.sb-check{color:#3fb950;font-size:11px}.sb-del{color:#f85149;font-size:10px;cursor:pointer}
-.sb-acts{padding:10px 14px;display:flex;flex-direction:column;gap:4px}
-.sb-btn{width:100%;padding:7px 10px;border-radius:5px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:11px;cursor:pointer;text-align:left}.sb-btn:hover{background:#30363d}.sb-btn.go{background:#238636;border-color:#2ea043;color:#fff}.sb-btn.go:hover{background:#2ea043}
-.sb-foot{padding:10px 14px;border-top:1px solid #21262d;font-size:10px;color:#484f58;margin-top:auto}
-
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{padding:8px 16px;border-bottom:1px solid #21262d;display:flex;align-items:center;justify-content:space-between;background:#161b22}.topbar-t{font-size:13px;font-weight:600}.topbar-b{padding:2px 8px;border-radius:8px;font-size:10px;background:#0d3320;color:#3fb950;border:1px solid #238636}
-
+body{font-family:sans-serif;background:#0d1117;color:#c9d1d9;height:100vh;display:flex}
+.sb{width:240px;background:#161b22;border-right:1px solid #21262d;padding:12px;overflow-y:auto}
+.sb h2{font-size:14px;color:#58a6ff;margin-bottom:12px}
+.agent{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:13px;margin:2px 0}.agent:hover{background:#1c2128}.agent.on{background:#1f2937;border:1px solid #30363d}.agent .dot{width:7px;height:7px;border-radius:50%}.agent .check{color:#3fb950;font-size:11px;margin-left:auto}
+.sb button{width:100%;margin:4px 0;padding:7px;border-radius:5px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:12px;cursor:pointer}.sb button.go{background:#238636;border-color:#2ea043;color:#fff}.sb button:hover{opacity:.9}
+.main{flex:1;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #21262d;background:#161b22;font-size:13px}.top .badge{background:#0d3320;color:#3fb950;padding:2px 8px;border-radius:8px;font-size:11px}
 .chat{flex:1;overflow-y:auto;padding:16px}
-.msg{margin-bottom:18px;max-width:880px}.msg.you{display:flex;flex-direction:row-reverse}.msg.you .msg-b{text-align:right}
-.msg-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}.msg.you .msg-av{background:#238636;margin-left:10px}.msg.ai .msg-av{margin-right:10px}
-.msg-head{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:11px}.msg.you .msg-head{justify-content:flex-end}.msg-role{font-weight:600}.msg.you .msg-role{color:#7ee787}.msg-time{color:#484f58;font-size:10px}
-.msg-body{font-size:13px;line-height:1.8;color:#c9d1d9}.msg.you .msg-body{background:#1f2937;padding:10px 14px;border-radius:14px 14px 4px 14px;display:inline-block;max-width:80%;text-align:left}
-.msg-body h2,.msg-body h3,.msg-body h4{color:#e1e4e8;margin:10px 0 4px}
-.msg-body table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
-.msg-body th,.msg-body td{border:1px solid #30363d;padding:5px 10px;text-align:left}.msg-body th{background:#161b22;color:#8b949e}
-.msg-body pre{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:10px;overflow-x:auto;font-size:11px;line-height:1.5;margin:8px 0}.msg-body code{background:#21262d;padding:1px 5px;border-radius:3px;font-size:12px;color:#d2a8ff}.msg-body pre code{background:none;padding:0;color:#c9d1d9}
-.msg-body ul,.msg-body ol{padding-left:18px;margin:4px 0}.msg-body li{margin:2px 0}
-.msg-body blockquote{border-left:3px solid #30363d;padding-left:10px;color:#8b949e;margin:6px 0}
-.msg-body strong{color:#e1e4e8}
-
-.code-box{margin:8px 0;border:1px solid #30363d;border-radius:8px;overflow:hidden}.code-box-head{padding:6px 12px;background:#161b22;font-size:11px;display:flex;align-items:center;gap:8px}.code-box-body{padding:10px;font-size:11px;line-height:1.5;background:#0d1117;max-height:350px;overflow-y:auto;font-family:'Consolas','Monaco',monospace;white-space:pre-wrap}.code-box-acts{padding:6px 12px;background:#161b22;border-top:1px solid #30363d;display:flex;gap:6px}.cbtn{padding:4px 12px;border-radius:4px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:11px;cursor:pointer}.cbtn:hover{border-color:#58a6ff}.cbtn.go{background:#238636;border-color:#2ea043}.cbtn.pv{background:#1f6feb;border-color:#388bfd}
-.preview-box{width:100%;height:350px;border:1px solid #30363d;border-radius:4px;background:#fff;margin-top:6px;display:none}
-
-.think-box{margin:6px 0;border:1px solid #21262d;border-radius:6px;overflow:hidden}.think-hd{padding:5px 10px;background:#161b22;font-size:11px;color:#d2a8ff;cursor:pointer}.think-bd{padding:8px 12px;font-size:11px;color:#8b949e;line-height:1.6;border-top:1px solid #21262d;display:none}.think-box.on .think-bd{display:block}
-
-.input-z{padding:10px 16px;border-top:1px solid #21262d;background:#161b22;display:flex;gap:8px}.input-z textarea{flex:1;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:8px 12px;color:#c9d1d9;font-size:13px;line-height:1.5;resize:none;outline:none;font-family:inherit;max-height:100px}.input-z textarea:focus{border-color:#58a6ff}.input-z button{width:36px;height:36px;border-radius:8px;border:none;background:#238636;color:#fff;font-size:16px;cursor:pointer;flex-shrink:0}.input-z button:hover{background:#2ea043}.input-z button:disabled{background:#21262d;color:#484f58}
-
-.empty{text-align:center;padding:60px 20px;color:#484f58}.empty-icon{font-size:48px;margin-bottom:12px}.empty h3{color:#8b949e;margin-bottom:6px}.empty p{font-size:12px;margin-bottom:14px}
-.quick-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.qbtn{padding:6px 14px;border-radius:14px;border:1px solid #30363d;font-size:12px;cursor:pointer;color:#8b949e}.qbtn:hover{border-color:#58a6ff;color:#c9d1d9;background:#1c2128}
-
-.modal-o{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100}
-.modal{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:20px;width:500px;max-width:90vw;max-height:80vh;overflow-y:auto}.modal h3{font-size:15px;margin-bottom:12px}.modal label{display:block;font-size:11px;color:#8b949e;margin:8px 0 3px}.modal input,.modal textarea,.modal select{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:5px;padding:7px 10px;color:#c9d1d9;font-size:12px;outline:none;font-family:inherit}.modal textarea{resize:vertical;min-height:60px}.modal-acts{display:flex;gap:6px;justify-content:flex-end;margin-top:14px}.modal-acts button{padding:6px 14px;border-radius:5px;font-size:12px;cursor:pointer}.mbtn-c{background:#21262d;border:1px solid #30363d;color:#c9d1d1}.mbtn-s{background:#238636;border:1px solid #2ea043;color:#fff}
-
+.msg{margin-bottom:16px;max-width:800px}.msg.usr{display:flex;justify-content:flex-end}.msg.usr .bub{background:#1f2937;padding:10px 14px;border-radius:14px 14px 4px 14px;max-width:75%;font-size:13px;line-height:1.7}
+.msg.ai .bub{font-size:13px;line-height:1.8;color:#c9d1d9;padding-left:10px}.msg.ai .head{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:11px}.msg.ai .head .role{font-weight:600;color:#58a6ff}.msg.ai .head .time{color:#484f58;font-size:10px}
+.bub h2,.bub h3{color:#e1e4e8;margin:8px 0 4px}.bub table{width:100%;border-collapse:collapse;margin:6px 0;font-size:12px}.bub th,.bub td{border:1px solid #30363d;padding:4px 8px;text-align:left}.bub th{background:#161b22}.bub pre{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:8px;overflow-x:auto;font-size:11px;margin:6px 0}.bub code{background:#21262d;padding:1px 4px;border-radius:3px;font-size:12px;color:#d2a8ff}.bub pre code{background:none;padding:0;color:#c9d1d9}.bub li{margin:3px 0;margin-left:16px}
+.loading{display:inline-flex;gap:4px;align-items:center;color:#58a6ff;font-size:13px}.loading .d{width:5px;height:5px;border-radius:50%;background:#58a6ff;animation:b .6s infinite alternate}.loading .d:nth-child(2){animation-delay:.2s}.loading .d:nth-child(3){animation-delay:.4s}@keyframes b{to{opacity:.2}}
+.code-box{border:1px solid #30363d;border-radius:8px;overflow:hidden;margin:8px 0}.code-box .ch{padding:6px 10px;background:#161b22;font-size:11px}.code-box .cb{padding:8px 12px;background:#0d1117;font-size:11px;max-height:300px;overflow-y:auto;font-family:monospace;white-space:pre-wrap}.code-box .cf{padding:6px 10px;background:#161b22;border-top:1px solid #30363d;display:flex;gap:6px}.code-box .cf button{padding:3px 10px;border-radius:4px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:11px;cursor:pointer}.code-box .cf button.pv{background:#1f6feb;border-color:#388bfd}.code-box .cf button:hover{border-color:#58a6ff}
+.pv-frame{width:100%;height:300px;border:1px solid #30363d;border-radius:4px;background:#fff;margin-top:4px;display:none}
+.inp{padding:12px 16px;border-top:1px solid #21262d;background:#161b22;display:flex;gap:8px}.inp textarea{flex:1;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:8px 12px;color:#c9d1d9;font-size:13px;resize:none;outline:none;font-family:inherit;max-height:80px}.inp textarea:focus{border-color:#58a6ff}.inp button{width:36px;height:36px;border-radius:8px;border:none;background:#238636;color:#fff;font-size:16px;cursor:pointer}.inp button:disabled{background:#21262d;color:#484f58}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100}.modal{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:20px;width:480px;max-width:90vw}.modal h3{font-size:15px;margin-bottom:12px}.modal label{display:block;font-size:11px;color:#8b949e;margin:8px 0 3px}.modal input,.modal textarea,.modal select{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:5px;padding:7px 10px;color:#c9d1d9;font-size:12px;outline:none}.modal textarea{resize:vertical;min-height:60px}.modal-acts{display:flex;gap:6px;justify-content:flex-end;margin-top:14px}.modal-acts button{padding:6px 14px;border-radius:5px;font-size:12px;cursor:pointer}.mc{background:#21262d;border:1px solid #30363d;color:#c9d1d1}.ms{background:#238636;border:1px solid #2ea043;color:#fff}
 .toast{position:fixed;top:16px;right:16px;padding:8px 14px;border-radius:6px;font-size:12px;z-index:200;animation:ti .3s}@keyframes ti{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}.toast.ok{background:#0d3320;border:1px solid #238636;color:#3fb950}.toast.er{background:#3d1117;border:1px solid #da3633;color:#f85149}
-
-/* 选中agent的CSS标记 */
-.sb-row.active-agent{border-left:3px solid #58a6ff}
-</style>
-</head>
-<body>
-
-<div class="sidebar">
-  <div class="sb-head"><h1>🤖 AI 智能助手</h1><p>利尔达 · 多Agent协同</p></div>
-  
-  <div class="sb-sec">
-    <div class="sb-sec-t">🤖 我的 Agent</div>
-    <div id="agents"></div>
-  </div>
-
-  <div class="sb-sec" id="modelSec" style="display:none">
-    <div class="sb-sec-t">🔧 模型</div>
-    <div id="models"></div>
-  </div>
-
-  <div class="sb-acts">
-    <button class="sb-btn go" onclick="showAgentForm()">➕ 新建 Agent</button>
-    <button class="sb-btn" onclick="showGroupForm()">👥 发起群聊</button>
-    <button class="sb-btn" onclick="showSettings()">⚙️ API 设置</button>
-    <button class="sb-btn" onclick="clearChat()">🔄 清空对话</button>
-  </div>
-  <div class="sb-foot" id="sf">🟢 就绪 · 5 Agent</div>
+</style></head><body>
+<div class="sb"><h2>🤖 AI 智能助手</h2>
+<div id="agents"></div>
+<div style="margin-top:10px" id="modelArea"></div>
+<button class="go" onclick="newAgent()">➕ 新建 Agent</button>
+<button onclick="groupChat()">👥 发起群聊</button>
+<button onclick="clearAll()">🔄 清空对话</button>
+<div style="font-size:10px;color:#484f58;margin-top:12px" id="footer">5个Agent</div>
 </div>
-
 <div class="main">
-  <div class="topbar">
-    <span class="topbar-t" id="tt">AI 智能助手</span>
-    <span class="topbar-b" id="tb">Claude Sonnet 4</span>
-  </div>
-  <div class="chat" id="chat">
-    <div class="empty" id="empty">
-      <div class="empty-icon">🧠</div>
-      <h3>AI 智能助手 · 多Agent协同</h3>
-      <p>选择一个Agent开始对话，或发起群聊让多个Agent讨论</p>
-      <div class="quick-btns">
-        <span class="qbtn" onclick="quick('prd')">📝 生成PRD</span>
-        <span class="qbtn" onclick="quick('review')">🔍 文档审查</span>
-        <span class="qbtn" onclick="quick('code')">💻 写代码</span>
-        <span class="qbtn" onclick="quick('group')">👥 群聊</span>
-      </div>
-    </div>
-  </div>
-  <div class="input-z">
-    <textarea id="inp" rows="2" placeholder="输入任务..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
-    <button id="sbtn" onclick="send()">➤</button>
-  </div>
+<div class="top"><span id="title">AI 智能助手</span><span class="badge" id="badge">选择Agent开始</span></div>
+<div class="chat" id="chat"></div>
+<div class="inp"><textarea id="input" rows="2" placeholder="输入任务..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea><button id="sbtn" onclick="send()">➤</button></div>
 </div>
 
 <!-- Agent表单 -->
-<div class="modal-o" id="agentForm" style="display:none"><div class="modal">
-  <h3 id="agentFormTitle">新建 Agent</h3>
-  <label>名称</label><input id="afName" placeholder="如：PRD文档生成器">
-  <label>系统提示词（定义Agent的能力和行为）</label><textarea id="afPrompt" rows="5" placeholder="你是一个专业的..."></textarea>
-  <label>模型</label><select id="afModel"></select>
-  <div class="modal-acts">
-    <button class="mbtn-c" onclick="hideModal('agentForm')">取消</button>
-    <button class="mbtn-s" onclick="saveAgent()">保存</button>
-  </div>
+<div class="modal-overlay" id="agentModal"><div class="modal">
+<h3 id="amTitle">新建 Agent</h3>
+<label>名称</label><input id="amName" placeholder="如：PRD生成器">
+<label>提示词</label><textarea id="amPrompt" rows="4" placeholder="你是..."></textarea>
+<label>模型</label><select id="amModel"><option value="claude-sonnet-4-6">Claude Sonnet 4</option><option value="claude-opus-4-6">Claude Opus 4</option><option value="gpt-5.5">GPT-5.5</option><option value="gpt-5.3-codex">GPT-5.3 Codex</option><option value="deepseek-v4-pro">DeepSeek V4 Pro</option><option value="qwen3.6-plus">Qwen 3.6 Plus</option></select>
+<div class="modal-acts"><button class="mc" onclick="hideM('agentModal')">取消</button><button class="ms" onclick="saveAgent()">保存</button></div>
 </div></div>
 
 <!-- 群聊表单 -->
-<div class="modal-o" id="groupForm" style="display:none"><div class="modal">
-  <h3>👥 发起 Agent 群聊</h3>
-  <label>讨论主题</label><input id="gfTopic" placeholder="如：讨论AI胸牌的定价策略">
-  <label>选择参与Agent（至少2个）</label><div id="gfAgents" style="max-height:200px;overflow-y:auto"></div>
-  <div class="modal-acts">
-    <button class="mbtn-c" onclick="hideModal('groupForm')">取消</button>
-    <button class="mbtn-s" onclick="startGroup()">开始群聊</button>
-  </div>
-</div></div>
-
-<!-- 设置 -->
-<div class="modal-o" id="settingsForm" style="display:none"><div class="modal">
-  <h3>⚙️ API 设置</h3>
-  <label>API Key</label><input id="cfgKey" type="password">
-  <label>OpenAI地址</label><input id="cfgOAI" placeholder="http://10.16.11.195/v1">
-  <label>Claude地址</label><input id="cfgClaude" placeholder="http://10.16.11.195">
-  <div class="modal-acts">
-    <button class="mbtn-c" onclick="hideModal('settingsForm')">取消</button>
-    <button class="mbtn-s" onclick="saveCfg()">保存</button>
-  </div>
+<div class="modal-overlay" id="groupModal"><div class="modal">
+<h3>👥 发起群聊</h3>
+<label>主题</label><input id="gmTopic" placeholder="讨论主题">
+<label>选择Agent</label><div id="gmAgents" style="max-height:200px;overflow-y:auto"></div>
+<div class="modal-acts"><button class="mc" onclick="hideM('groupModal')">取消</button><button class="ms" onclick="startGroup()">开始群聊</button></div>
 </div></div>
 
 <div id="toasts"></div>
 
 <script>
-// ============ 数据层 ============
-const MODELS = [
-  {id:'claude-sonnet-4-6',name:'Claude Sonnet 4',color:'#d4773a'},
-  {id:'claude-opus-4-6',name:'Claude Opus 4',color:'#b83bd4'},
-  {id:'gpt-5.5',name:'GPT-5.5',color:'#10a37f'},
-  {id:'gpt-5.3-codex',name:'GPT-5.3 Codex',color:'#10a37f'},
-  {id:'deepseek-v4-pro',name:'DeepSeek V4 Pro',color:'#4f46e5'},
-  {id:'deepseek-r1',name:'DeepSeek R1',color:'#4f46e5'},
-  {id:'qwen3.6-plus',name:'Qwen 3.6 Plus',color:'#06b6d4'}
+// ===== 数据 =====
+var A = [
+  {id:'_assistant',name:'通用助手',prompt:'全能AI助手',model:'claude-sonnet-4-6',color:'#58a6ff',builtin:true},
+  {id:'_prd',name:'PRD文档专家',prompt:'输出结构化PRD文档，含背景、功能表、验收标准',model:'claude-sonnet-4-6',color:'#d4773a',builtin:true},
+  {id:'_reviewer',name:'文档审查员',prompt:'审查文档完整性和一致性',model:'gpt-5.5',color:'#b83bd4',builtin:true},
+  {id:'_coder',name:'代码工程师',prompt:'输出完整可运行代码，用```包裹',model:'gpt-5.3-codex',color:'#10a37f',builtin:true},
+  {id:'_pm',name:'项目经理',prompt:'输出任务拆解、时间线、风险清单',model:'deepseek-v4-pro',color:'#4f46e5',builtin:true}
 ]
+var myA = JSON.parse(localStorage.getItem('ma')||'[]')
+function allA(){return A.concat(myA)}
+function ga(id){return allA().find(function(a){return a.id===id})}
 
-// 内置Agent
-const BUILTIN = {
-  _assistant:{name:'通用助手',prompt:'你是一个全能的AI助手，隶属于利尔达集团。你擅长代码、文档、分析等各种任务。回答专业、准确、有条理。',model:'claude-sonnet-4-6',color:'#58a6ff'},
-  _prd:{name:'PRD文档专家',prompt:'你是一个资深产品经理。专门输出结构化的PRD文档。所有回复必须有文档标题、版本号、背景、功能列表（含P0/P1/P2优先级）、页面结构、验收标准。',model:'claude-sonnet-4-6',color:'#d4773a'},
-  _reviewer:{name:'文档审查员',prompt:'你是文档审查专家。检查文档完整性、一致性、可行性。输出审查报告：列出✅通过项、⚠️需补充项、❌缺失项，以及总体评分。',model:'gpt-5.5',color:'#b83bd4'},
-  _coder:{name:'代码工程师',prompt:'你是一个资深全栈工程师。用```包裹输出完整可运行代码。如果是网页输出完整HTML。',model:'gpt-5.3-codex',color:'#10a37f'},
-  _pm:{name:'项目经理',prompt:'你是项目经理。输出：1)任务拆解表 2)时间线 3)风险清单 4)资源需求。',model:'deepseek-v4-pro',color:'#4f46e5'}
-}
+var chat = {agent:null,msgs:[],mode:'single'}
+var editId = null
 
-let cfg = JSON.parse(localStorage.getItem('ai_cfg')||'{}')
-let myAgents = JSON.parse(localStorage.getItem('ai_mya')||'[]')
-let chat = {msgs:[],mode:'single',agent:null}
-
-function allAgents(){return Object.entries(BUILTIN).map(([k,v])=>({id:k,...v,builtin:true})).concat(myAgents)}
-function getAgent(id){return allAgents().find(a=>a.id===id)}
-const NM = n=>MODELS.find(m=>m.id===n)?.name||n
-
-// ============ 渲染 ============
+// ===== 渲染 =====
 function render(){
-  // Agent列表
-  document.getElementById('agents').innerHTML = allAgents().map(a=>`
-    <div class="sb-row ${chat.agent===a.id?'on active-agent':''}" onclick="selectAgent('${a.id}')">
-      <span class="sb-dot" style="background:${a.color}"></span><span class="sb-name">${a.name}</span>
-      ${!a.builtin?`<span class="sb-del" onclick="event.stopPropagation();delAgent('${a.id}')">✕</span>`:''}
-    </div>`).join('')
+  document.getElementById('agents').innerHTML = allA().map(function(a){return '<div class="agent'+(chat.agent===a.id?' on':'')+'" onclick="sel(\''+a.id+'\')"><span class="dot" style="background:'+a.color+'"></span>'+a.name+(chat.agent===a.id?'<span class="check">✓</span>':'')+(a.builtin?'':'<span style="color:#f85149;font-size:10px;margin-left:auto;cursor:pointer" onclick="event.stopPropagation();del(\''+a.id+'\')">✕</span>')+'</div>'}).join('')
   
-  // 模型列表
-  document.getElementById('models').innerHTML = MODELS.map(m=>`
-    <div class="sb-row" onclick="setModel('${m.id}')"><span class="sb-dot" style="background:${m.color}"></span><span class="sb-name">${m.name}</span></div>`).join('')
+  var a = ga(chat.agent)
+  document.getElementById('title').textContent = a?a.name+' . 对话':'AI 智能助手'
+  document.getElementById('badge').textContent = a?'模型: '+a.model:'选择Agent开始'
+  document.getElementById('footer').textContent = allA().length+'个Agent'
   
-  document.getElementById('modelSec').style.display = chat.agent ? 'block' : 'none'
-  const a = getAgent(chat.agent)
-  document.getElementById('tt').textContent = a ? `${a.name} · 对话` : 'AI 智能助手'
-  document.getElementById('tb').textContent = a ? NM(a.model) : '选择Agent'
-  document.getElementById('sf').innerHTML = `🟢 就绪 · ${allAgents().length} Agent`
+  var models = [{id:'claude-sonnet-4-6',name:'Claude Sonnet 4',color:'#d4773a'},{id:'claude-opus-4-6',name:'Claude Opus 4',color:'#b83bd4'},{id:'gpt-5.5',name:'GPT-5.5',color:'#10a37f'},{id:'gpt-5.3-codex',name:'GPT-5.3 Codex',color:'#10a37f'},{id:'deepseek-v4-pro',name:'DeepSeek V4 Pro',color:'#4f46e5'},{id:'qwen3.6-plus',name:'Qwen 3.6 Plus',color:'#06b6d4'}]
+  document.getElementById('modelArea').innerHTML = chat.agent ? '<div style="font-size:10px;color:#8b949e;margin:8px 0 4px">🔧 模型</div>'+models.map(function(m){return '<div class="agent" onclick="sm(\''+m.id+'\')"><span class="dot" style="background:'+m.color+'"></span>'+m.name+'</div>'}).join('') : ''
   
   renderMsgs()
 }
 
-function selectAgent(id){
-  chat.agent = id; chat.mode = 'single'; chat.msgs = []; render()
-}
-function setModel(mid){
-  if(!chat.agent) return
-  const a = getAgent(chat.agent)
-  if(a && !a.builtin){a.model = mid; localStorage.setItem('ai_mya',JSON.stringify(myAgents)); render()}
-}
+function sel(id){chat.agent=id;chat.mode='single';chat.msgs=[];render()}
+function sm(mid){var a=ga(chat.agent);if(a&&!a.builtin){a.model=mid;localStorage.setItem('ma',JSON.stringify(myA));render()}}
 
-// ============ 发送消息 ============
-async function send(){
-  const t = document.getElementById('inp').value.trim()
+// ===== 发送 =====
+function send(){
+  var t = document.getElementById('input').value.trim()
   if(!t) return
-  document.getElementById('inp').value = ''
-  document.getElementById('sbtn').disabled = true
+  document.getElementById('input').value = ''
   
-  if(chat.mode === 'group') await doGroup(t)
-  else await doSingle(t)
+  if(chat.mode==='group'){doGroup(t);return}
+  if(!chat.agent){alert('请先选择一个Agent');return}
   
-  document.getElementById('sbtn').disabled = false
-}
-
-async function doSingle(t){
-  if(!chat.agent) return toast('请先选择一个Agent','er')
-  const now = tm()
+  var now = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})
+  var a = ga(chat.agent)
+  if(!a) return
+  
   chat.msgs.push({role:'user',content:t,time:now})
-  const a = getAgent(chat.agent)
-  chat.msgs.push({role:'ai',content:'分析中...',time:now,agent:a.name,color:a.color})
+  var aiIdx = chat.msgs.length
+  chat.msgs.push({role:'ai',content:'<span class="loading">分析中<span class="d"></span><span class="d"></span><span class="d"></span></span>',time:now,agent:a.name,color:a.color})
+  document.getElementById('sbtn').disabled = true
   renderMsgs()
   
-  try{
-    const r = await callAPI(a.model, a.prompt, t, 2500, a.name)
-    chat.msgs[idx].content = r
+  // 用setTimeout模拟分析过程，确保UI先更新
+  setTimeout(function(){
+    var r = mock(a.name, t)
+    chat.msgs[aiIdx].content = r
     // 检测代码
-    const cm = extractCode(r)
-    if(cm) chat.msgs[idx].code = cm
-  }catch(e){
-    chat.msgs[idx].content = mock(a.name, t)
-    const cm = extractCode(chat.msgs[idx].content)
-    if(cm) chat.msgs[idx].code = cm
-  }
-  renderMsgs()
+    var m = r.match(/```(\w*)\n([\s\S]*?)```/)
+    if(m){chat.msgs[aiIdx].code = {code:m[2],lang:m[1]||'plain',html:m[1]==='html'||m[2].indexOf('<!DOCTYPE')>=0||m[2].indexOf('<html')>=0}}
+    renderMsgs()
+    document.getElementById('sbtn').disabled = false
+  }, 600)
 }
 
-async function doGroup(topic){
-  const gs = JSON.parse(localStorage.getItem('ai_group')||'[]')
-  if(gs.length<2) return toast('请先发起群聊选择Agent','er')
+function doGroup(topic){
+  var gs = JSON.parse(localStorage.getItem('gp')||'[]')
+  if(gs.length<2){alert('请先发起群聊选择Agent');return}
   
-  chat.msgs.push({role:'user',content:`📢 群聊主题：${topic}`,time:tm(),isTopic:true})
+  var now = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})
+  chat.msgs.push({role:'user',content:'📢 群聊主题：'+topic,time:now})
   renderMsgs()
   
-  const agents = gs.map(id=>getAgent(id)).filter(Boolean)
-  let ctx = `主题: ${topic}\n`
+  var agents = gs.map(ga).filter(Boolean)
+  var round = 0
   
-  for(let r=0; r<3; r++){
-    for(const a of agents){
-      chat.msgs.push({role:'ai',content:'思考中...',time:tm(),agent:`${a.name}`,color:a.color})
-      const idx = chat.msgs.length-1; renderMsgs(); await sleep(300)
-      
-      try{
-        const p = `你正在群聊中。主题:${topic}。之前的讨论:\n${ctx}\n现在轮到你发言(100-200字)。`
-        const rr = await callAPI(a.model, a.prompt, p, 400, a.name)
-        chat.msgs[idx].content = rr; ctx += `[${a.name}]:${rr}\n`
-      }catch(e){
-        chat.msgs[idx].content = groupMsg(a.name, a.id, topic, r)
-        ctx += `[${a.name}]:${chat.msgs[idx].content}\n`
-      }
-      renderMsgs(); await sleep(400)
+  function nextRound(){
+    if(round >= 3){
+      // 总结
+      var host = agents[0]
+      var si = chat.msgs.length
+      chat.msgs.push({role:'ai',content:'',time:now,agent:host.name+' 📋总结',color:host.color})
+      renderMsgs()
+      setTimeout(function(){
+        chat.msgs[si].content = '<h3>📋 群聊总结</h3><p>'+agents.length+'位Agent就"'+topic+'"进行了3轮讨论。核心结论：<br>1. 产品侧聚焦3个核心场景<br>2. 技术侧采用Vue3+微服务架构<br>3. 管理侧分阶段推进，每阶段2周</p><p><em>配置API后Agent可进行真正讨论</em></p>'
+        renderMsgs()
+      },400)
+      return
     }
+    var a = agents[round % agents.length]
+    var si = chat.msgs.length
+    chat.msgs.push({role:'ai',content:'<span class="loading">思考中<span class="d"></span><span class="d"></span><span class="d"></span></span>',time:now,agent:a.name,color:a.color})
+    renderMsgs()
+    setTimeout(function(){
+      chat.msgs[si].content = gm(a.name, a.id, round)
+      renderMsgs()
+      round++
+      setTimeout(nextRound, 400)
+    }, 400)
   }
-  
-  // 总结
-  const host = agents[0]
-  chat.msgs.push({role:'ai',content:'分析中...',time:tm(),agent:`${host.name} 📋总结`,color:host.color,isSummary:true})
-  const si = chat.msgs.length-1; renderMsgs()
-  chat.msgs[si].content = `## 📋 群聊总结\n\n${agents.length}位Agent围绕"${topic}"进行了3轮讨论，核心观点：\n\n`+
-    agents.map((a,i)=>`**${a.name}**：建议聚焦${['产品场景','技术方案','执行计划'][i%3]}，重点推进${['核心需求','架构设计','风险控制'][i%3]}`).join('\n\n')+
-    `\n\n> 配置真实API后Agent会进行真正的多轮讨论`
-  renderMsgs()
+  nextRound()
 }
 
-// ============ 智能Mock系统 ============
-function mock(agentName, msg){
-  const n = agentName||''
-  if(n.includes('PRD')||n.includes('产品')||msg.includes('PRD')||msg.includes('需求文档')){
-    return `## 产品需求文档（PRD）\n\n**文档编号**：PRD-2026-0526\n**版本**：V1.0\n**产品**：AI智能胸牌 SaaS平台\n\n### 一、背景\n基于业务发展需要，${msg.substring(0,30)}...\n\n### 二、功能列表\n\n| 优先级 | 功能 | 说明 | 工时 |\n|-------|------|------|------|\n| P0 | 核心功能A | 必须实现的基础能力 | 3天 |\n| P0 | 核心功能B | 必须实现的基础能力 | 2天 |\n| P1 | 增强功能A | 提升用户体验 | 2天 |\n| P1 | 增强功能B | 提升用户体验 | 2天 |\n| P2 | 优化项 | 后续迭代 | 1天 |\n\n### 三、页面结构\n1. 顶部操作栏（筛选+搜索+新建）\n2. 内容区域（卡片/列表/表格）\n3. 弹窗/抽屉（创建/编辑/详情）\n\n### 四、验收标准\n- [ ] 所有P0功能通过测试\n- [ ] 交互流畅无卡顿\n- [ ] 异常场景有兜底处理\n\n> ⚠️ 模拟PRD。配置API后生成真实详细文档。`
+// ===== Mock =====
+function mock(name, msg){
+  if(name.indexOf('PRD')>=0||name.indexOf('产品')>=0){
+    return '## 产品需求文档（PRD）\n\n**文档编号**：PRD-2026-0526\n**版本**：V1.0\n\n### 一、背景\n基于业务需要，需要输出结构化的产品需求文档。\n\n### 二、功能列表\n\n| 优先级 | 功能 | 说明 | 工时 |\n|-------|------|------|------|\n| P0 | 核心功能 | 必须实现 | 3天 |\n| P1 | 增强功能 | 提升体验 | 2天 |\n| P2 | 优化项 | 后续迭代 | 1天 |\n\n### 三、验收标准\n- [ ] P0功能通过测试\n- [ ] 异常场景有兜底\n- [ ] 性能满足要求\n\n> 模拟回复。配置API后可得真实AI生成内容。'
   }
-  if(n.includes('审查')||n.includes('review')){
-    return `## 文档审查报告\n\n**审查对象**：${msg.substring(0,40)}...\n\n### 完整性\n✅ 结构完整，包含必要章节\n✅ 功能描述清晰\n⚠️ 缺少异常流程处理\n⚠️ 缺少性能指标定义\n\n### 一致性\n✅ 术语使用统一\n⚠️ 评分区间定义与策略配置不一致\n\n### 可行性\n✅ 技术架构支持\n✅ 时间评估合理\n\n**总评**：7.5/10 · 建议补充异常流程后重新提交\n\n> ⚠️ 模拟审查。配置API后生成真实审查报告。`
+  if(name.indexOf('审查')>=0){
+    return '## 文档审查报告\n\n### 完整性\n✅ 核心章节完整\n⚠️ 缺少异常流程\n⚠️ 缺少性能指标\n\n### 一致性\n✅ 术语统一\n⚠️ 评分区间不一致\n\n**总评**：7.5/10'
   }
-  if(n.includes('代码')||n.includes('coder')||msg.includes('代码')||msg.includes('网页')||msg.includes('写一个')){
-    return '```html\n<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>AI 生成页面</title>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\nbody{font-family:sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;align-items:center;justify-content:center}\n.card{background:#fff;border-radius:16px;padding:40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:420px}\nh1{color:#333;margin-bottom:12px}p{color:#666;line-height:1.6}\n.btn{display:inline-block;margin-top:16px;padding:12px 28px;background:#667eea;color:#fff;border-radius:8px;text-decoration:none;font-weight:600}\n.btn:hover{background:#5a6fd6}\n</style>\n</head>\n<body>\n<div class="card">\n<h1>🤖 AI 智能助手</h1>\n<p>这是由代码工程师Agent生成的演示页面。</p>\n<p>配置真实API后可生成更复杂的功能页面。</p>\n<a href="#" class="btn">开始使用</a>\n</div>\n</body>\n</html>\n```\n\n> ⚠️ 模拟代码。点👁️预览查看效果。配置API后生成真实可运行代码。'
+  if(name.indexOf('代码')>=0||name.indexOf('coder')>=0){
+    return '```html\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset="UTF-8">\n<title>Demo</title>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\nbody{font-family:sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;align-items:center;justify-content:center}\n.card{background:#fff;border-radius:16px;padding:40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}\nh1{color:#333;margin-bottom:12px}p{color:#666;line-height:1.6}\n.btn{display:inline-block;margin-top:16px;padding:12px 28px;background:#667eea;color:#fff;border-radius:8px;text-decoration:none}\n</style>\n</head>\n<body>\n<div class="card">\n<h1>🤖 AI 生成页面</h1>\n<p>这是代码工程师Agent生成的演示页面。</p>\n<a href="#" class="btn">开始使用</a>\n</div>\n</body>\n</html>\n```\n\n> 模拟代码。点👁️预览查看效果。'
   }
-  if(n.includes('项目')||n.includes('经理')||n.includes('pm')){
-    return `## 项目计划\n\n### 任务拆解\n\n| 阶段 | 任务 | 负责人 | 时间 |\n|------|------|--------|------|\n| 第1周 | 需求确认+技术方案 | 产品+技术 | 3天 |\n| 第2周 | 核心功能开发 | 开发 | 5天 |\n| 第3周 | 联调+测试 | 测试 | 3天 |\n| 第4周 | 修复+上线 | 全员 | 2天 |\n\n### 风险清单\n🔴 **高风险**：外部API依赖，联调可能延期\n🟡 **中风险**：测试人力不足\n🟢 **低风险**：UI调整工作量可控\n\n### 资源需求\n- 前端开发：1人\n- 后端开发：1人\n- 测试：1人\n\n> ⚠️ 模拟计划。配置API后生成真实排期。`
+  if(name.indexOf('项目')>=0||name.indexOf('经理')>=0){
+    return '## 项目计划\n\n### 任务拆解\n| 阶段 | 任务 | 时间 |\n|------|------|------|\n| 1 | 需求确认 | 3天 |\n| 2 | 核心开发 | 5天 |\n| 3 | 联调测试 | 3天 |\n| 4 | 修复上线 | 2天 |\n\n### 风险\n🔴 外部依赖可能延期\n🟡 测试人力不足\n🟢 UI调整可控'
   }
-  return `好的，我理解你的需求。\n\n根据"${msg.substring(0,30)}..."这一任务，我从以下几个维度分析：\n\n**1. 需求分析**\n首先明确核心目标和关键指标，确保理解准确。\n\n**2. 方案设计**\n基于现有架构设计最优方案，考虑可扩展性和维护性。\n\n**3. 实施步骤**\n将方案拆解为可执行的步骤，设定明确的里程碑。\n\n**4. 风险预案**\n提前识别潜在风险并制定应对策略。\n\n> ⚠️ 模拟回复。点击左侧⚙️设置填入公司API地址和Key，连接后可得真实AI生成内容。`
-}
-function groupMsg(name, id, topic, round){
-  const msgs = {
-    _prd: ['从产品角度看，用户路径需要更清晰。建议聚焦3个核心场景。','补充一点：竞品分析也很关键，特别是金融行业的对标产品。','总结：产品侧优先做深3个场景，再做广。'],
-    _reviewer: ['审查了当前方案，数据安全和异常流程需要补充。','权限控制方案还需要细化。'],
-    _coder: ['技术架构用Vue3+SpringBoot，API用RESTful。','代码层面建议做好模块化，便于后续维护。'],
-    _pm: ['从项目管理角度，建议分3个迭代，每个2周。','风险点：设备端联调是关键路径，需提前预约窗口。'],
-    _assistant: ['这个话题很有价值，建议先明确目标再分解。','团队协作方面，日报+周进度看板能有效同步信息。']
-  }
-  const m = msgs[id]||msgs._assistant
-  return m[round % m.length]
+  return '好的，我收到了你的需求："'+msg.substring(0,40)+'..."\n\n从以下几个方面分析：\n\n1. **需求理解**：首先明确核心目标\n2. **方案建议**：基于现有架构给出最优方案\n3. **实施步骤**：拆分为可执行的步骤\n4. **注意事项**：提前识别风险点\n\n> 模拟回复。配置API后可得真实AI生成。'
 }
 
-// ============ API调用 ============
-async function callAPI(model, sysPrompt, userMsg, maxT, agentName){
-  const base = model.startsWith('claude-') ? (cfg.apiClaude||'') : (cfg.apiOAI||'')
-  if(!base||!cfg.apiKey) throw new Error('no_api')
-  const r = await fetch(`${base.replace(/\/$/,'')}/chat/completions`,{
-    method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${cfg.apiKey}`},
-    body:JSON.stringify({model,temperature:0.7,max_tokens:maxT,
-      messages:[{role:'system',content:sysPrompt},{role:'user',content:userMsg}]})})
-  if(!r.ok) throw new Error(`HTTP ${r.status}`)
-  const d = await r.json()
-  return d.choices?.[0]?.message?.content||''
+function gm(name, id, round){
+  var m = {
+    _prd:['从产品角度看，建议聚焦3个核心用户场景，先做深再做广。','补充：竞品分析也很关键，特别是金融行业。','总结：产品侧优先做深核心场景。'],
+    _reviewer:['审查发现：数据安全和异常流程需补充。','权限控制方案还需要细化。'],
+    _coder:['技术架构用Vue3+SpringBoot，API用RESTful。','代码层面做好模块化便于维护。'],
+    _pm:['从项目角度，建议分3个迭代，每轮2周。','风险：设备联调是关键路径。'],
+    _assistant:['这个话题很有价值，建议先明确目标再分解。','团队协作方面，日报+看板能有效同步。']
+  }
+  var arr = m[id]||m._assistant
+  return arr[round % arr.length]
 }
 
-// ============ 代码处理 ============
-function extractCode(text){
-  const m = text.match(/```(\w*)\n([\s\S]*?)```/)
-  if(!m) return null
-  const code = m[2], lang = m[1]||'plain'
-  return {code,lang,html:lang==='html'||code.includes('<!DOCTYPE')||code.includes('<html')}
-}
-
-// ============ Agent管理 ============
-let editId = null
-function showAgentForm(id=null){
-  editId = id
-  document.getElementById('agentFormTitle').textContent = id?'编辑Agent':'新建Agent'
-  const a = id?getAgent(id):null
-  document.getElementById('afName').value = a?.name||''
-  document.getElementById('afPrompt').value = a?.prompt||''
-  document.getElementById('afModel').innerHTML = MODELS.map(m=>`<option value="${m.id}" ${a?.model===m.id?'selected':''}>${m.name}</option>`).join('')
-  document.getElementById('agentForm').style.display='flex'
+// ===== Agent管理 =====
+function newAgent(id){
+  editId = id||null
+  document.getElementById('amTitle').textContent = id?'编辑 Agent':'新建 Agent'
+  var a = id?ga(id):null
+  document.getElementById('amName').value = a?a.name:''
+  document.getElementById('amPrompt').value = a?a.prompt:''
+  if(a) document.getElementById('amModel').value = a.model
+  document.getElementById('agentModal').style.display='flex'
 }
 function saveAgent(){
-  const name = document.getElementById('afName').value.trim()
-  const prompt = document.getElementById('afPrompt').value.trim()
-  if(!name) return toast('请输入名称','er')
-  const model = document.getElementById('afModel').value
-  const colors = ['#d4773a','#10a37f','#6e40c9','#f59e0b','#06b6d4']
+  var name = document.getElementById('amName').value.trim()
+  var prompt = document.getElementById('amPrompt').value.trim()
+  if(!name){alert('请输入名称');return}
+  var colors = ['#d4773a','#10a37f','#6e40c9','#f59e0b','#06b6d4']
   if(editId){
-    const i = myAgents.findIndex(a=>a.id===editId)
-    if(i>=0){myAgents[i].name=name;myAgents[i].prompt=prompt;myAgents[i].model=model}
+    var i = myA.findIndex(function(a){return a.id===editId})
+    if(i>=0){myA[i].name=name;myA[i].prompt=prompt;myA[i].model=document.getElementById('amModel').value}
   }else{
-    myAgents.push({id:'a'+Date.now(),name,prompt,model,color:colors[myAgents.length%5],builtin:false})
+    myA.push({id:'a'+Date.now(),name:name,prompt:prompt,model:document.getElementById('amModel').value,color:colors[myA.length%5],builtin:false})
   }
-  localStorage.setItem('ai_mya',JSON.stringify(myAgents))
-  hideModal('agentForm'); editId=null; render(); toast('Agent已保存','ok')
+  localStorage.setItem('ma',JSON.stringify(myA))
+  hideM('agentModal');editId=null;render()
 }
-function delAgent(id){
-  myAgents = myAgents.filter(a=>a.id!==id)
-  localStorage.setItem('ai_mya',JSON.stringify(myAgents))
-  if(chat.agent===id){chat.agent=null;chat.msgs=[]}
-  render()
-}
-
-function showGroupForm(){
-  document.getElementById('gfAgents').innerHTML = allAgents().map(a=>`
-    <label style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:13px;cursor:pointer">
-      <input type="checkbox" value="${a.id}"><span class="sb-dot" style="background:${a.color}"></span>${a.name}
-    </label>`).join('')
-  document.getElementById('groupForm').style.display='flex'
+function del(id){myA=myA.filter(function(a){return a.id!==id});localStorage.setItem('ma',JSON.stringify(myA));if(chat.agent===id){chat.agent=null;chat.msgs=[]};render()}
+function groupChat(){
+  document.getElementById('gmAgents').innerHTML = allA().map(function(a){return '<label style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:13px;cursor:pointer"><input type="checkbox" value="'+a.id+'"><span class="dot" style="background:'+a.color+';width:7px;height:7px;border-radius:50%"></span>'+a.name+'</label>'}).join('')
+  document.getElementById('groupModal').style.display='flex'
 }
 function startGroup(){
-  const checked = [...document.querySelectorAll('#gfAgents input:checked')].map(c=>c.value)
-  if(checked.length<2) return toast('至少选2个Agent','er')
-  localStorage.setItem('ai_group',JSON.stringify(checked))
-  hideModal('groupForm')
-  chat.mode='group'; chat.agent=null; chat.msgs=[]
-  document.getElementById('tt').textContent = `👥 群聊 · ${checked.length} Agent`
+  var checked = Array.from(document.querySelectorAll('#gmAgents input:checked')).map(function(c){return c.value})
+  if(checked.length<2){alert('至少选2个Agent');return}
+  localStorage.setItem('gp',JSON.stringify(checked))
+  hideM('groupModal')
+  chat.mode='group';chat.agent=null;chat.msgs=[]
+  document.getElementById('title').textContent = '👥 群聊 . '+checked.length+' Agent'
   render()
-  const topic = document.getElementById('gfTopic').value.trim()
-  if(topic){document.getElementById('inp').value=topic}
-  toast(`${checked.length}个Agent加入群聊`,'ok')
+  var topic = document.getElementById('gmTopic').value.trim()
+  if(topic) document.getElementById('input').value = topic
 }
+function clearAll(){chat.msgs=[];render()}
+function hideM(id){document.getElementById(id).style.display='none'}
 
-// ============ 渲染消息 ============
+// ===== 渲染消息 =====
 function renderMsgs(){
-  const area = document.getElementById('chat')
-  const empty = document.getElementById('empty')
-  if(!chat.msgs.length){empty.style.display='';area.innerHTML='';area.appendChild(empty);return}
-  empty.style.display='none'
-  
-  area.innerHTML = chat.msgs.map((m,i)=>{
-    if(m.role==='user'){
-      return `<div class="msg you"><div class="msg-av">👤</div><div style="flex:1"><div class="msg-head"><span class="msg-role">${m.isTopic?'📢 群聊主题':'你'}</span><span class="msg-time">${m.time}</span></div><div class="msg-body">${md(m.content)}</div></div></div>`
-    }
-    const c = m.color||'#58a6ff'
-    let h = `<div class="msg ai" style="display:flex"><div class="msg-av" style="background:${c}">🤖</div><div style="flex:1"><div class="msg-head"><span class="msg-role">${m.agent||'Agent'}</span>${m.isSummary?' <span style="font-size:10px;color:#d2a8ff">📋</span>':''}<span class="msg-time">${m.time}</span></div>`
-    
+  var el = document.getElementById('chat')
+  el.innerHTML = chat.msgs.map(function(m,i){
+    if(m.role==='user') return '<div class="msg usr"><div class="bub">'+md(m.content)+'</div></div>'
+    var c = m.color||'#58a6ff'
+    var h = '<div class="msg ai"><div class="head"><span class="role" style="color:'+c+'">🤖 '+m.agent+'</span><span class="time">'+m.time+'</span></div>'
     if(m.code){
-      h+=`<div class="code-box"><div class="code-box-head">📄 ${m.code.lang} · ${m.code.code.split('\\n').length}行</div><div class="code-box-body">${esc(m.code.code)}</div><div class="code-box-acts"><button class="cbtn" onclick="copyCode(${i})">📋 复制</button>${m.code.html?`<button class="cbtn pv" onclick="preview(${i})">👁️ 预览</button>`:''}</div><div class="preview-box" id="pv-${i}"></div></div>`
+      h+='<div class="code-box"><div class="ch">📄 '+m.code.lang+' . '+m.code.code.split('\n').length+'行</div><div class="cb">'+esc(m.code.code)+'</div><div class="cf"><button onclick="navigator.clipboard.writeText(`'+esc(m.code.code).replace(/`/g,'\\`')+'`)">📋 复制</button>'+(m.code.html?'<button class="pv" onclick="pv('+i+')">👁️ 预览</button>':'')+'</div><div class="pv-frame" id="pv-'+i+'"></div></div>'
     }
-    
-    h += `<div class="msg-body">${md(m.content)}</div></div></div>`
+    h+='<div class="bub">'+md(m.content)+'</div></div>'
     return h
   }).join('')
-  area.scrollTop = area.scrollHeight
+  el.scrollTop = el.scrollHeight
 }
-function md(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/```(\w*)\n([\s\S]*?)```/g,'').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p>').replace(/^> (.+)/gm,'<blockquote>$1</blockquote>').replace(/\|(.+)\|/g,m=>m.includes('---')?'':'<tr>'+m.split('|').filter(c=>c.trim()).map(c=>'<td>'+c.trim()+'</td>').join('')+'</tr>'):''}
+function md(s){return s?String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/```[\s\S]*?```/g,'').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\|(.+)\|/g,function(m){return m.indexOf('---')>=0?'':'<tr>'+m.split('|').filter(function(c){return c.trim()}).map(function(c){return '<td>'+c.trim()+'</td>'}).join('')+'</tr>'}).replace(/^- (.+)/gm,'<li>$1</li>'):''}
 function esc(s){return s.replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function copyCode(i){const c=chat.msgs[i]?.code?.code;if(c){navigator.clipboard.writeText(c);toast('已复制','ok')}}
-function preview(i){const el=document.getElementById('pv-'+i);if(!el)return;el.style.display='block';el.innerHTML=`<iframe srcdoc="${chat.msgs[i].code.code.replace(/"/g,'&quot;')}" style="width:100%;height:340px;border:none"></iframe>`}
+function pv(i){var el=document.getElementById('pv-'+i);if(!el)return;el.style.display='block';el.innerHTML='<iframe srcdoc="'+chat.msgs[i].code.code.replace(/"/g,'&quot;')+'" style="width:100%;height:300px;border:none"></iframe>'}
 
-// ============ 辅助 ============
-function tm(){return new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}
-function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
-function clearChat(){chat.msgs=[];render()}
-function hideModal(id){document.getElementById(id).style.display='none'}
-function showSettings(){
-  document.getElementById('cfgKey').value=cfg.apiKey||''
-  document.getElementById('cfgOAI').value=cfg.apiOAI||'http://10.16.11.195/v1'
-  document.getElementById('cfgClaude').value=cfg.apiClaude||'http://10.16.11.195'
-  document.getElementById('settingsForm').style.display='flex'
-}
-function saveCfg(){
-  cfg.apiKey=document.getElementById('cfgKey').value.trim()
-  cfg.apiOAI=document.getElementById('cfgOAI').value.trim()
-  cfg.apiClaude=document.getElementById('cfgClaude').value.trim()
-  localStorage.setItem('ai_cfg',JSON.stringify(cfg))
-  hideModal('settingsForm');toast('已保存','ok')
-}
-function toast(m,t='ok'){const c=document.getElementById('toasts');const e=document.createElement('div');e.className=`toast ${t}`;e.textContent=m;c.appendChild(e);setTimeout(()=>e.remove(),2500)}
-function quick(t){
-  if(t==='prd'){chat.agent='_prd';chat.mode='single';chat.msgs=[];render();document.getElementById('inp').value='帮我写一份AI智能胸牌智能体配置功能的产品需求文档'}
-  else if(t==='review'){chat.agent='_reviewer';chat.mode='single';chat.msgs=[];render();document.getElementById('inp').value='帮我审查一下智能体配置页面的完整性和一致性'}
-  else if(t==='code'){chat.agent='_coder';chat.mode='single';chat.msgs=[];render();document.getElementById('inp').value='写一个漂亮的登录页面，带渐变背景和动画效果'}
-  else if(t==='group'){showGroupForm()}
-}
-function init(){render();renderMsgs()}
-init()
+// 初始化
+render()
+renderMsgs()
 </script>
-</body>
-</html>
+</body></html>
