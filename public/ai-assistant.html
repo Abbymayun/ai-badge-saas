@@ -7,142 +7,46 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#0d1117;color:#c9d1d9;height:100vh;display:flex;overflow:hidden}
-
-/* 侧边栏 */
 .sidebar{width:260px;background:#161b22;border-right:1px solid #21262d;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
-.sb-header{padding:16px;border-bottom:1px solid #21262d}
-.sb-header h1{font-size:16px;color:#58a6ff}
-.sb-header p{font-size:11px;color:#8b949e;margin-top:4px}
-.sb-section{padding:12px 16px;border-bottom:1px solid #21262d}
-.sb-section-title{font-size:11px;color:#8b949e;text-transform:uppercase;margin-bottom:8px;letter-spacing:.5px}
-.sb-model{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:13px;transition:.15s;margin-bottom:2px}
-.sb-model:hover{background:#1c2128}
-.sb-model.active{background:#1f2937;border:1px solid #30363d}
-.sb-model-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.sb-model-name{flex:1;color:#c9d1d9}.sb-model-tag{font-size:10px;padding:1px 6px;border-radius:4px;background:#21262d;color:#8b949e}
-.sb-model-check{color:#3fb950;font-size:12px}
-.sb-actions{padding:12px 16px;display:flex;flex-direction:column;gap:6px}
-.sb-btn{width:100%;padding:8px 12px;border-radius:6px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:12px;cursor:pointer;text-align:left;transition:.15s}
-.sb-btn:hover{background:#30363d;border-color:#58a6ff}
-.sb-btn.primary{background:#238636;border-color:#2ea043;color:#fff}
-.sb-btn.primary:hover{background:#2ea043}
-.sb-btn.danger{color:#f85149}
-.sb-footer{padding:12px 16px;border-top:1px solid #21262d;font-size:11px;color:#484f58;margin-top:auto}
-
-/* 主区域 */
+.sb-header{padding:16px;border-bottom:1px solid #21262d}.sb-header h1{font-size:16px;color:#58a6ff}.sb-header p{font-size:11px;color:#8b949e;margin-top:4px}
+.sb-section{padding:12px 16px;border-bottom:1px solid #21262d}.sb-section-title{font-size:11px;color:#8b949e;text-transform:uppercase;margin-bottom:8px}
+.sb-model{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:13px;margin-bottom:2px}.sb-model:hover{background:#1c2128}.sb-model.active{background:#1f2937;border:1px solid #30363d}.sb-model-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.sb-model-name{flex:1;color:#c9d1d9}.sb-model-tag{font-size:10px;padding:1px 6px;border-radius:4px;background:#21262d;color:#8b949e}.sb-model-check{color:#3fb950;font-size:12px}
+.sb-actions{padding:12px 16px;display:flex;flex-direction:column;gap:6px}.sb-btn{width:100%;padding:8px 12px;border-radius:6px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:12px;cursor:pointer;text-align:left}.sb-btn:hover{background:#30363d;border-color:#58a6ff}.sb-btn.primary{background:#238636;border-color:#2ea043;color:#fff}.sb-footer{padding:12px 16px;border-top:1px solid #21262d;font-size:11px;color:#484f58;margin-top:auto}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.header{padding:10px 20px;border-bottom:1px solid #21262d;display:flex;align-items:center;justify-content:space-between;background:#161b22}
-.header-title{font-size:14px;font-weight:600}
-.header-badge{padding:2px 10px;border-radius:10px;font-size:11px;background:#0d213b;color:#58a6ff;border:1px solid #1f6feb}
-
-/* 对话区 */
+.header{padding:10px 20px;border-bottom:1px solid #21262d;display:flex;align-items:center;justify-content:space-between;background:#161b22}.header-title{font-size:14px;font-weight:600}.header-badge{padding:2px 10px;border-radius:10px;font-size:11px;background:#0d213b;color:#58a6ff;border:1px solid #1f6feb}
 .chat-area{flex:1;overflow-y:auto;padding:20px}
-.chat-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#484f58;gap:16px}
-.chat-empty-icon{font-size:56px;opacity:.4}
-.chat-empty h2{font-size:22px;color:#8b949e}
-.chat-empty p{font-size:14px;color:#6e7681;max-width:500px;text-align:center;line-height:1.6}
-.quick-prompts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
-.quick-prompt{padding:8px 16px;border-radius:20px;border:1px solid #30363d;font-size:13px;cursor:pointer;color:#8b949e;transition:.15s}
-.quick-prompt:hover{border-color:#58a6ff;color:#c9d1d9;background:#1c2128}
-
-/* 消息 */
-.msg{display:flex;gap:12px;margin-bottom:20px;max-width:900px}
-.msg.user{flex-direction:row-reverse;align-self:flex-end}
-.msg.user .msg-body{text-align:right}
-.msg-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
-.msg.user .msg-avatar{background:#238636}
-.msg.assistant .msg-avatar{background:#1f6feb}
-.msg-body{flex:1;min-width:0}
-.msg-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
-.msg.user .msg-header{justify-content:flex-end}
-.msg-role{font-weight:600;color:#58a6ff}.msg.user .msg-role{color:#7ee787}
-.msg-time{color:#484f58;font-size:11px}
-
-/* Agent 思考过程 */
-.agent-think{margin:6px 0;border:1px solid #21262d;border-radius:8px;overflow:hidden}
-.agent-think-header{padding:8px 12px;background:#161b22;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px;color:#d2a8ff;user-select:none}
-.agent-think-header:hover{color:#e2c8ff}
-.agent-think-body{padding:10px 14px;font-size:12px;color:#8b949e;line-height:1.7;border-top:1px solid #21262d;display:none}
-.agent-think.open .agent-think-body{display:block}
-
-/* 模型调用卡片 */
-.model-invoke{margin:8px 0;border:1px solid #1f6feb;border-radius:8px;overflow:hidden;border-left:3px solid #1f6feb}
-.model-invoke-header{padding:8px 12px;background:#0d213b;font-size:12px;display:flex;align-items:center;gap:8px}
-.model-invoke-body{padding:10px 14px;font-size:13px;line-height:1.7;background:#0d1117;max-height:300px;overflow-y:auto}
-.model-invoke-footer{padding:6px 12px;background:#0d213b;font-size:11px;color:#58a6ff;display:flex;align-items:center;gap:6px}
-
-/* 工具调用 */
-.tool-call{margin:8px 0;border:1px solid #6e40c9;border-radius:8px;overflow:hidden;border-left:3px solid #6e40c9}
-.tool-call-header{padding:8px 12px;background:#1a1228;font-size:12px;display:flex;align-items:center;gap:8px;color:#d2a8ff}
-.tool-call-body{padding:8px 12px;font-size:12px;background:#0d1117;color:#8b949e;font-family:monospace;max-height:200px;overflow-y:auto;white-space:pre-wrap}
-
-/* 消息内容 */
-.msg-content{font-size:14px;line-height:1.75;color:#c9d1d9}
-.msg.user .msg-content{background:#1f2937;padding:12px 16px;border-radius:16px 16px 4px 16px;display:inline-block;text-align:left;max-width:85%}
-.msg-content p{margin:6px 0}
-.msg-content pre{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;overflow-x:auto;font-size:12px;line-height:1.5;margin:8px 0}
-.msg-content code{background:#21262d;padding:2px 6px;border-radius:4px;font-size:13px;color:#d2a8ff}
-.msg-content pre code{background:transparent;padding:0;color:#c9d1d9}
-.msg-content ul,.msg-content ol{padding-left:20px;margin:6px 0}
-.msg-content li{margin:3px 0}
-.msg-content table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px}
-.msg-content th,.msg-content td{border:1px solid #30363d;padding:6px 10px;text-align:left}
-.msg-content th{background:#161b22}
-.msg-content strong{color:#e1e4e8}
-.msg-content blockquote{border-left:3px solid #30363d;padding-left:12px;color:#8b949e;margin:8px 0}
-
-/* 状态动画 */
+.chat-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#484f58;gap:16px}.chat-empty-icon{font-size:56px;opacity:.4}.chat-empty h2{font-size:22px;color:#8b949e}.chat-empty p{font-size:14px;color:#6e7681;max-width:500px;text-align:center;line-height:1.6}
+.quick-prompts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}.quick-prompt{padding:8px 16px;border-radius:20px;border:1px solid #30363d;font-size:13px;cursor:pointer;color:#8b949e}.quick-prompt:hover{border-color:#58a6ff;color:#c9d1d9;background:#1c2128}
+.msg{display:flex;gap:12px;margin-bottom:20px;max-width:900px}.msg.user{flex-direction:row-reverse;align-self:flex-end}.msg-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}.msg.user .msg-avatar{background:#238636}.msg.assistant .msg-avatar{background:#1f6feb}.msg-body{flex:1;min-width:0}
+.msg-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}.msg.user .msg-header{justify-content:flex-end}.msg-role{font-weight:600;color:#58a6ff}.msg.user .msg-role{color:#7ee787}.msg-time{color:#484f58;font-size:11px}
+.msg-content{font-size:14px;line-height:1.75;color:#c9d1d9}.msg.user .msg-content{background:#1f2937;padding:12px 16px;border-radius:16px 16px 4px 16px;display:inline-block;text-align:left;max-width:85%}
+.msg-content p{margin:6px 0}.msg-content pre{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;overflow-x:auto;font-size:12px;line-height:1.5;margin:8px 0}.msg-content code{background:#21262d;padding:2px 6px;border-radius:4px;font-size:13px;color:#d2a8ff}.msg-content pre code{background:transparent;padding:0;color:#c9d1d9}.msg-content strong{color:#e1e4e8}
+.agent-think{margin:6px 0;border:1px solid #21262d;border-radius:8px;overflow:hidden}.agent-think-header{padding:8px 12px;background:#161b22;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px;color:#d2a8ff}.agent-think-body{padding:10px 14px;font-size:12px;color:#8b949e;line-height:1.7;border-top:1px solid #21262d;display:none}.agent-think.open .agent-think-body{display:block}
+.model-invoke{margin:8px 0;border:1px solid #1f6feb;border-radius:8px;overflow:hidden;border-left:3px solid #1f6feb}.model-invoke-header{padding:8px 12px;background:#0d213b;font-size:12px;display:flex;align-items:center;gap:8px}.model-invoke-body{padding:10px 14px;font-size:13px;line-height:1.7;background:#0d1117;max-height:300px;overflow-y:auto}.model-invoke-footer{padding:6px 12px;background:#0d213b;font-size:11px;color:#58a6ff;display:flex;align-items:center;gap:6px}
+.status-badge.running{color:#58a6ff}.status-badge.done{color:#3fb950}.status-badge.error{color:#f85149}
 .typing-dots{display:flex;gap:4px;padding:8px 0}.typing-dot{width:6px;height:6px;border-radius:50%;background:#58a6ff;animation:typing 1.4s infinite}.typing-dot:nth-child(2){animation-delay:.2s}.typing-dot:nth-child(3){animation-delay:.4s}@keyframes typing{0%,60%,100%{opacity:.3}30%{opacity:1}}
-.status-badge{font-size:11px;padding:2px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:4px}
-.status-badge.running{background:#0d213b;color:#58a6ff}.status-badge.done{background:#0d3320;color:#3fb950}.status-badge.error{background:#3d1117;color:#f85149}
-
-/* 输入区 */
-.input-area{padding:14px 20px;border-top:1px solid #21262d;background:#161b22}
-.input-row{display:flex;gap:10px;align-items:flex-end}
-.input-wrap{flex:1;position:relative}
-.input-wrap textarea{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:10px 14px;color:#c9d1d9;font-size:14px;line-height:1.6;resize:none;outline:none;font-family:inherit;transition:.15s}
-.input-wrap textarea:focus{border-color:#58a6ff;box-shadow:0 0 0 2px rgba(88,166,255,.1)}
-.input-wrap textarea::placeholder{color:#484f58}
-.input-row button{width:40px;height:40px;border-radius:10px;border:1px solid #30363d;background:#238636;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
-.input-row button:hover{background:#2ea043}
-.input-row button:disabled{background:#21262d;color:#484f58;cursor:not-allowed}
-
-/* 设置弹窗 */
+.input-area{padding:14px 20px;border-top:1px solid #21262d;background:#161b22}.input-row{display:flex;gap:10px;align-items:flex-end}.input-wrap{flex:1}.input-wrap textarea{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:10px 14px;color:#c9d1d9;font-size:14px;line-height:1.6;resize:none;outline:none;font-family:inherit}.input-wrap textarea:focus{border-color:#58a6ff}.input-wrap textarea::placeholder{color:#484f58}
+.input-row button{width:40px;height:40px;border-radius:10px;border:1px solid #30363d;background:#238636;color:#fff;font-size:18px;cursor:pointer}.input-row button:hover{background:#2ea043}.input-row button:disabled{background:#21262d;color:#484f58;cursor:not-allowed}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100}
-.modal{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:24px;width:520px;max-width:90vw;max-height:90vh;overflow-y:auto}
-.modal h3{font-size:16px;margin-bottom:16px;color:#c9d1d9}.modal label{display:block;font-size:12px;color:#8b949e;margin:10px 0 4px}.modal input,.modal textarea{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:8px 12px;color:#c9d1d9;font-size:13px;outline:none;font-family:inherit}.modal input:focus,.modal textarea:focus{border-color:#58a6ff}.modal textarea{resize:vertical;min-height:60px}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.modal-actions button{padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer}.mbtn-cancel{background:#21262d;border:1px solid #30363d;color:#c9d1d1}.mbtn-save{background:#238636;border:1px solid #2ea043;color:#fff}.mbtn-test{background:#1f6feb;border:1px solid #388bfd;color:#fff}
-.toast{position:fixed;top:20px;right:20px;padding:10px 18px;border-radius:8px;font-size:13px;z-index:200;animation:slideIn .3s}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.toast.success{background:#0d3320;border:1px solid#238636;color:#3fb950}.toast.error{background:#3d1117;border:1px solid#da3633;color:#f85149}.toast.info{background:#0d213b;border:1px solid#1f6feb;color:#58a6ff}
-.file-upload-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;border:1px dashed #30363d;cursor:pointer;font-size:12px;color:#8b949e;margin-right:8px}.file-upload-btn:hover{border-color:#58a6ff;color:#58a6ff}
+.modal{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:24px;width:520px;max-width:90vw;max-height:90vh;overflow-y:auto}.modal h3{font-size:16px;margin-bottom:16px}.modal label{display:block;font-size:12px;color:#8b949e;margin:10px 0 4px}.modal input,.modal textarea{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:8px 12px;color:#c9d1d9;font-size:13px;outline:none}.modal input:focus{border-color:#58a6ff}.modal textarea{resize:vertical;min-height:60px}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.modal-actions button{padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer}.mbtn-cancel{background:#21262d;border:1px solid #30363d;color:#c9d1d1}.mbtn-save{background:#238636;border:1px solid #2ea043;color:#fff}.mbtn-test{background:#1f6feb;border:1px solid #388bfd;color:#fff}
+.toast{position:fixed;top:20px;right:20px;padding:10px 18px;border-radius:8px;font-size:13px;z-index:200;animation:slideIn .3s}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.toast.success{background:#0d3320;border:1px solid #238636;color:#3fb950}.toast.error{background:#3d1117;border:1px solid #da3633;color:#f85149}.toast.info{background:#0d213b;border:1px solid #1f6feb;color:#58a6ff}
 </style>
 </head>
 <body>
 
 <div class="sidebar">
-  <div class="sb-header"><h1>🤖 AI 智能助手</h1><p>利尔达企业版 · Agent 模式</p></div>
+  <div class="sb-header"><h1>🤖 AI 智能助手</h1><p>利尔达 · Agent 多模型协同</p></div>
   <div class="sb-section">
-    <div class="sb-section-title">🎯 主控模型（Orchestrator）</div>
-    <div id="primaryModelList" class="sb-model-list"></div>
+    <div class="sb-section-title">🎯 主控模型</div><div id="primaryModelList"></div>
   </div>
   <div class="sb-section">
-    <div class="sb-section-title">🔧 工作模型（可被主控调用）</div>
-    <div id="workerModelList" class="sb-model-list"></div>
-  </div>
-  <div class="sb-section">
-    <div class="sb-section-title">⚡ Agent 模式说明</div>
-    <div style="font-size:11px;color:#8b949e;line-height:1.6">
-      主控模型接收任务后，自动分析并决定：<br>
-      1️⃣ 自己回答<br>
-      2️⃣ 调用其他模型协同<br>
-      3️⃣ 多个模型链式接力<br>
-      点击模型可切换/勾选
-    </div>
+    <div class="sb-section-title">🔧 工作模型（多选）</div><div id="workerModelList"></div>
   </div>
   <div class="sb-actions">
     <button class="sb-btn" onclick="newChat()">➕ 新建对话</button>
     <button class="sb-btn" onclick="toggleSettings()">⚙️ API 设置</button>
-    <button class="sb-btn" onclick="exportChat()">💾 导出对话</button>
   </div>
-  <div class="sb-footer">Token: <span id="tokenStatus">未配置</span></div>
+  <div class="sb-footer">Token: <span id="tokenStatus">已配置 ✓</span></div>
 </div>
 
 <div class="main">
@@ -150,45 +54,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
     <span class="header-title" id="chatTitle">新对话</span>
     <div style="display:flex;gap:6px">
       <span class="header-badge" id="orchestratorBadge">🎯 Claude Sonnet 4</span>
-      <span class="header-badge" id="workerCountBadge" style="background:#0d3320;color:#3fb950;border-color:#238636">🔧 0 Worker</span>
+      <span class="header-badge" id="workerCountBadge" style="background:#0d3320;color:#3fb950;border-color:#238636">🔧 3 Workers</span>
     </div>
   </div>
-
-  <div class="chat-area" id="chatArea">
-    <div class="chat-empty">
-      <div class="chat-empty-icon">🧠</div>
-      <h2>Agent 多模型协同模式</h2>
-      <p>主控模型接收你的任务后，可以<b>主动调用</b>其他模型来分工完成。<br>就像团队协作——有人写代码、有人审查、有人写文档。<br>支持链式调用：模型A的输出 → 模型B的输入。</p>
-      <div class="quick-prompts">
-        <span class="quick-prompt" onclick="setInput('调用 GPT-5.3 Codex 写一个 Python 快速排序，然后用 Claude Opus 做代码审查，最后用 DeepSeek R1 分析算法复杂度')">🧑‍💻 多模型代码协作</span>
-        <span class="quick-prompt" onclick="setInput('分别用 DeepSeek V4 Pro 和 Qwen 3.6 Plus 分析AI胸牌的市场定价策略，然后综合两方观点给我最终建议')">📊 双模型对比分析</span>
-        <span class="quick-prompt" onclick="setInput('你来拆解这个任务：写一份产品PRD → 审查PRD完整性 → 生成开发任务清单。每个步骤调最合适的模型')">📝 链式任务接力</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="input-area">
-    <div class="input-row">
-      <div class="input-wrap">
-        <textarea id="msgInput" rows="2" placeholder="输入任务，主控Agent会分析并调用合适的模型协同完成..." onkeydown="handleKey(event)"></textarea>
-      </div>
-      <button id="sendBtn" onclick="sendMessage()" title="发送">➤</button>
-    </div>
-  </div>
+  <div class="chat-area" id="chatArea"><div class="chat-empty"><div class="chat-empty-icon">🧠</div><h2>Agent 多模型协同</h2><p>主控模型接收任务后<b>真正调用</b>其他模型 API 分工完成。</p><div class="quick-prompts"><span class="quick-prompt" onclick="setInput('调用 GPT-5.3 Codex 写 Python 快速排序，然后 Claude Opus 审查代码，最后 DeepSeek R1 分析复杂度')">🧑‍💻 代码协作</span><span class="quick-prompt" onclick="setInput('分别用 DeepSeek V4 Pro 和 Qwen 3.6 Plus 分析AI胸牌市场定价，综合给我建议')">📊 双模型对比</span></div></div></div>
+  <div class="input-area"><div class="input-row"><div class="input-wrap"><textarea id="msgInput" rows="2" placeholder="输入任务，主控Agent会分析并调用合适的模型..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea></div><button id="sendBtn" onclick="sendMessage()">➤</button></div></div>
 </div>
 
-<!-- 设置弹窗 -->
 <div class="modal-overlay" id="settingsModal" style="display:none">
-  <div class="modal">
-    <h3>⚙️ API 设置</h3>
-    <label>API 地址 <span style="color:#f85149">*必填</span></label>
-    <input type="text" id="apiBase" placeholder="https://litellm.xxx.com/v1">
-    <label>API Key</label>
+  <div class="modal"><h3>⚙️ API 设置</h3>
+    <label>API Key <span style="color:#f85149">*必填</span></label>
     <input type="password" id="apiKey">
-    <label>系统提示词（主控模型）</label>
-    <textarea id="systemPrompt" rows="4"></textarea>
+    <label>OpenAI 模型地址（GPT/DeepSeek/Qwen/MiniMax）</label>
+    <input type="text" id="apiBaseOpenAI" placeholder="http://10.16.11.195/v1">
+    <label>Claude 模型地址</label>
+    <input type="text" id="apiBaseClaude" placeholder="http://10.16.11.195">
+    <label>系统提示词</label>
+    <textarea id="systemPrompt" rows="3"></textarea>
     <div class="modal-actions">
-      <button class="mbtn-test" onclick="testConnection()">🔌 测试连接</button>
+      <button class="mbtn-test" onclick="testConnection()">🔌 测试</button>
       <button class="mbtn-cancel" onclick="toggleSettings()">取消</button>
       <button class="mbtn-save" onclick="saveSettings()">保存</button>
     </div>
@@ -197,249 +81,138 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 <div id="toastContainer"></div>
 
 <script>
-// ============ 模型定义 ============
 const MODELS = [
-  { id:'claude-sonnet-4-6', name:'Claude Sonnet 4', tag:'推荐', color:'#d4773a', category:'primary', desc:'主力模型，平衡速度与能力' },
-  { id:'claude-opus-4-6', name:'Claude Opus 4', tag:'最强', color:'#b83bd4', category:'primary', desc:'最强推理，复杂任务首选' },
-  { id:'gpt-5.5', name:'GPT-5.5', tag:'', color:'#10a37f', category:'primary', desc:'OpenAI最新旗舰' },
-  { id:'gpt-5.4', name:'GPT-5.4', tag:'', color:'#10a37f', category:'primary', desc:'OpenAI主力模型' },
-  { id:'gpt-5.3-codex', name:'GPT-5.3 Codex', tag:'代码', color:'#10a37f', category:'both', desc:'代码生成专家' },
-  { id:'deepseek-v4-pro', name:'DeepSeek V4 Pro', tag:'', color:'#4f46e5', category:'both', desc:'深度推理，性价比高' },
-  { id:'deepseek-v4-flash', name:'DeepSeek V4 Flash', tag:'快速', color:'#4f46e5', category:'worker', desc:'速度优先' },
-  { id:'deepseek-r1', name:'DeepSeek R1', tag:'推理', color:'#4f46e5', category:'worker', desc:'深度推理专用' },
-  { id:'MiniMax-M2.7', name:'MiniMax M2.7', tag:'', color:'#f59e0b', category:'worker', desc:'通用模型' },
-  { id:'qwen3.6-plus', name:'Qwen 3.6 Plus', tag:'', color:'#06b6d4', category:'worker', desc:'阿里最新旗舰' },
-  { id:'qwen3.5-plus', name:'Qwen 3.5 Plus', tag:'', color:'#06b6d4', category:'worker', desc:'阿里主力模型' },
-  { id:'qwen3-coder-plus', name:'Qwen Coder Plus', tag:'代码', color:'#06b6d4', category:'worker', desc:'代码生成' }
+  {id:'claude-sonnet-4-6',name:'Claude Sonnet 4',tag:'推荐',color:'#d4773a',category:'primary'},
+  {id:'claude-opus-4-6',name:'Claude Opus 4',tag:'最强',color:'#b83bd4',category:'primary'},
+  {id:'gpt-5.5',name:'GPT-5.5',tag:'',color:'#10a37f',category:'primary'},
+  {id:'gpt-5.4',name:'GPT-5.4',tag:'',color:'#10a37f',category:'primary'},
+  {id:'gpt-5.3-codex',name:'GPT-5.3 Codex',tag:'代码',color:'#10a37f',category:'both'},
+  {id:'deepseek-v4-pro',name:'DeepSeek V4 Pro',tag:'',color:'#4f46e5',category:'both'},
+  {id:'deepseek-v4-flash',name:'DeepSeek V4 Flash',tag:'快速',color:'#4f46e5',category:'worker'},
+  {id:'deepseek-r1',name:'DeepSeek R1',tag:'推理',color:'#4f46e5',category:'worker'},
+  {id:'MiniMax-M2.7',name:'MiniMax M2.7',tag:'',color:'#f59e0b',category:'worker'},
+  {id:'qwen3.6-plus',name:'Qwen 3.6 Plus',tag:'',color:'#06b6d4',category:'worker'},
+  {id:'qwen3.5-plus',name:'Qwen 3.5 Plus',tag:'',color:'#06b6d4',category:'worker'},
+  {id:'qwen3-coder-plus',name:'Qwen Coder Plus',tag:'代码',color:'#06b6d4',category:'worker'}
 ]
 
-// ============ 状态 ============
-let settings = JSON.parse(localStorage.getItem('agent_settings') || '{}')
-let chatHistory = JSON.parse(localStorage.getItem('agent_history') || '[]')
-let currentChat = { id:Date.now(), title:'新对话', messages:[] }
-let isRunning = false
-let orchestrator = settings.orchestrator || 'claude-sonnet-4-6'
-let workers = settings.workers || ['gpt-5.3-codex','deepseek-v4-pro','qwen3.6-plus']
+let S = JSON.parse(localStorage.getItem('agent_cfg')||'{}')
+let chatHistory = JSON.parse(localStorage.getItem('agent_hist')||'[]')
+let chat = {id:Date.now(),title:'新对话',msgs:[]}
+let running = false
+let orch = S.orchestrator||'claude-sonnet-4-6'
+let workers = S.workers||['gpt-5.3-codex','deepseek-v4-pro','qwen3.6-plus']
 
-// ============ 渲染 ============
-function init() {
+function init(){
   renderModels()
-  renderMessages()
-  updateStatus()
-  document.getElementById('apiBase').value = settings.apiBase || ''
-  document.getElementById('apiKey').value = settings.apiKey || 'voVHB960PuPIgHnHK42wb7q84XnJgd6jhACq009RUSeLWRyQ'
-  document.getElementById('systemPrompt').value = settings.systemPrompt || `你是AI智能助手的主控Agent（Orchestrator）。你可以调用以下工作模型来协助完成任务：${workers.map(w=>MODELS.find(m=>m.id===w)?.name||w).join('、')}。\n\n你的工作方式：\n1. 分析用户任务，判断是自己完成还是需要调用工作模型\n2. 如果需要调用，明确指定调用哪个模型、输入什么、期望输出什么\n3. 可以链式调用：模型A结果→模型B继续处理\n4. 最终综合所有结果，给用户一个完整的答案\n5. 调用格式：[CALL_MODEL:模型名称]任务描述[/CALL_MODEL]`
-  if (!settings.apiBase) setTimeout(() => toggleSettings(), 600)
+  renderMsgs()
+  document.getElementById('apiBaseOpenAI').value = S.apiBaseOpenAI||'http://10.16.11.195/v1'
+  document.getElementById('apiBaseClaude').value = S.apiBaseClaude||'http://10.16.11.195'
+  document.getElementById('apiKey').value = S.apiKey||'voVHB960PuPIgHnHK42wb7q84XnJgd6jhACq009RUSeLWRyQ'
+  document.getElementById('systemPrompt').value = S.systemPrompt||'你是主控Agent。分析任务后可调用工作模型。'
+  document.getElementById('tokenStatus').textContent = S.apiKey?'已配置 ✓':'未配置'
+  document.getElementById('tokenStatus').style.color = S.apiKey?'#3fb950':'#484f58'
+  if(!S.apiBaseOpenAI) setTimeout(()=>toggleSettings(),600)
 }
 
-function renderModels() {
-  const primary = MODELS.filter(m => m.category==='primary'||m.category==='both')
-  const worker = MODELS.filter(m => m.category==='worker'||m.category==='both')
-  
-  document.getElementById('primaryModelList').innerHTML = primary.map(m => `
-    <div class="sb-model ${orchestrator===m.id?'active':''}" onclick="selectOrchestrator('${m.id}')">
-      <span class="sb-model-dot" style="background:${m.color}"></span>
-      <span class="sb-model-name">${m.name}</span>
-      ${m.tag?`<span class="sb-model-tag">${m.tag}</span>`:''}
-      ${orchestrator===m.id?'<span class="sb-model-check">✓</span>':''}
-    </div>`).join('')
-
-  document.getElementById('workerModelList').innerHTML = worker.map(m => `
-    <div class="sb-model" onclick="toggleWorker('${m.id}')">
-      <span class="sb-model-dot" style="background:${m.color}"></span>
-      <span class="sb-model-name">${m.name}</span>
-      ${m.tag?`<span class="sb-model-tag">${m.tag}</span>`:''}
-      ${workers.includes(m.id)?'<span class="sb-model-check">✓</span>':''}
-    </div>`).join('')
-
-  document.getElementById('workerCountBadge').textContent = `🔧 ${workers.length} Worker${workers.length>1?'s':''}`
+function renderModels(){
+  const p = MODELS.filter(m=>m.category==='primary'||m.category==='both')
+  const w = MODELS.filter(m=>m.category==='worker'||m.category==='both')
+  document.getElementById('primaryModelList').innerHTML = p.map(m=>`<div class="sb-model ${orch===m.id?'active':''}" onclick="selectOrch('${m.id}')"><span class="sb-model-dot" style="background:${m.color}"></span><span class="sb-model-name">${m.name}</span>${m.tag?`<span class="sb-model-tag">${m.tag}</span>`:''}${orch===m.id?'<span class="sb-model-check">✓</span>':''}</div>`).join('')
+  document.getElementById('workerModelList').innerHTML = w.map(m=>`<div class="sb-model" onclick="toggleW('${m.id}')"><span class="sb-model-dot" style="background:${m.color}"></span><span class="sb-model-name">${m.name}</span>${m.tag?`<span class="sb-model-tag">${m.tag}</span>`:''}${workers.includes(m.id)?'<span class="sb-model-check">✓</span>':''}</div>`).join('')
+  document.getElementById('workerCountBadge').textContent = `🔧 ${workers.length} Workers`
 }
+function selectOrch(id){orch=id;S.orchestrator=id;svCfg();renderModels()}
+function toggleW(id){const i=workers.indexOf(id);if(i>=0)workers.splice(i,1);else workers.push(id);S.workers=workers;svCfg();renderModels()}
 
-function selectOrchestrator(id) { orchestrator=id; settings.orchestrator=id; saveSettingsQuiet(); renderModels(); updateStatus() }
-function toggleWorker(id) { const i=workers.indexOf(id); if(i>=0) workers.splice(i,1); else workers.push(id); settings.workers=workers; saveSettingsQuiet(); renderModels() }
-function updateStatus() { 
-  document.getElementById('orchestratorBadge').textContent = `🎯 ${MODELS.find(m=>m.id===orchestrator)?.name||orchestrator}`
-  document.getElementById('tokenStatus').textContent = settings.apiKey ? '已配置 ✓' : '未配置'
-  document.getElementById('tokenStatus').style.color = settings.apiKey ? '#3fb950' : '#484f58'
-}
+async function sendMessage(){
+  if(running)return
+  const t = document.getElementById('msgInput').value.trim()
+  if(!t)return
+  document.getElementById('msgInput').value=''
+  document.getElementById('sendBtn').disabled=true
+  running=true
+  const tm=now()
+  chat.msgs.push({role:'user',content:t,time:tm})
+  if(chat.msgs.length===1){chat.title=t.substring(0,30);document.getElementById('chatTitle').textContent=chat.title}
+  const ai = chat.msgs.length
+  chat.msgs.push({role:'assistant',time:tm,content:'',thinking:[],calls:[]})
+  renderMsgs()
 
-// ============ Agent 主循环 ============
-async function sendMessage() {
-  if (isRunning) return
-  const input = document.getElementById('msgInput')
-  const text = input.value.trim()
-  if (!text) return
-  input.value = ''
-  document.getElementById('sendBtn').disabled = true
-  isRunning = true
+  try{
+    addThink(ai,'🔍 主控分析任务...');renderMsgs();await sleep(300)
+    // 主控分析任务
+    const planRaw = await api(orch, `你是主控Agent。可调用: ${workers.map(w=>MODELS.find(m=>m.id===w)?.name||w).join('、')}。分析任务返回JSON: {"plan":[{"step":1,"call":false,"model":"","task":""}],"reason":"原因"}。不需要调模型时 call=false。用户: ${t}`, 800)
+    let plan = {plan:[],reason:''}
+    try{const m=planRaw.match(/\{[\s\S]*\}/);if(m)plan=JSON.parse(m[0])}catch(e){}
+    addThink(ai,`📋 计划: ${plan.reason||'直接回答'}\n${plan.plan.map(p=>`  ${p.step}. ${p.call?'📞调 '+p.model:''}${p.task}`).join('\n')}`)
+    renderMsgs();await sleep(200)
 
-  const time = now()
-  currentChat.messages.push({ role:'user', content:text, time })
-  if (currentChat.messages.length === 1) { currentChat.title = text.substring(0,30); document.getElementById('chatTitle').textContent = currentChat.title }
-  
-  // 添加 Agent 消息占位
-  const agentIdx = currentChat.messages.length
-  currentChat.messages.push({ role:'assistant', time, content:'', thinking:[], modelCalls:[] })
-  renderMessages()
-
-  try {
-    // === Step 1: 主控模型分析任务 ===
-    addThinking(agentIdx, '🔍 主控模型分析任务中...')
-    await delay(300)
-
-    const planPrompt = `你是主控Agent。你可以调用以下工作模型：${workers.map(w=>MODELS.find(m=>m.id===w)?.name||w).join('、')}。\n\n分析用户任务，制定执行计划。返回JSON：\n{"plan":[{"step":1,"action":"self|call_model","model":"模型名（如调用）","task":"具体任务描述","input_hint":"输入提示"}],"reasoning":"为什么这样计划"}\n\n用户任务：${text}`
-    
-    const planRaw = await callAPI(orchestrator, planPrompt, 1000)
-    let plan = { plan:[{step:1,action:'self',task:'直接回答'}], reasoning:'简单问题直接回答' }
-    try { const m = planRaw.match(/\{[\s\S]*\}/); if (m) plan = JSON.parse(m[0]) } catch(e) { addThinking(agentIdx, '⚠️ 计划解析失败，主控模型直接回答') }
-    addThinking(agentIdx, `📋 执行计划：${plan.reasoning||'分析完成'}\n${plan.plan.map(p=>`  ${p.step}. ${p.action==='call_model'?'📞调用 '+p.model+'：':''}${p.task}`).join('\n')}`)
-
-    // === Step 2: 执行计划 ===
-    let context = text
-    let allResults = []
-
-    for (const step of plan.plan) {
-      if (step.action === 'call_model') {
-        const modelId = workers.find(w => MODELS.find(m=>m.id===w)?.name === step.model) || workers[0]
-        if (!modelId) continue
-
-        addModelCall(agentIdx, 'running', modelId, step.task)
-        const idx = currentChat.messages[agentIdx].modelCalls.length - 1
-        try {
-          const result = await callAPI(modelId, `${step.input_hint||step.task}\n\n上下文：${context}`, 2000)
-          currentChat.messages[agentIdx].modelCalls[idx].status = 'done'
-          currentChat.messages[agentIdx].modelCalls[idx].result = result
-          allResults.push({ model: MODELS.find(m=>m.id===modelId)?.name||modelId, result })
-          context += `\n[${MODELS.find(m=>m.id===modelId)?.name||modelId}的输出]\n${result}`
-        } catch(e) {
-          currentChat.messages[agentIdx].modelCalls[idx].status = 'error'
-          currentChat.messages[agentIdx].modelCalls[idx].error = e.message
-        }
-        renderMessages()
-        await delay(400)
+    let ctx = t; let results = []
+    for(const step of (plan.plan||[])){
+      if(step.call){
+        const mid = workers.find(w=>MODELS.find(m=>m.id===w)?.name===step.model) || workers[0]
+        if(!mid)continue
+        addCall(ai,'running',mid,step.task);renderMsgs();await sleep(200)
+        const ci = chat.msgs[ai].calls.length-1
+        try{
+          const r = await api(mid, `${step.task}\n上下文: ${ctx}`, 1500)
+          chat.msgs[ai].calls[ci].status='done';chat.msgs[ai].calls[ci].result=r
+          ctx += `\n[${MODELS.find(m=>m.id===mid)?.name}]: ${r}`;results.push({m:MODELS.find(m=>m.id===mid)?.name,r})
+        }catch(e){chat.msgs[ai].calls[ci].status='error';chat.msgs[ai].calls[ci].error=e.message}
+        renderMsgs();await sleep(200)
       }
     }
-
-    // === Step 3: 主控模型综合总结 ===
-    addThinking(agentIdx, '🤝 主控模型综合各模型结果...')
-    const finalPrompt = allResults.length ? 
-      `你是主控Agent。以下是各工作模型的输出结果，请综合分析后给用户最终答案:\n\n${allResults.map(r=>`【${r.model}】\n${r.result}`).join('\n\n')}\n\n用户原始问题：${text}\n\n请输出完整的综合报告。` :
-      `请回答用户的问题：${text}`
-    
-    const finalResult = await callAPI(orchestrator, finalPrompt, 3000)
-    currentChat.messages[agentIdx].content = finalResult
-    addThinking(agentIdx, '✅ 任务完成')
-  } catch(e) {
-    currentChat.messages[agentIdx].content = `❌ 执行失败：${e.message}\n\n请检查API设置是否正确（需连接公司VPN），或简化任务重试。`
-    addThinking(agentIdx, `❌ 错误: ${e.message}`)
-  }
-
-  renderMessages()
-  saveHistory()
-  isRunning = false
-  document.getElementById('sendBtn').disabled = false
+    addThink(ai,'🤝 综合汇总...');renderMsgs()
+    const fp = results.length ? `综合各模型结果回答用户: ${t}\n\n${results.map(r=>`【${r.m}】${r.r}`).join('\n\n')}` : t
+    chat.msgs[ai].content = await api(orch, fp, 2000)
+    addThink(ai,'✅ 完成')
+  }catch(e){chat.msgs[ai].content=`❌ ${e.message}`;addThink(ai,`❌ ${e.message}`)}
+  renderMsgs();saveHist();running=false;document.getElementById('sendBtn').disabled=false
 }
 
-function addThinking(idx, text) {
-  const msg = currentChat.messages[idx]
-  msg.thinking.push({ time: now(), text })
-}
-function addModelCall(idx, status, modelId, task) {
-  const msg = currentChat.messages[idx]
-  msg.modelCalls.push({ status, model: MODELS.find(m=>m.id===modelId)?.name||modelId, color: MODELS.find(m=>m.id===modelId)?.color||'#58a6ff', task, result:'', error:'' })
-}
+function addThink(i,t){chat.msgs[i].thinking.push({time:now(),text:t})}
+function addCall(i,s,mid,task){chat.msgs[i].calls.push({status:s,model:MODELS.find(m=>m.id===mid)?.name||mid,color:MODELS.find(m=>m.id===mid)?.color,task,result:'',error:''})}
 
-// ============ API 调用 ============
-async function callAPI(modelId, prompt, maxTokens=2000) {
-  const base = settings.apiBase; const key = settings.apiKey
-  if (!base||!key) throw new Error('请先配置API地址和Key')
-  
-  const resp = await fetch(`${base.replace(/\/$/,'')}/chat/completions`, {
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
-    body:JSON.stringify({
-      model:modelId, temperature:0.7, max_tokens:maxTokens,
-      messages:[
-        {role:'system',content:settings.systemPrompt||'你是AI助手'},
-        {role:'user',content:prompt}
-      ]
-    })
-  })
-  if (!resp.ok) { const e = await resp.text(); throw new Error(`HTTP ${resp.status}: ${e.substring(0,150)}`) }
-  const data = await resp.json()
-  return data.choices?.[0]?.message?.content || JSON.stringify(data)
+async function api(modelId, prompt, maxT=2000){
+  const base = modelId.startsWith('claude-') ? S.apiBaseClaude : S.apiBaseOpenAI
+  if(!base||!S.apiKey) throw new Error('请先配置API地址和Key（点击⚙️）')
+  const r = await fetch(`${base.replace(/\/$/,'')}/chat/completions`,{
+    method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.apiKey}`},
+    body:JSON.stringify({model:modelId,temperature:0.7,max_tokens:maxT,
+      messages:[{role:'system',content:S.systemPrompt||'你是AI助手'},{role:'user',content:prompt}]})})
+  if(!r.ok){const e=await r.text();throw new Error(`HTTP ${r.status}: ${e.substring(0,150)}`)}
+  const d=await r.json();return d.choices?.[0]?.message?.content||JSON.stringify(d)
 }
 
-// ============ 渲染消息 ============
-function renderMessages() {
-  const area = document.getElementById('chatArea')
-  if (currentChat.messages.length === 0) {
-    area.innerHTML = `<div class="chat-empty"><div class="chat-empty-icon">🧠</div><h2>Agent 多模型协同模式</h2><p>主控模型接收任务后可<b>主动调用</b>其他模型分工完成。</p><div class="quick-prompts"><span class="quick-prompt" onclick="setInput('调用 GPT-5.3 Codex 写一个 Python 快速排序，然后用 Claude Opus 做代码审查，最后用 DeepSeek R1 分析算法复杂度')">🧑‍💻 多模型代码协作</span><span class="quick-prompt" onclick="setInput('分别用 DeepSeek V4 Pro 和 Qwen 3.6 Plus 分析市场定价，综合给我建议')">📊 双模型对比</span><span class="quick-prompt" onclick="setInput('拆解任务：写PRD→审查→生成开发清单，每步调最合适的模型')">📝 链式接力</span></div></div>`
-    return
-  }
-
-  area.innerHTML = currentChat.messages.map((msg,idx) => {
-    const isUser = msg.role === 'user'
-    let html = `<div class="msg ${isUser?'user':'assistant'}">
-      <div class="msg-avatar">${isUser?'👤':'🤖'}</div>
-      <div class="msg-body">
-        <div class="msg-header"><span class="msg-role">${isUser?'你':(idx===1?'主控 Agent':'AI')}</span><span class="msg-time">${msg.time}</span></div>`
-
-    // Agent 思考过程
-    if (msg.thinking?.length) {
-      html += `<div class="agent-think"><div class="agent-think-header" onclick="this.parentElement.classList.toggle('open')">💭 思考过程 (${msg.thinking.length}步)</div><div class="agent-think-body">${msg.thinking.map(t=>`<div>[${t.time}] ${t.text}</div>`).join('')}</div></div>`
-    }
-
-    // 模型调用
-    if (msg.modelCalls?.length) {
-      msg.modelCalls.forEach(call => {
-        const icon = call.status === 'running' ? '⟳' : call.status === 'done' ? '✓' : '✗'
-        html += `<div class="model-invoke">
-          <div class="model-invoke-header">
-            <span class="sb-model-dot" style="background:${call.color||'#58a6ff'}"></span>
-            <span style="flex:1">${call.model}</span>
-            <span class="status-badge ${call.status}">${icon} ${call.status==='running'?'执行中':call.status==='done'?'完成':'失败'}</span>
-          </div>`
-        if (call.result) html += `<div class="model-invoke-body">${call.result}</div>`
-        if (call.error) html += `<div class="model-invoke-body" style="color:#f85149">${call.error}</div>`
-        if (call.task) html += `<div class="model-invoke-footer">📋 ${call.task}</div>`
-        html += `</div>`
-      })
-    }
-
-    // 内容
-    if (msg.content) {
-      let c = msg.content
-        .replace(/```(\w*)\n([\s\S]*?)```/g,'<pre><code>$2</code></pre>')
-        .replace(/`([^`]+)`/g,'<code>$1</code>')
-        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-        .replace(/\n\n/g,'</p><p>')
-      html += `<div class="msg-content"><p>${c}</p></div>`
-    } else if (!msg.thinking?.length && !msg.modelCalls?.length) {
-      html += `<div class="msg-content"><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`
-    }
-
-    html += `</div></div>`
-    return html
+function renderMsgs(){
+  const a=document.getElementById('chatArea')
+  if(!chat.msgs.length){a.innerHTML=`<div class="chat-empty"><div class="chat-empty-icon">🧠</div><h2>Agent 多模型协同</h2><p>主控模型<b>真正调用</b>其他模型的API来分工完成。</p><div class="quick-prompts"><span class="quick-prompt" onclick="setInput('调用 GPT-5.3 Codex 写 Python 快速排序，然后 Claude Opus 审查，最后 DeepSeek R1 分析复杂度')">🧑‍💻 代码协作</span><span class="quick-prompt" onclick="setInput('分别用 DeepSeek V4 Pro 和 Qwen 3.6 Plus 分析市场定价，综合给我建议')">📊 双模型对比</span></div></div>`;return}
+  a.innerHTML = chat.msgs.map((m,i)=>{
+    if(m.role==='user') return `<div class="msg user"><div class="msg-avatar">👤</div><div class="msg-body"><div class="msg-header"><span class="msg-role">你</span><span class="msg-time">${m.time}</span></div><div class="msg-content">${esc(m.content)}</div></div></div>`
+    let h=`<div class="msg assistant"><div class="msg-avatar">🤖</div><div class="msg-body"><div class="msg-header"><span class="msg-role">Agent</span><span class="msg-time">${m.time}</span></div>`
+    if(m.thinking?.length) h+=`<div class="agent-think"><div class="agent-think-header" onclick="this.parentElement.classList.toggle('open')">💭 思考(${m.thinking.length}步)</div><div class="agent-think-body">${m.thinking.map(t=>`<div>[${t.time}] ${t.text}</div>`).join('')}</div></div>`
+    if(m.calls?.length) m.calls.forEach(c=>{h+=`<div class="model-invoke"><div class="model-invoke-header"><span class="sb-model-dot" style="background:${c.color||'#58a6ff'}"></span>${c.model} <span class="status-badge ${c.status}">${c.status==='running'?'⟳':'✓'}</span></div>${c.result?`<div class="model-invoke-body">${esc(c.result)}</div>`:''}${c.error?`<div class="model-invoke-body" style="color:#f85149">${c.error}</div>`:''}</div>`})
+    if(m.content) h+=`<div class="msg-content"><p>${esc(m.content)}</p></div>`
+    else if(!m.thinking?.length&&!m.calls?.length) h+=`<div class="msg-content"><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`
+    return h+`</div></div>`
   }).join('')
-
-  area.scrollTop = area.scrollHeight
+  a.scrollTop=a.scrollHeight
 }
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/```(\w*)\n([\s\S]*?)```/g,'<pre><code>$2</code></pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p>'):''}
 
-// ============ 辅助 ============
-function now() { return new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}) }
-function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage()} }
-function setInput(t) { document.getElementById('msgInput').value=t }
-function delay(ms) { return new Promise(r=>setTimeout(r,ms)) }
-function newChat() { saveHistory(); currentChat={id:Date.now(),title:'新对话',messages:[]}; document.getElementById('chatTitle').textContent='新对话'; renderMessages() }
-function exportChat() { if(!currentChat.messages.length)return toast('暂无对话','info'); const t=currentChat.messages.map(m=>`### ${m.role}\n${m.content}`).join('\n---\n'); const b=new Blob([t],{type:'text/markdown'}); const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`chat-${Date.now()}.md`;a.click();toast('已导出','success') }
-function saveHistory() { if(!currentChat.messages.length)return; const e=chatHistory.findIndex(c=>c.id===currentChat.id); if(e>=0)chatHistory[e]={...currentChat}; else chatHistory.unshift({...currentChat}); chatHistory=chatHistory.slice(0,20); localStorage.setItem('agent_history',JSON.stringify(chatHistory)) }
-function toggleSettings() { const e=document.getElementById('settingsModal'); e.style.display=e.style.display==='none'?'flex':'none' }
-function saveSettings() { settings.apiBase=document.getElementById('apiBase').value.trim(); settings.apiKey=document.getElementById('apiKey').value.trim(); settings.systemPrompt=document.getElementById('systemPrompt').value.trim(); saveSettingsQuiet(); updateStatus(); toggleSettings(); toast('已保存','success') }
-function saveSettingsQuiet() { localStorage.setItem('agent_settings',JSON.stringify(settings)) }
-async function testConnection() { const base=document.getElementById('apiBase').value.trim(); const key=document.getElementById('apiKey').value.trim(); if(!base||!key)return toast('请填写地址和Key','error'); toast('测试中...','info'); try{const r=await fetch(`${base.replace(/\/$/,'')}/models`,{headers:{'Authorization':`Bearer ${key}`}});if(r.ok){const d=await r.json();toast(`连接成功！${d.data?.length||'?'} 个模型`,'success')}else{toast(`HTTP ${r.status}`,'error')}}catch(e){toast(`连接失败: ${e.message}`,'error')} }
-function toast(msg,type='info') { const c=document.getElementById('toastContainer'); const e=document.createElement('div'); e.className=`toast ${type}`; e.textContent=msg; c.appendChild(e); setTimeout(()=>e.remove(),3000) }
-
+function now(){return new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}
+function setInput(t){document.getElementById('msgInput').value=t}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function newChat(){saveHist();chat={id:Date.now(),title:'新对话',msgs:[]};document.getElementById('chatTitle').textContent='新对话';renderMsgs()}
+function saveHist(){if(!chat.msgs.length)return;const e=chatHistory.findIndex(c=>c.id===chat.id);if(e>=0)chatHistory[e]={...chat};else chatHistory.unshift({...chat});chatHistory=chatHistory.slice(0,20);localStorage.setItem('agent_hist',JSON.stringify(chatHistory))}
+function toggleSettings(){const e=document.getElementById('settingsModal');e.style.display=e.style.display==='none'?'flex':'none'}
+function saveSettings(){S.apiBaseOpenAI=document.getElementById('apiBaseOpenAI').value.trim();S.apiBaseClaude=document.getElementById('apiBaseClaude').value.trim();S.apiKey=document.getElementById('apiKey').value.trim();S.systemPrompt=document.getElementById('systemPrompt').value.trim();svCfg();document.getElementById('tokenStatus').textContent=S.apiKey?'已配置 ✓':'未配置';document.getElementById('tokenStatus').style.color=S.apiKey?'#3fb950':'#484f58';toggleSettings();toast('已保存','success')}
+function svCfg(){localStorage.setItem('agent_cfg',JSON.stringify(S))}
+async function testConnection(){const k=document.getElementById('apiKey').value.trim();if(!k)return toast('请填写Key','error');toast('测试中...','info');
+  try{const b1=document.getElementById('apiBaseOpenAI').value.trim();if(b1){const r=await fetch(b1.replace(/\/$/,'')+'/models',{headers:{'Authorization':`Bearer ${k}`}});if(r.ok){const d=await r.json();toast('OpenAI端点: '+(d.data?.length||'?')+'模型 ✓','success')}else toast('OpenAI: HTTP '+r.status,'error')}}catch(e){toast('OpenAI: '+e.message,'error')}
+  setTimeout(async()=>{const b2=document.getElementById('apiBaseClaude').value.trim();if(b2){try{const r=await fetch(b2.replace(/\/$/,'')+'/models',{headers:{'Authorization':`Bearer ${k}`}});if(r.ok){const d=await r.json();toast('Claude端点: '+(d.data?.length||'?')+'模型 ✓','success')}else toast('Claude: HTTP '+r.status,'error')}catch(e){toast('Claude: '+e.message,'error')}}},1500)}
+function toast(m,t='info'){const c=document.getElementById('toastContainer');const e=document.createElement('div');e.className=`toast ${t}`;e.textContent=m;c.appendChild(e);setTimeout(()=>e.remove(),3000)}
 init()
 </script>
 </body>
