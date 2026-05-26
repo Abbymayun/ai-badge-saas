@@ -1,266 +1,626 @@
-﻿<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>AI助手</title>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 智能助手 · 利尔达企业版</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:sans-serif;background:#0d1117;color:#c9d1d9;height:100vh;display:flex}
-.sb{width:240px;background:#161b22;border-right:1px solid #21262d;padding:12px;overflow-y:auto}
-.sb h2{font-size:14px;color:#58a6ff;margin-bottom:12px}
-.agent{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:13px;margin:2px 0}.agent:hover{background:#1c2128}.agent.on{background:#1f2937;border:1px solid #30363d}.agent .dot{width:7px;height:7px;border-radius:50%}.agent .check{color:#3fb950;font-size:11px;margin-left:auto}
-.sb button{width:100%;margin:4px 0;padding:7px;border-radius:5px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:12px;cursor:pointer}.sb button.go{background:#238636;border-color:#2ea043;color:#fff}.sb button:hover{opacity:.9}
-.main{flex:1;display:flex;flex-direction:column}
-.top{display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #21262d;background:#161b22;font-size:13px}.top .badge{background:#0d3320;color:#3fb950;padding:2px 8px;border-radius:8px;font-size:11px}
-.chat{flex:1;overflow-y:auto;padding:16px}
-.msg{margin-bottom:16px;max-width:800px}.msg.usr{display:flex;justify-content:flex-end}.msg.usr .bub{background:#1f2937;padding:10px 14px;border-radius:14px 14px 4px 14px;max-width:75%;font-size:13px;line-height:1.7}
-.msg.ai .bub{font-size:13px;line-height:1.8;color:#c9d1d9;padding-left:10px}.msg.ai .head{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:11px}.msg.ai .head .role{font-weight:600;color:#58a6ff}.msg.ai .head .time{color:#484f58;font-size:10px}
-.bub h2,.bub h3{color:#e1e4e8;margin:8px 0 4px}.bub table{width:100%;border-collapse:collapse;margin:6px 0;font-size:12px}.bub th,.bub td{border:1px solid #30363d;padding:4px 8px;text-align:left}.bub th{background:#161b22}.bub pre{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:8px;overflow-x:auto;font-size:11px;margin:6px 0}.bub code{background:#21262d;padding:1px 4px;border-radius:3px;font-size:12px;color:#d2a8ff}.bub pre code{background:none;padding:0;color:#c9d1d9}.bub li{margin:3px 0;margin-left:16px}
-.loading{display:inline-flex;gap:4px;align-items:center;color:#58a6ff;font-size:13px}.loading .d{width:5px;height:5px;border-radius:50%;background:#58a6ff;animation:b .6s infinite alternate}.loading .d:nth-child(2){animation-delay:.2s}.loading .d:nth-child(3){animation-delay:.4s}@keyframes b{to{opacity:.2}}
-.code-box{border:1px solid #30363d;border-radius:8px;overflow:hidden;margin:8px 0}.code-box .ch{padding:6px 10px;background:#161b22;font-size:11px}.code-box .cb{padding:8px 12px;background:#0d1117;font-size:11px;max-height:300px;overflow-y:auto;font-family:monospace;white-space:pre-wrap}.code-box .cf{padding:6px 10px;background:#161b22;border-top:1px solid #30363d;display:flex;gap:6px}.code-box .cf button{padding:3px 10px;border-radius:4px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:11px;cursor:pointer}.code-box .cf button.pv{background:#1f6feb;border-color:#388bfd}.code-box .cf button:hover{border-color:#58a6ff}
-.pv-frame{width:100%;height:300px;border:1px solid #30363d;border-radius:4px;background:#fff;margin-top:4px;display:none}
-.inp{padding:12px 16px;border-top:1px solid #21262d;background:#161b22;display:flex;gap:8px}.inp textarea{flex:1;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:8px 12px;color:#c9d1d9;font-size:13px;resize:none;outline:none;font-family:inherit;max-height:80px}.inp textarea:focus{border-color:#58a6ff}.inp button{width:36px;height:36px;border-radius:8px;border:none;background:#238636;color:#fff;font-size:16px;cursor:pointer}.inp button:disabled{background:#21262d;color:#484f58}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100}.modal{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:20px;width:480px;max-width:90vw}.modal h3{font-size:15px;margin-bottom:12px}.modal label{display:block;font-size:11px;color:#8b949e;margin:8px 0 3px}.modal input,.modal textarea,.modal select{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:5px;padding:7px 10px;color:#c9d1d9;font-size:12px;outline:none}.modal textarea{resize:vertical;min-height:60px}.modal-acts{display:flex;gap:6px;justify-content:flex-end;margin-top:14px}.modal-acts button{padding:6px 14px;border-radius:5px;font-size:12px;cursor:pointer}.mc{background:#21262d;border:1px solid #30363d;color:#c9d1d1}.ms{background:#238636;border:1px solid #2ea043;color:#fff}
-.toast{position:fixed;top:16px;right:16px;padding:8px 14px;border-radius:6px;font-size:12px;z-index:200;animation:ti .3s}@keyframes ti{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}.toast.ok{background:#0d3320;border:1px solid #238636;color:#3fb950}.toast.er{background:#3d1117;border:1px solid #da3633;color:#f85149}
-</style></head><body>
-<div class="sb"><h2>🤖 AI 智能助手</h2>
-<div id="agents"></div>
-<div style="margin-top:10px" id="modelArea"></div>
-<button class="go" onclick="newAgent()">➕ 新建 Agent</button>
-<button onclick="groupChat()">👥 发起群聊</button>
-<button onclick="clearAll()">🔄 清空对话</button><button style="background:#1f6feb;border-color:#388bfd;color:#fff" onclick="showCfg()">⚙️ API设置 (已配置)</button>
-<div style="font-size:10px;color:#484f58;margin-top:12px" id="footer">5个Agent</div>
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#0f1117;color:#e1e4e8;height:100vh;display:flex}
+/* 侧边栏 */
+.sidebar{width:260px;background:#161b22;border-right:1px solid #21262d;display:flex;flex-direction:column;flex-shrink:0}
+.sb-header{padding:16px;border-bottom:1px solid #21262d}
+.sb-header h1{font-size:16px;color:#58a6ff;display:flex;align-items:center;gap:8px}
+.sb-header p{font-size:11px;color:#8b949e;margin-top:4px}
+.sb-section{padding:12px 16px;border-bottom:1px solid #21262d}
+.sb-section-title{font-size:11px;color:#8b949e;text-transform:uppercase;margin-bottom:8px;letter-spacing:.5px}
+.sb-model-list{display:flex;flex-direction:column;gap:4px}
+.sb-model{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:13px;transition:.15s}
+.sb-model:hover{background:#1c2128}
+.sb-model.active{background:#1f2937;border:1px solid #30363d}
+.sb-model-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sb-model-name{flex:1;color:#c9d1d9}.sb-model-tag{font-size:10px;padding:1px 6px;border-radius:4px;background:#21262d;color:#8b949e}
+.sb-model-check{color:#3fb950;font-size:12px}
+.sb-actions{padding:12px 16px;display:flex;flex-direction:column;gap:6px}
+.sb-btn{width:100%;padding:8px;border-radius:6px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:12px;cursor:pointer;text-align:left;transition:.15s}
+.sb-btn:hover{background:#30363d;border-color:#58a6ff}
+.sb-btn.primary{background:#238636;border-color:#2ea043;color:#fff}.sb-btn.primary:hover{background:#2ea043}
+.sb-btn.danger{color:#f85149}.sb-btn.danger:hover{background:#da3633;color:#fff;border-color:#da3633}
+.sb-footer{padding:12px 16px;border-top:1px solid #21262d;font-size:11px;color:#484f58;margin-top:auto}
+
+/* 主区域 */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.header{padding:12px 20px;border-bottom:1px solid #21262d;display:flex;align-items:center;justify-content:space-between;background:#161b22}
+.header-title{font-size:14px;font-weight:600}
+.header-actions{display:flex;gap:8px;align-items:center}
+.header-badge{padding:2px 8px;border-radius:10px;font-size:11px;background:#1f2937;color:#8b949e;border:1px solid #30363d}
+.header-badge.online{background:#0d3320;color:#3fb950;border-color:#238636}
+
+/* 对话区 */
+.chat-area{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
+.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#484f58;gap:12px}
+.chat-empty-icon{font-size:48px;opacity:.5}
+.chat-empty h2{font-size:20px;color:#8b949e}
+.chat-empty p{font-size:13px;max-width:400px;text-align:center;line-height:1.6}
+
+/* 消息气泡 */
+.msg{display:flex;gap:12px;max-width:900px}
+.msg.user{flex-direction:row-reverse;align-self:flex-end}
+.msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+.msg.user .msg-avatar{background:#238636}
+.msg.assistant .msg-avatar{background:#1f6feb}
+.msg.system .msg-avatar{background:#6e40c9}
+.msg-body{flex:1;min-width:0}
+.msg-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px}
+.msg.user .msg-header{justify-content:flex-end}
+.msg-role{font-weight:600}.msg.user .msg-role{color:#7ee787}.msg.assistant .msg-role{color:#58a6ff}.msg.system .msg-role{color:#d2a8ff}
+.msg-time{color:#484f58;font-size:11px}
+.msg-content{font-size:14px;line-height:1.7;color:#c9d1d9}
+.msg-content p{margin:8px 0}
+.msg-content pre{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;overflow-x:auto;font-size:12px;line-height:1.5;margin:8px 0}
+.msg-content code{background:#21262d;padding:2px 6px;border-radius:4px;font-size:13px;color:#d2a8ff}
+.msg-content pre code{background:transparent;padding:0;color:#c9d1d9}
+.msg-content ul,.msg-content ol{padding-left:20px;margin:8px 0}
+.msg-content li{margin:4px 0}
+.msg-content table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px}
+.msg-content th,.msg-content td{border:1px solid #30363d;padding:6px 10px;text-align:left}
+.msg-content th{background:#161b22;color:#8b949e}
+.msg-content strong{color:#e1e4e8}
+.msg-content blockquote{border-left:3px solid #30363d;padding-left:12px;color:#8b949e;margin:8px 0}
+.msg.bubble-user .msg-content{background:#1f2937;padding:12px 16px;border-radius:16px 16px 4px 16px}
+
+/* 思考过程 */
+.think-box{margin:8px 0;border:1px solid #21262d;border-radius:8px;overflow:hidden}
+.think-head{padding:8px 12px;background:#161b22;font-size:12px;color:#8b949e;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none}
+.think-head:hover{color:#c9d1d9}
+.think-body{padding:10px 14px;font-size:12px;color:#8b949e;line-height:1.6;border-top:1px solid #21262d;display:none}
+.think-box.open .think-body{display:block}
+
+/* 多模型结果 */
+.multi-results{margin:8px 0}
+.mr-header{font-size:12px;color:#8b949e;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.mr-model-tag{font-size:10px;padding:2px 8px;border-radius:6px;background:#1f2937;color:#58a6ff}
+.mr-item{margin-bottom:8px;border:1px solid #21262d;border-radius:8px;overflow:hidden}
+.mr-item-head{padding:6px 12px;background:#161b22;font-size:11px;color:#8b949e;display:flex;align-items:center;gap:6px}
+.mr-item-body{padding:8px 12px;font-size:12px;line-height:1.6;color:#c9d1d9;max-height:200px;overflow-y:auto}
+.mr-item.selected{border-color:#238636}.mr-item.selected .mr-item-head{background:#0d3320}
+
+/* 输入区 */
+.input-area{padding:16px 20px;border-top:1px solid #21262d;background:#161b22}
+.input-row{display:flex;gap:12px;align-items:flex-end}
+.input-wrap{flex:1;position:relative}
+.input-wrap textarea{width:100%;background:#0f1117;border:1px solid #30363d;border-radius:10px;padding:12px 16px;color:#c9d1d9;font-size:14px;line-height:1.6;resize:none;outline:none;font-family:inherit;transition:.15s}
+.input-wrap textarea:focus{border-color:#58a6ff;box-shadow:0 0 0 2px rgba(88,166,255,.15)}
+.input-wrap textarea::placeholder{color:#484f58}
+.input-actions{display:flex;align-items:center;gap:4px;padding:4px 8px}
+.input-hint{font-size:11px;color:#484f58;padding:4px 8px}
+.send-btn{width:40px;height:40px;border-radius:10px;border:1px solid #30363d;background:#238636;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
+.send-btn:hover{background:#2ea043}
+.send-btn:disabled{background:#21262d;color:#484f58;cursor:not-allowed}
+
+/* 设置弹窗 */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:100}
+.modal{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:24px;width:500px;max-width:90vw}
+.modal h3{font-size:16px;margin-bottom:12px;color:#c9d1d9}
+.modal label{display:block;font-size:12px;color:#8b949e;margin:10px 0 4px}
+.modal input,.modal textarea,.modal select{width:100%;background:#0f1117;border:1px solid #30363d;border-radius:6px;padding:8px 12px;color:#c9d1d9;font-size:13px;outline:none;font-family:inherit}
+.modal input:focus,.modal textarea:focus,.modal select:focus{border-color:#58a6ff}
+.modal textarea{resize:vertical;min-height:80px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.modal-actions button{padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer}
+.modal-btn-cancel{background:#21262d;border:1px solid #30363d;color:#c9d1d9}
+.modal-btn-save{background:#238636;border:1px solid #2ea043;color:#fff}
+.modal-btn-test{background:#1f6feb;border:1px solid #388bfd;color:#fff}
+
+/* Toast */
+.toast{position:fixed;top:20px;right:20px;padding:10px 16px;border-radius:8px;font-size:13px;z-index:200;animation:slideIn .3s}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast.success{background:#0d3320;border:1px solid #238636;color:#3fb950}
+.toast.error{background:#3d1117;border:1px solid #da3633;color:#f85149}
+.toast.info{background:#0d213b;border:1px solid #1f6feb;color:#58a6ff}
+
+/* 任务分解 */
+.task-card{border:1px solid #21262d;border-radius:8px;padding:12px;margin:8px 0;background:#0f1117}
+.task-card-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.task-card-icon{font-size:16px}.task-card-title{font-size:13px;font-weight:600;flex:1}.task-card-status{font-size:11px;padding:2px 8px;border-radius:6px}
+.task-card-status.pending{background:#1f2937;color:#d29922}.task-card-status.running{background:#0d213b;color:#58a6ff;animation:pulse 2s infinite}.task-card-status.done{background:#0d3320;color:#3fb950}@keyframes pulse{50%{opacity:.6}}
+.task-card-detail{font-size:12px;color:#8b949e;line-height:1.5}
+</style>
+</head>
+<body>
+
+<!-- 侧边栏 -->
+<div class="sidebar">
+  <div class="sb-header">
+    <h1>🤖 AI 智能助手</h1>
+    <p>利尔达企业版 · 多模型协同</p>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-section-title">🎯 主模型</div>
+    <div class="sb-model-list" id="primaryModelList"></div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-section-title">🔧 辅助模型（多模型协同）</div>
+    <div class="sb-model-list" id="secondaryModelList"></div>
+  </div>
+
+  <div class="sb-actions">
+    <button class="sb-btn" onclick="newChat()">➕ 新建对话</button>
+    <button class="sb-btn" onclick="toggleSettings()">⚙️ API 设置</button>
+    <button class="sb-btn" onclick="exportChat()">💾 导出对话</button>
+    <button class="sb-btn danger" onclick="clearAll()">🗑️ 清除全部</button>
+  </div>
+
+  <div class="sb-footer">
+    Token: <span id="tokenStatus" style="color:#484f58;">未配置</span>
+  </div>
 </div>
+
+<!-- 主区域 -->
 <div class="main">
-<div class="top"><span id="title">AI 智能助手</span><span class="badge" id="badge">选择Agent开始</span></div>
-<div class="chat" id="chat"></div>
-<div class="inp"><textarea id="input" rows="2" placeholder="输入任务..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea><button id="sbtn" onclick="send()">➤</button></div>
+  <div class="header">
+    <div class="header-title" id="chatTitle">新对话</div>
+    <div class="header-actions">
+      <span class="header-badge online" id="modelBadge">Claude Sonnet 4</span>
+      <span class="header-badge" id="multiBadge" style="display:none">多模型协同</span>
+    </div>
+  </div>
+
+  <div class="chat-area" id="chatArea">
+    <div class="chat-empty">
+      <div class="chat-empty-icon">💬</div>
+      <h2>AI 智能助手</h2>
+      <p>输入你的任务，AI会自动分析并协调多个模型协同完成。<br>支持：代码生成、文档处理、数据分析、多模型对比等场景。</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+        <span class="header-badge" style="cursor:pointer" onclick="setInput('帮我分析这个项目的技术架构，给出优化建议')">🏗️ 架构分析</span>
+        <span class="header-badge" style="cursor:pointer" onclick="setInput('写一份AI智能胸牌的产品介绍文档')">📝 文档生成</span>
+        <span class="header-badge" style="cursor:pointer" onclick="setInput('用多模型协同：分析市场定价策略')">🤝 多模型协同</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <div class="input-wrap">
+        <textarea id="msgInput" rows="2" placeholder="输入你的任务，AI会自动分析并协调多模型完成..." onkeydown="handleKey(event)"></textarea>
+        <div class="input-hint">
+          <span id="charCount">0/8000</span>
+          &nbsp;·&nbsp;Enter 发送 &nbsp;·&nbsp;Shift+Enter 换行
+        </div>
+      </div>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="发送 (Enter)">➤</button>
+    </div>
+  </div>
 </div>
 
+<!-- 设置弹窗 -->
+<div class="modal-overlay" id="settingsModal" style="display:none">
+  <div class="modal">
+    <h3>⚙️ API 设置</h3>
+    <label>API 地址（OpenAI兼容格式）</label>
+    <input type="text" id="apiBase" placeholder="https://api.openai.com/v1">
+    <label>API Key / Token</label>
+    <input type="password" id="apiKey" placeholder="sk-...">
+    <label>系统提示词</label>
+    <textarea id="systemPrompt" rows="3" placeholder="你是一个专业的AI助手..."></textarea>
+    <div class="modal-actions">
+      <button class="modal-btn-test" onclick="testConnection()">🔌 测试连接</button>
+      <button class="modal-btn-cancel" onclick="toggleSettings()">取消</button>
+      <button class="modal-btn-save" onclick="saveSettings()">保存</button>
+    </div>
+  </div>
+</div>
 
-<!-- API设置弹窗 -->
-<div class="modal-overlay" id="cfgModal"><div class="modal">
-<h3>⚙️ API 设置</h3>
-<label>API Key</label><input id="cfgKey" type="password" value="voVHB960PuPIgHnHK42wb7q84XnJgd6jhACq009RUSeLWRyQ">
-<label>OpenAI地址 (GPT/DeepSeek/Qwen)</label><input id="cfgOAI" value="http://10.16.11.195/v1">
-<label>Claude地址</label><input id="cfgClaude" value="http://10.16.11.195">
-<div style="font-size:11px;color:#8b949e;margin-top:6px">配置已预填。点击保存后即可调用真实API。</div>
-<div class="modal-acts"><button class="mc" onclick="hideM('cfgModal')">取消</button><button class="ms" onclick="saveCfg()">💾 保存并连接</button></div>
-</div></div>\n<!-- Agent表单 -->
-<div class="modal-overlay" id="agentModal"><div class="modal">
-<h3 id="amTitle">新建 Agent</h3>
-<label>名称</label><input id="amName" placeholder="如：PRD生成器">
-<label>提示词</label><textarea id="amPrompt" rows="4" placeholder="你是..."></textarea>
-<label>模型</label><select id="amModel"><option value="claude-sonnet-4-6">Claude Sonnet 4</option><option value="claude-opus-4-6">Claude Opus 4</option><option value="gpt-5.5">GPT-5.5</option><option value="gpt-5.3-codex">GPT-5.3 Codex</option><option value="deepseek-v4-pro">DeepSeek V4 Pro</option><option value="qwen3.6-plus">Qwen 3.6 Plus</option></select>
-<div class="modal-acts"><button class="mc" onclick="hideM('agentModal')">取消</button><button class="ms" onclick="saveAgent()">保存</button></div>
-</div></div>
-
-<!-- 群聊表单 -->
-<div class="modal-overlay" id="groupModal"><div class="modal">
-<h3>👥 发起群聊</h3>
-<label>主题</label><input id="gmTopic" placeholder="讨论主题">
-<label>选择Agent</label><div id="gmAgents" style="max-height:200px;overflow-y:auto"></div>
-<div class="modal-acts"><button class="mc" onclick="hideM('groupModal')">取消</button><button class="ms" onclick="startGroup()">开始群聊</button></div>
-</div></div>
-
-<div id="toasts"></div>
+<!-- Toast容器 -->
+<div id="toastContainer"></div>
 
 <script>
-// ===== 数据 =====
-var A = [
-  {id:'_assistant',name:'通用助手',prompt:'全能AI助手',model:'claude-sonnet-4-6',color:'#58a6ff',builtin:true},
-  {id:'_prd',name:'PRD文档专家',prompt:'输出结构化PRD文档，含背景、功能表、验收标准',model:'claude-sonnet-4-6',color:'#d4773a',builtin:true},
-  {id:'_reviewer',name:'文档审查员',prompt:'审查文档完整性和一致性',model:'gpt-5.5',color:'#b83bd4',builtin:true},
-  {id:'_coder',name:'代码工程师',prompt:'输出完整可运行代码，用```包裹',model:'gpt-5.3-codex',color:'#10a37f',builtin:true},
-  {id:'_pm',name:'项目经理',prompt:'输出任务拆解、时间线、风险清单',model:'deepseek-v4-pro',color:'#4f46e5',builtin:true}
+// ============ 模型配置 ============
+const MODEL_LIST = [
+  { id:'claude-sonnet-4-6', name:'Claude Sonnet 4', tag:'推荐', color:'#d4773a', category:'primary' },
+  { id:'claude-opus-4-6', name:'Claude Opus 4', tag:'最强', color:'#b83bd4', category:'primary' },
+  { id:'gpt-5.5', name:'GPT-5.5', tag:'', color:'#10a37f', category:'primary' },
+  { id:'gpt-5.4', name:'GPT-5.4', tag:'', color:'#10a37f', category:'primary' },
+  { id:'gpt-5.3-codex', name:'GPT-5.3 Codex', tag:'代码', color:'#10a37f', category:'both' },
+  { id:'deepseek-v4-pro', name:'DeepSeek V4 Pro', tag:'', color:'#4f46e5', category:'both' },
+  { id:'deepseek-v4-flash', name:'DeepSeek V4 Flash', tag:'快速', color:'#4f46e5', category:'secondary' },
+  { id:'deepseek-r1', name:'DeepSeek R1', tag:'推理', color:'#4f46e5', category:'secondary' },
+  { id:'MiniMax-M2.7', name:'MiniMax M2.7', tag:'', color:'#f59e0b', category:'secondary' },
+  { id:'qwen3.6-plus', name:'Qwen 3.6 Plus', tag:'', color:'#06b6d4', category:'secondary' },
+  { id:'qwen3.5-plus', name:'Qwen 3.5 Plus', tag:'', color:'#06b6d4', category:'secondary' },
+  { id:'qwen3-coder-plus', name:'Qwen Coder Plus', tag:'代码', color:'#06b6d4', category:'secondary' }
 ]
-var myA = JSON.parse(localStorage.getItem('ma')||'[]')
-function allA(){return A.concat(myA)}
-function ga(id){return allA().find(function(a){return a.id===id})}
 
-var chat = {agent:null,msgs:[],mode:'single'}
-var editId = null
+// ============ 状态 ============
+let settings = JSON.parse(localStorage.getItem('ai_assistant_settings') || '{}')
+let chatHistory = JSON.parse(localStorage.getItem('ai_assistant_history') || '[]')
+let currentChat = { id: Date.now(), title:'新对话', messages:[] }
+let isStreaming = false
+let primaryModel = settings.primaryModel || 'claude-sonnet-4-6'
+let secondaryModels = settings.secondaryModels || []
+let multiMode = false
 
-// ===== 渲染 =====
-function render(){
-  document.getElementById('agents').innerHTML = allA().map(function(a){return '<div class="agent'+(chat.agent===a.id?' on':'')+'" onclick="sel(\''+a.id+'\')"><span class="dot" style="background:'+a.color+'"></span>'+a.name+(chat.agent===a.id?'<span class="check">✓</span>':'')+(a.builtin?'':'<span style="color:#f85149;font-size:10px;margin-left:auto;cursor:pointer" onclick="event.stopPropagation();del(\''+a.id+'\')">✕</span>')+'</div>'}).join('')
-  
-  var a = ga(chat.agent)
-  document.getElementById('title').textContent = a?a.name+' . 对话':'AI 智能助手'
-  document.getElementById('badge').textContent = a?'模型: '+a.model:'选择Agent开始'
-  document.getElementById('footer').textContent = allA().length+'个Agent'
-  
-  var models = [{id:'claude-sonnet-4-6',name:'Claude Sonnet 4',color:'#d4773a'},{id:'claude-opus-4-6',name:'Claude Opus 4',color:'#b83bd4'},{id:'gpt-5.5',name:'GPT-5.5',color:'#10a37f'},{id:'gpt-5.3-codex',name:'GPT-5.3 Codex',color:'#10a37f'},{id:'deepseek-v4-pro',name:'DeepSeek V4 Pro',color:'#4f46e5'},{id:'qwen3.6-plus',name:'Qwen 3.6 Plus',color:'#06b6d4'}]
-  document.getElementById('modelArea').innerHTML = chat.agent ? '<div style="font-size:10px;color:#8b949e;margin:8px 0 4px">🔧 模型</div>'+models.map(function(m){return '<div class="agent" onclick="sm(\''+m.id+'\')"><span class="dot" style="background:'+m.color+'"></span>'+m.name+'</div>'}).join('') : ''
-  
-  renderMsgs()
+// ============ 初始化 ============
+function init() {
+  renderModelList()
+  renderMessages()
+  updateTokenStatus()
+  updateModelBadge()
+  document.getElementById('apiBase').value = settings.apiBase || ''
+  document.getElementById('apiKey').value = settings.apiKey || ''
+  document.getElementById('systemPrompt').value = settings.systemPrompt || '你是一个专业的AI智能助手，隶属于利尔达集团。你擅长代码生成、文档处理、数据分析和多模型协同工作。回答要专业、准确、有条理。'
 }
 
-function sel(id){chat.agent=id;chat.mode='single';chat.msgs=[];render()}
-function sm(mid){var a=ga(chat.agent);if(a&&!a.builtin){a.model=mid;localStorage.setItem('ma',JSON.stringify(myA));render()}}
+function renderModelList() {
+  const primary = MODEL_LIST.filter(m => m.category === 'primary' || m.category === 'both')
+  const secondary = MODEL_LIST.filter(m => m.category === 'secondary' || m.category === 'both')
+  
+  document.getElementById('primaryModelList').innerHTML = primary.map(m => `
+    <div class="sb-model ${primaryModel===m.id?'active':''}" onclick="selectPrimary('${m.id}')">
+      <span class="sb-model-dot" style="background:${m.color}"></span>
+      <span class="sb-model-name">${m.name}</span>
+      ${m.tag?`<span class="sb-model-tag">${m.tag}</span>`:''}
+      ${primaryModel===m.id?'<span class="sb-model-check">✓</span>':''}
+    </div>
+  `).join('')
 
-// ===== 发送 =====
-function send(){
-  var t = document.getElementById('input').value.trim()
-  if(!t) return
-  document.getElementById('input').value = ''
-  
-  if(chat.mode==='group'){doGroup(t);return}
-  if(!chat.agent){alert('请先选择一个Agent');return}
-  
-  var now = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})
-  var a = ga(chat.agent)
-  if(!a) return
-  
-  chat.msgs.push({role:'user',content:t,time:now})
-  var aiIdx = chat.msgs.length
-  chat.msgs.push({role:'ai',content:'<span class="loading">分析中<span class="d"></span><span class="d"></span><span class="d"></span></span>',time:now,agent:a.name,color:a.color})
-  document.getElementById('sbtn').disabled = true
-  renderMsgs()
-  
-  // 用setTimeout模拟分析过程，确保UI先更新
-  setTimeout(function(){
-    var base = a.model.startsWith('claude-') ? CFG.apiClaude : CFG.apiOAI
-if(base && CFG.apiKey){try{var xhr=new XMLHttpRequest();xhr.open('POST',base.replace(/\/\$/,'')+'/chat/completions',false);xhr.setRequestHeader('Content-Type','application/json');xhr.setRequestHeader('Authorization','Bearer '+CFG.apiKey);xhr.send(JSON.stringify({model:a.model,messages:[{role:'system',content:a.prompt},{role:'user',content:t}],max_tokens:2500}));if(xhr.status===200){var d=JSON.parse(xhr.responseText);var r=d.choices[0].message.content}else{var r=mock(a.name,t)}}catch(e){var r=mock(a.name,t)}}else{var r=mock(a.name,t)}
-    chat.msgs[aiIdx].content = r
-    // 检测代码
-    var m = r.match(/```(\w*)\n([\s\S]*?)```/)
-    if(m){chat.msgs[aiIdx].code = {code:m[2],lang:m[1]||'plain',html:m[1]==='html'||m[2].indexOf('<!DOCTYPE')>=0||m[2].indexOf('<html')>=0}}
-    renderMsgs()
-    document.getElementById('sbtn').disabled = false
-  }, 600)
+  document.getElementById('secondaryModelList').innerHTML = secondary.map(m => `
+    <div class="sb-model" onclick="toggleSecondary('${m.id}')">
+      <span class="sb-model-dot" style="background:${m.color}"></span>
+      <span class="sb-model-name">${m.name}</span>
+      ${secondaryModels.includes(m.id)?'<span class="sb-model-check">✓</span>':''}
+    </div>
+  `).join('')
 }
 
-function doGroup(topic){
-  var gs = JSON.parse(localStorage.getItem('gp')||'[]')
-  if(gs.length<2){alert('请先发起群聊选择Agent');return}
-  
-  var now = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})
-  chat.msgs.push({role:'user',content:'📢 群聊主题：'+topic,time:now})
-  renderMsgs()
-  
-  var agents = gs.map(ga).filter(Boolean)
-  var round = 0
-  
-  function nextRound(){
-    if(round >= 3){
-      // 总结
-      var host = agents[0]
-      var si = chat.msgs.length
-      chat.msgs.push({role:'ai',content:'',time:now,agent:host.name+' 📋总结',color:host.color})
-      renderMsgs()
-      setTimeout(function(){
-        chat.msgs[si].content = '<h3>📋 群聊总结</h3><p>'+agents.length+'位Agent就"'+topic+'"进行了3轮讨论。核心结论：<br>1. 产品侧聚焦3个核心场景<br>2. 技术侧采用Vue3+微服务架构<br>3. 管理侧分阶段推进，每阶段2周</p><p><em>配置API后Agent可进行真正讨论</em></p>'
-        renderMsgs()
-      },400)
-      return
+function selectPrimary(id) {
+  primaryModel = id
+  settings.primaryModel = id
+  saveSettingsQuiet()
+  renderModelList()
+  updateModelBadge()
+  document.getElementById('multiBadge').style.display = secondaryModels.length ? 'inline' : 'none'
+}
+
+function toggleSecondary(id) {
+  const idx = secondaryModels.indexOf(id)
+  if (idx >= 0) secondaryModels.splice(idx,1)
+  else secondaryModels.push(id)
+  settings.secondaryModels = secondaryModels
+  saveSettingsQuiet()
+  renderModelList()
+  document.getElementById('multiBadge').style.display = secondaryModels.length ? 'inline' : 'none'
+}
+
+function updateModelBadge() {
+  const m = MODEL_LIST.find(x => x.id === primaryModel)
+  document.getElementById('modelBadge').textContent = m ? m.name : primaryModel
+}
+
+// ============ 消息渲染 ============
+function renderMessages() {
+  const area = document.getElementById('chatArea')
+  if (currentChat.messages.length === 0) {
+    area.innerHTML = `<div class="chat-empty">
+      <div class="chat-empty-icon">💬</div>
+      <h2>AI 智能助手</h2>
+      <p>输入你的任务，AI会自动分析并协调多个模型协同完成。</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+        <span class="header-badge" style="cursor:pointer" onclick="setInput('帮我分析这个项目的技术架构，给出优化建议')">🏗️ 架构分析</span>
+        <span class="header-badge" style="cursor:pointer" onclick="setInput('写一份AI智能胸牌的产品介绍文档')">📝 文档生成</span>
+        <span class="header-badge" style="cursor:pointer" onclick="setInput('用多模型协同：分析市场定价策略')">🤝 多模型协同</span>
+      </div>
+    </div>`
+    return
+  }
+
+  area.innerHTML = currentChat.messages.map((msg,idx) => {
+    const cls = msg.role === 'user' ? 'user' : (msg.role === 'system' ? 'system' : 'assistant')
+    const bubbleCls = msg.role === 'user' ? ' bubble-user' : ''
+    const avatar = msg.role === 'user' ? '👤' : (msg.role === 'system' ? '⚙️' : '🤖')
+    const roleName = msg.role === 'user' ? '你' : (msg.role === 'system' ? '系统' : (msg.model || 'AI助手'))
+
+    let content = msg.content
+    // Simple markdown rendering
+    content = content
+      .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n\* (.+)/g, '\n<ul><li>$1</li></ul>')
+      .replace(/\n- (.+)/g, '\n<ul><li>$1</li></ul>')
+      .replace(/\n\d+\. (.+)/g, '\n<ol><li>$1</li></ol>')
+      .replace(/\|(.+)\|/g, (m) => m.includes('---') ? '' : '<tr>' + m.split('|').filter(c=>c.trim()).map(c=>'<td>'+c.trim()+'</td>').join('')+'</tr>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^>(.+)/gm, '<blockquote>$1</blockquote>')
+
+    let html = `
+    <div class="msg ${cls}${bubbleCls}">
+      <div class="msg-avatar">${avatar}</div>
+      <div class="msg-body">
+        <div class="msg-header">
+          <span class="msg-role">${roleName}</span>
+          ${msg.model ? `<span class="header-badge" style="font-size:10px;padding:1px 6px">${msg.model}</span>` : ''}
+          <span class="msg-time">${msg.time || ''}</span>
+        </div>`
+
+    if (msg.thinking) {
+      html += `<div class="think-box">
+        <div class="think-head" onclick="this.parentElement.classList.toggle('open')">💭 思考过程</div>
+        <div class="think-body">${msg.thinking}</div>
+      </div>`
     }
-    var a = agents[round % agents.length]
-    var si = chat.msgs.length
-    chat.msgs.push({role:'ai',content:'<span class="loading">思考中<span class="d"></span><span class="d"></span><span class="d"></span></span>',time:now,agent:a.name,color:a.color})
-    renderMsgs()
-    setTimeout(function(){
-      chat.msgs[si].content = gm(a.name, a.id, round)
-      renderMsgs()
-      round++
-      setTimeout(nextRound, 400)
-    }, 400)
-  }
-  nextRound()
-}
 
-// ===== Mock =====
-function mock(name, msg){
-  if(name.indexOf('PRD')>=0||name.indexOf('产品')>=0){
-    return '## 产品需求文档（PRD）\n\n**文档编号**：PRD-2026-0526\n**版本**：V1.0\n\n### 一、背景\n基于业务需要，需要输出结构化的产品需求文档。\n\n### 二、功能列表\n\n| 优先级 | 功能 | 说明 | 工时 |\n|-------|------|------|------|\n| P0 | 核心功能 | 必须实现 | 3天 |\n| P1 | 增强功能 | 提升体验 | 2天 |\n| P2 | 优化项 | 后续迭代 | 1天 |\n\n### 三、验收标准\n- [ ] P0功能通过测试\n- [ ] 异常场景有兜底\n- [ ] 性能满足要求\n\n> 模拟回复。配置API后可得真实AI生成内容。'
-  }
-  if(name.indexOf('审查')>=0){
-    return '## 文档审查报告\n\n### 完整性\n✅ 核心章节完整\n⚠️ 缺少异常流程\n⚠️ 缺少性能指标\n\n### 一致性\n✅ 术语统一\n⚠️ 评分区间不一致\n\n**总评**：7.5/10'
-  }
-  if(name.indexOf('代码')>=0||name.indexOf('coder')>=0){
-    return '```html\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset="UTF-8">\n<title>Demo</title>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\nbody{font-family:sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;align-items:center;justify-content:center}\n.card{background:#fff;border-radius:16px;padding:40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}\nh1{color:#333;margin-bottom:12px}p{color:#666;line-height:1.6}\n.btn{display:inline-block;margin-top:16px;padding:12px 28px;background:#667eea;color:#fff;border-radius:8px;text-decoration:none}\n</style>\n</head>\n<body>\n<div class="card">\n<h1>🤖 AI 生成页面</h1>\n<p>这是代码工程师Agent生成的演示页面。</p>\n<a href="#" class="btn">开始使用</a>\n</div>\n</body>\n</html>\n```\n\n> 模拟代码。点👁️预览查看效果。'
-  }
-  if(name.indexOf('项目')>=0||name.indexOf('经理')>=0){
-    return '## 项目计划\n\n### 任务拆解\n| 阶段 | 任务 | 时间 |\n|------|------|------|\n| 1 | 需求确认 | 3天 |\n| 2 | 核心开发 | 5天 |\n| 3 | 联调测试 | 3天 |\n| 4 | 修复上线 | 2天 |\n\n### 风险\n🔴 外部依赖可能延期\n🟡 测试人力不足\n🟢 UI调整可控'
-  }
-  return '好的，我收到了你的需求："'+msg.substring(0,40)+'..."\n\n从以下几个方面分析：\n\n1. **需求理解**：首先明确核心目标\n2. **方案建议**：基于现有架构给出最优方案\n3. **实施步骤**：拆分为可执行的步骤\n4. **注意事项**：提前识别风险点\n\n> 模拟回复。配置API后可得真实AI生成。'
-}
-
-function gm(name, id, round){
-  var m = {
-    _prd:['从产品角度看，建议聚焦3个核心用户场景，先做深再做广。','补充：竞品分析也很关键，特别是金融行业。','总结：产品侧优先做深核心场景。'],
-    _reviewer:['审查发现：数据安全和异常流程需补充。','权限控制方案还需要细化。'],
-    _coder:['技术架构用Vue3+SpringBoot，API用RESTful。','代码层面做好模块化便于维护。'],
-    _pm:['从项目角度，建议分3个迭代，每轮2周。','风险：设备联调是关键路径。'],
-    _assistant:['这个话题很有价值，建议先明确目标再分解。','团队协作方面，日报+看板能有效同步。']
-  }
-  var arr = m[id]||m._assistant
-  return arr[round % arr.length]
-}
-
-// ===== Agent管理 =====
-function newAgent(id){
-  editId = id||null
-  document.getElementById('amTitle').textContent = id?'编辑 Agent':'新建 Agent'
-  var a = id?ga(id):null
-  document.getElementById('amName').value = a?a.name:''
-  document.getElementById('amPrompt').value = a?a.prompt:''
-  if(a) document.getElementById('amModel').value = a.model
-  document.getElementById('agentModal').style.display='flex'
-}
-function saveAgent(){
-  var name = document.getElementById('amName').value.trim()
-  var prompt = document.getElementById('amPrompt').value.trim()
-  if(!name){alert('请输入名称');return}
-  var colors = ['#d4773a','#10a37f','#6e40c9','#f59e0b','#06b6d4']
-  if(editId){
-    var i = myA.findIndex(function(a){return a.id===editId})
-    if(i>=0){myA[i].name=name;myA[i].prompt=prompt;myA[i].model=document.getElementById('amModel').value}
-  }else{
-    myA.push({id:'a'+Date.now(),name:name,prompt:prompt,model:document.getElementById('amModel').value,color:colors[myA.length%5],builtin:false})
-  }
-  localStorage.setItem('ma',JSON.stringify(myA))
-  hideM('agentModal');editId=null;render()
-}
-function del(id){myA=myA.filter(function(a){return a.id!==id});localStorage.setItem('ma',JSON.stringify(myA));if(chat.agent===id){chat.agent=null;chat.msgs=[]};render()}
-function groupChat(){
-  document.getElementById('gmAgents').innerHTML = allA().map(function(a){return '<label style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:13px;cursor:pointer"><input type="checkbox" value="'+a.id+'"><span class="dot" style="background:'+a.color+';width:7px;height:7px;border-radius:50%"></span>'+a.name+'</label>'}).join('')
-  document.getElementById('groupModal').style.display='flex'
-}
-function startGroup(){
-  var checked = Array.from(document.querySelectorAll('#gmAgents input:checked')).map(function(c){return c.value})
-  if(checked.length<2){alert('至少选2个Agent');return}
-  localStorage.setItem('gp',JSON.stringify(checked))
-  hideM('groupModal')
-  chat.mode='group';chat.agent=null;chat.msgs=[]
-  document.getElementById('title').textContent = '👥 群聊 . '+checked.length+' Agent'
-  render()
-  var topic = document.getElementById('gmTopic').value.trim()
-  if(topic) document.getElementById('input').value = topic
-}
-var CFG = JSON.parse(localStorage.getItem('ai_cfg')||'{"apiKey":"voVHB960PuPIgHnHK42wb7q84XnJgd6jhACq009RUSeLWRyQ","apiOAI":"http://10.16.11.195/v1","apiClaude":"http://10.16.11.195"}')
-function showCfg(){document.getElementById('cfgKey').value=CFG.apiKey||'';document.getElementById('cfgOAI').value=CFG.apiOAI||'';document.getElementById('cfgClaude').value=CFG.apiClaude||'';document.getElementById('cfgModal').style.display='flex'}
-function saveCfg(){CFG.apiKey=document.getElementById('cfgKey').value.trim();CFG.apiOAI=document.getElementById('cfgOAI').value.trim();CFG.apiClaude=document.getElementById('cfgClaude').value.trim();localStorage.setItem('ai_cfg',JSON.stringify(CFG));hideM('cfgModal')}
-function clearAll(){chat.msgs=[];render()}
-function hideM(id){document.getElementById(id).style.display='none'}
-
-// ===== 渲染消息 =====
-function renderMsgs(){
-  var el = document.getElementById('chat')
-  el.innerHTML = chat.msgs.map(function(m,i){
-    if(m.role==='user') return '<div class="msg usr"><div class="bub">'+md(m.content)+'</div></div>'
-    var c = m.color||'#58a6ff'
-    var h = '<div class="msg ai"><div class="head"><span class="role" style="color:'+c+'">🤖 '+m.agent+'</span><span class="time">'+m.time+'</span></div>'
-    if(m.code){
-      h+='<div class="code-box"><div class="ch">📄 '+m.code.lang+' . '+m.code.code.split('\n').length+'行</div><div class="cb">'+esc(m.code.code)+'</div><div class="cf"><button onclick="navigator.clipboard.writeText(`'+esc(m.code.code).replace(/`/g,'\\`')+'`)">📋 复制</button>'+(m.code.html?'<button class="pv" onclick="pv('+i+')">👁️ 预览</button>':'')+'</div><div class="pv-frame" id="pv-'+i+'"></div></div>'
+    if (msg.multiResults) {
+      html += `<div class="multi-results">
+        <div class="mr-header">🤝 多模型协同结果</div>`
+      msg.multiResults.forEach(r => {
+        html += `<div class="mr-item ${r.selected?'selected':''}">
+          <div class="mr-item-head"><span class="sb-model-dot" style="background:${r.color||'#58a6ff'}"></span>${r.model}</div>
+          <div class="mr-item-body">${r.content.substring(0,500)}${r.content.length>500?'...':''}</div>
+        </div>`
+      })
+      html += `</div>`
     }
-    h+='<div class="bub">'+md(m.content)+'</div></div>'
-    return h
+
+    html += `<div class="msg-content"><p>${content || '...'}</p></div></div></div>`
+    return html
   }).join('')
-  el.scrollTop = el.scrollHeight
-}
-function md(s){return s?String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/```[\s\S]*?```/g,'').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\|(.+)\|/g,function(m){return m.indexOf('---')>=0?'':'<tr>'+m.split('|').filter(function(c){return c.trim()}).map(function(c){return '<td>'+c.trim()+'</td>'}).join('')+'</tr>'}).replace(/^- (.+)/gm,'<li>$1</li>'):''}
-function esc(s){return s.replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function pv(i){var el=document.getElementById('pv-'+i);if(!el)return;el.style.display='block';el.innerHTML='<iframe srcdoc="'+chat.msgs[i].code.code.replace(/"/g,'&quot;')+'" style="width:100%;height:300px;border:none"></iframe>'}
 
-// 初始化
-render()
-renderMsgs()
+  area.scrollTop = area.scrollHeight
+}
+
+// ============ 发送消息 ============
+async function sendMessage() {
+  if (isStreaming) return
+  const input = document.getElementById('msgInput')
+  const text = input.value.trim()
+  if (!text) return
+
+  input.value = ''
+  updateCharCount()
+  document.getElementById('sendBtn').disabled = true
+  isStreaming = true
+
+  const time = new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})
+  
+  // 添加用户消息
+  currentChat.messages.push({ role:'user', content:text, time })
+  
+  // 更新标题
+  if (currentChat.messages.length === 1) {
+    currentChat.title = text.substring(0,30) + (text.length>30?'...':'')
+    document.getElementById('chatTitle').textContent = currentChat.title
+  }
+
+  renderMessages()
+
+  // 判断是否需要多模型协同
+  const needMulti = secondaryModels.length > 0 && (
+    text.includes('多模型') || text.includes('对比') || text.includes('多角度') ||
+    text.includes('协同') || text.includes('各模型') || text.includes('分别')
+  )
+
+  if (needMulti) {
+    await handleMultiModel(text, time)
+  } else {
+    await handleSingleModel(text, time)
+  }
+
+  isStreaming = false
+  document.getElementById('sendBtn').disabled = false
+  saveHistory()
+}
+
+async function handleSingleModel(text, time) {
+  const msgIdx = currentChat.messages.length
+  currentChat.messages.push({ role:'assistant', content:'思考中...', model: getModelName(primaryModel), time })
+  renderMessages()
+
+  try {
+    const result = await callAPI(primaryModel, text)
+    currentChat.messages[msgIdx] = { role:'assistant', content:result, model: getModelName(primaryModel), time }
+  } catch(e) {
+    currentChat.messages[msgIdx] = { role:'assistant', content:`❌ 调用失败: ${e.message}`, model: getModelName(primaryModel), time }
+  }
+  renderMessages()
+}
+
+async function handleMultiModel(text, time) {
+  // 第一步：主模型分析任务
+  const msgIdx = currentChat.messages.length
+  currentChat.messages.push({ role:'assistant', content:'🔍 正在分析任务，协调多模型...', model: getModelName(primaryModel), time })
+  renderMessages()
+
+  try {
+    // 主模型先规划任务
+    const planPrompt = `你是一个任务协调器。请分析以下用户任务，拆解为适合不同AI模型处理的子任务。可用模型：${secondaryModels.map(m=>getModelName(m)).join(', ')}。输出JSON格式：{"subtasks":[{"task":"...","suitable_model":"...","reason":"..."}]}\n\n用户任务：${text}`
+    
+    const planResult = await callAPI(primaryModel, planPrompt)
+    let plan
+    try {
+      const jsonMatch = planResult.match(/\{[\s\S]*\}/)
+      plan = jsonMatch ? JSON.parse(jsonMatch[0]) : null
+    } catch { plan = null }
+
+    // 第二步：并行调用辅助模型
+    const subtasks = plan?.subtasks || secondaryModels.map(m => ({ task:text, suitable_model:m }))
+    const multiResults = []
+    
+    const promises = secondaryModels.map(async (modelId, idx) => {
+      const sub = subtasks.find(s => s.suitable_model === getModelName(modelId))
+      const taskPrompt = sub ? `你是${getModelName(modelId)}。请完成以下子任务：\n\n${sub.task}\n\n原始用户需求：${text}` : text
+      try {
+        const result = await callAPI(modelId, taskPrompt)
+        multiResults.push({ model: getModelName(modelId), content:result, color: MODEL_LIST.find(m=>m.id===modelId)?.color, selected: modelId === primaryModel })
+      } catch(e) {
+        multiResults.push({ model: getModelName(modelId), content:`调用失败: ${e.message}`, color: MODEL_LIST.find(m=>m.id===modelId)?.color })
+      }
+    })
+    await Promise.all(promises)
+
+    // 第三步：主模型总结
+    const summaryPrompt = `你是主协调模型。以下是多个AI模型对同一任务的分析结果，请综合各模型的优势输出最终总结：\n\n` +
+      multiResults.map(r => `【${r.model}】\n${r.content}`).join('\n\n') +
+      `\n\n请输出一份综合报告，标注哪些结论来自哪个模型。`
+    
+    const finalResult = await callAPI(primaryModel, summaryPrompt)
+    
+    currentChat.messages[msgIdx] = {
+      role:'assistant',
+      content: finalResult,
+      model: getModelName(primaryModel),
+      multiResults,
+      time,
+      thinking: `任务拆解：${plan?.subtasks?.map(s=>s.task).join('；') || '直接分配各模型'}`
+    }
+  } catch(e) {
+    currentChat.messages[msgIdx] = { role:'assistant', content:`❌ 多模型协同失败: ${e.message}`, model: getModelName(primaryModel), time }
+  }
+  renderMessages()
+}
+
+// ============ API调用 ============
+async function callAPI(modelId, prompt) {
+  const base = settings.apiBase
+  const key = settings.apiKey
+  const sysPrompt = settings.systemPrompt || '你是一个专业的AI助手'
+
+  if (!base || !key) {
+    return `⚠️ 请先配置API地址和Key（点击左侧 ⚙️ API设置）\n\n这是一条模拟回复，演示多模型协同的效果：\n\n根据你的需求，我建议从以下几个方面分析...`
+  }
+
+  try {
+    const resp = await fetch(`${base.replace(/\/$/,'')}/chat/completions`, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${key}` },
+      body: JSON.stringify({
+        model: modelId,
+        messages: [
+          { role:'system', content: sysPrompt },
+          ...currentChat.messages.slice(0,-1).map(m => ({ role: m.role, content: m.content.substring(0,2000) })),
+          { role:'user', content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 4096
+      })
+    })
+    if (!resp.ok) {
+      const err = await resp.text()
+      throw new Error(`HTTP ${resp.status}: ${err.substring(0,200)}`)
+    }
+    const data = await resp.json()
+    return data.choices?.[0]?.message?.content || JSON.stringify(data)
+  } catch(e) {
+    if (e.message.includes('Failed to fetch') || e.message.includes('NetworkError')) {
+      return `🔌 无法连接API服务器。请检查：\n1. 是否已连接公司VPN\n2. API地址是否正确\n3. 网络是否正常`
+    }
+    throw e
+  }
+}
+
+// ============ 辅助函数 ============
+function getModelName(id) { const m = MODEL_LIST.find(x => x.id === id); return m ? m.name : id }
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() }
+}
+function setInput(text) { document.getElementById('msgInput').value = text; updateCharCount() }
+function updateCharCount() { 
+  const len = document.getElementById('msgInput').value.length
+  document.getElementById('charCount').textContent = `${len}/8000`
+}
+
+function newChat() {
+  saveHistory()
+  currentChat = { id: Date.now(), title:'新对话', messages:[] }
+  document.getElementById('chatTitle').textContent = '新对话'
+  renderMessages()
+}
+
+function clearAll() {
+  if (!confirm('确定清除所有对话记录？此操作不可恢复。')) return
+  chatHistory = []
+  localStorage.removeItem('ai_assistant_history')
+  newChat()
+  toast('已清除所有记录','info')
+}
+
+function exportChat() {
+  if (currentChat.messages.length === 0) return toast('当前对话为空','info')
+  const text = currentChat.messages.map(m => `## ${m.role}${m.model?` (${m.model})`:''}\n\n${m.content}\n`).join('\n---\n\n')
+  const blob = new Blob([text],{type:'text/markdown'})
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `chat-${currentChat.title||Date.now()}.md`; a.click()
+  toast('已导出对话','success')
+}
+
+function saveHistory() {
+  if (currentChat.messages.length === 0) return
+  const existing = chatHistory.findIndex(c => c.id === currentChat.id)
+  if (existing >= 0) chatHistory[existing] = {...currentChat}
+  else chatHistory.unshift({...currentChat})
+  chatHistory = chatHistory.slice(0, 20)
+  localStorage.setItem('ai_assistant_history', JSON.stringify(chatHistory))
+}
+
+function updateTokenStatus() {
+  const el = document.getElementById('tokenStatus')
+  if (settings.apiKey) { el.textContent = '已配置 ✓'; el.style.color = '#3fb950' }
+  else { el.textContent = '未配置'; el.style.color = '#484f58' }
+}
+
+function toggleSettings() {
+  const el = document.getElementById('settingsModal')
+  el.style.display = el.style.display === 'none' ? 'flex' : 'none'
+}
+
+function saveSettings() {
+  settings.apiBase = document.getElementById('apiBase').value.trim()
+  settings.apiKey = document.getElementById('apiKey').value.trim()
+  settings.systemPrompt = document.getElementById('systemPrompt').value.trim()
+  saveSettingsQuiet()
+  updateTokenStatus()
+  toggleSettings()
+  toast('设置已保存','success')
+}
+
+function saveSettingsQuiet() {
+  localStorage.setItem('ai_assistant_settings', JSON.stringify(settings))
+}
+
+async function testConnection() {
+  const base = document.getElementById('apiBase').value.trim()
+  const key = document.getElementById('apiKey').value.trim()
+  if (!base || !key) return toast('请填写API地址和Key','error')
+  
+  toast('正在测试连接...','info')
+  try {
+    const resp = await fetch(`${base.replace(/\/$/,'')}/models`, {
+      headers: { 'Authorization': `Bearer ${key}` }
+    })
+    if (resp.ok) {
+      const data = await resp.json()
+      toast(`连接成功！可用模型: ${data.data?.length || '?'} 个`,'success')
+    } else {
+      toast(`连接失败: HTTP ${resp.status}`,'error')
+    }
+  } catch(e) {
+    toast(`连接失败: ${e.message}`,'error')
+  }
+}
+
+function toast(msg, type='info') {
+  const container = document.getElementById('toastContainer')
+  const el = document.createElement('div')
+  el.className = `toast ${type}`
+  el.textContent = msg
+  container.appendChild(el)
+  setTimeout(() => el.remove(), 3000)
+}
+
+// 启动
+document.getElementById('msgInput').addEventListener('input', updateCharCount)
+init()
 </script>
-</body></html>
+</body>
+</html>
