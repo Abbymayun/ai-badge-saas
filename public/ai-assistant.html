@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -212,19 +212,19 @@ async function doSingle(t){
   const now = tm()
   chat.msgs.push({role:'user',content:t,time:now})
   const a = getAgent(chat.agent)
-  chat.msgs.push({role:'ai',content:'',time:now,agent:a.name,color:a.color})
+  chat.msgs.push({role:'ai',content:'分析中...',time:now,agent:a.name,color:a.color})
   renderMsgs()
   
   try{
     const r = await callAPI(a.model, a.prompt, t, 2500, a.name)
-    chat.msgs[chat.msgs.length-1].content = r
+    chat.msgs[idx].content = r
     // 检测代码
     const cm = extractCode(r)
-    if(cm) chat.msgs[chat.msgs.length-1].code = cm
+    if(cm) chat.msgs[idx].code = cm
   }catch(e){
-    chat.msgs[chat.msgs.length-1].content = mock(a.name, t)
-    const cm = extractCode(chat.msgs[chat.msgs.length-1].content)
-    if(cm) chat.msgs[chat.msgs.length-1].code = cm
+    chat.msgs[idx].content = mock(a.name, t)
+    const cm = extractCode(chat.msgs[idx].content)
+    if(cm) chat.msgs[idx].code = cm
   }
   renderMsgs()
 }
@@ -258,7 +258,7 @@ async function doGroup(topic){
   
   // 总结
   const host = agents[0]
-  chat.msgs.push({role:'ai',content:'',time:tm(),agent:`${host.name} 📋总结`,color:host.color,isSummary:true})
+  chat.msgs.push({role:'ai',content:'分析中...',time:tm(),agent:`${host.name} 📋总结`,color:host.color,isSummary:true})
   const si = chat.msgs.length-1; renderMsgs()
   chat.msgs[si].content = `## 📋 群聊总结\n\n${agents.length}位Agent围绕"${topic}"进行了3轮讨论，核心观点：\n\n`+
     agents.map((a,i)=>`**${a.name}**：建议聚焦${['产品场景','技术方案','执行计划'][i%3]}，重点推进${['核心需求','架构设计','风险控制'][i%3]}`).join('\n\n')+
