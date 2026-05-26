@@ -260,7 +260,7 @@ async function doSingleChat(t){
   renderMsgs()
   
   try{
-    const r = await api(agent.model, agent.prompt, t, 2000)
+    const r = await api(agent.model, agent.prompt, t, 2000, agent.name)
     curChat.msgs[curChat.msgs.length-1].content = r
     // 检测代码块
     if(r.includes('```') && (r.includes('html')||r.includes('javascript')||r.includes('<!DOCTYPE'))){
@@ -279,30 +279,27 @@ async function doGroupChat(t){
   renderMsgs()
   
   const topic = t; const rounds = parseInt(document.getElementById('groupRounds')?.value||'3')
-  let context = `群聊主题: ${topic}\n`
+
+  // No API configured → use simulation
+  if(!cfg.apiKey||!cfg.apiOAI){
+    await simulateGroupChat(topic, selected, rounds)
+    return
+  }
   
+  let context = `群聊主题: ${topic}\n`
   for(let r=0; r<rounds; r++){
     for(const aid of selected){
       const agent = getAgent(aid); if(!agent) continue
-      const prompt = `你正在参加一个AI Agent群聊。讨论主题: ${topic}\n\n之前的讨论:\n${context}\n\n现在轮到你了。请基于之前的讨论发表你的观点（100-200字），可以是赞同、补充、质疑或提出新角度。`
-      
+      const prompt = `你正在参加AI Agent群聊。讨论主题: ${topic}\n之前的讨论:\n${context}\n现在轮到你发言（100-200字）。`
       curChat.msgs.push({role:'assistant',content:'思考中...',time:ts(),agentId:agent.id,agentName:agent.name,agentColor:agent.color})
       const idx = curChat.msgs.length-1; renderMsgs()
-      try{
-        const r = await api(agent.model, agent.prompt, prompt, 500)
-        curChat.msgs[idx].content = r; context += `[${agent.name}]: ${r}\n`
-      }catch(e){curChat.msgs[idx].content = `❌ ${e.message}`}
-      renderMsgs(); await sleep(300)
+      try{const r=await api(agent.model,agent.prompt,prompt,500,agent.name);curChat.msgs[idx].content=r;context+=`[${agent.name}]:${r}\n`}catch(e){curChat.msgs[idx].content=`❌ ${e.message}`}
+      renderMsgs();await sleep(300)
     }
   }
-  
-  // 总结
-  const host = getAgent(selected[0])
-  curChat.msgs.push({role:'assistant',content:'📋 汇总中...',time:ts(),agentId:host.id,agentName:host.name+' (总结)',agentColor:host.color,isSummary:true})
-  const si = curChat.msgs.length-1; renderMsgs()
-  try{
-    curChat.msgs[si].content = '## 📋 群聊总结\n\n' + await api(host.model, host.prompt, `请总结以下群聊讨论的核心观点和结论:\n${context}`, 800)
-  }catch(e){curChat.msgs[si].content = '❌ 总结失败'}
+  const host=getAgent(selected[0]);curChat.msgs.push({role:'assistant',content:'📋 汇总中...',time:ts(),agentId:host.id,agentName:host.name+' (总结)',agentColor:host.color,isSummary:true})
+  const si=curChat.msgs.length-1;renderMsgs()
+  try{curChat.msgs[si].content='## 📋 群聊总结\n\n'+await api(host.model,host.prompt,`请总结群聊核心观点:\n${context}`,800)}catch(e){curChat.msgs[si].content='❌ 总结失败'}
   renderMsgs()
 }
 
@@ -367,21 +364,61 @@ function startGroupChat(){
 }
 
 // ============ API ============
-async function api(model, systemPrompt, userMsg, maxT=2000){
+async function api(model, systemPrompt, userMsg, maxT=2000, agentName=''){
   const base = model.startsWith('claude-') ? (cfg.apiClaude||'') : (cfg.apiOAI||'')
-  if(!base||!cfg.apiKey) return mockResponse(userMsg)
+  if(!base||!cfg.apiKey) return mockResponse(userMsg, agentName)
   try{
     const r=await fetch(`${base.replace(/\/$/,'')}/chat/completions`,{
       method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${cfg.apiKey}`},
       body:JSON.stringify({model,temperature:0.7,max_tokens:maxT,messages:[{role:'system',content:systemPrompt},{role:'user',content:userMsg}]})})
     if(!r.ok) throw new Error(`HTTP ${r.status}`)
     const d=await r.json();return d.choices?.[0]?.message?.content||''
-  }catch(e){return mockResponse(userMsg)}
+  }catch(e){return mockResponse(userMsg, agentName)}
 }
-function mockResponse(msg){
-  if(msg.includes('PRD')||msg.includes('prd')) return '## PRD文档\n\n### 一、背景与目标\n基于用户需求，本项目旨在...\n\n### 二、功能列表\n| 优先级 | 功能 | 说明 |\n|-------|------|------|\n| P0 | 核心功能A | 必须实现 |\n| P1 | 重要功能B | 建议实现 |\n\n### 三、验收标准\n1. 功能A通过测试\n2. 性能满足要求\n\n> ⚠️ 这是模拟回复。配置API后可获得真实AI生成。'
-  if(msg.includes('代码')||msg.includes('写一个')||msg.includes('网页')) return '```html\n<!DOCTYPE html>\n<html>\n<head><title>Demo</title>\n<style>body{font-family:sans-serif;padding:40px;text-align:center}h1{color:#58a6ff}</style>\n</head>\n<body>\n<h1>Hello AI!</h1>\n<p>这是一个AI生成的页面预览</p>\n</body>\n</html>\n```\n\n> ⚠️ 模拟回复。配置API后生成真实代码。'
-  return '好的，我理解你的需求。\n\n根据你的描述，我建议从以下几个方面来处理：\n\n1. **需求分析**：首先明确核心目标和关键指标\n2. **方案设计**：基于现有架构设计最优方案\n3. **实施计划**：拆解为可执行的步骤\n4. **风险评估**：提前识别潜在风险\n\n> ⚠️ 这是模拟回复。配置API后可获得真实AI生成的详细内容。'
+function mockResponse(msg, agentName){
+  const a = agentName || ''
+  if(a.includes('PRD')||a.includes('产品')||msg.includes('PRD')||msg.includes('文档')||msg.includes('需求')){
+    return `## 产品需求文档（PRD）\n\n### 一、文档概述\n- **产品名称**：AI智能胸牌 SaaS管理平台\n- **功能模块**：智能体配置\n- **版本**：V2.0\n- **撰写日期**：2026年5月26日\n\n### 二、功能背景\n智能体配置页面是企业管理员配置AI分析模板的核心入口。当前支持评分模板、报告模板、综合分析模板三种类型，覆盖7大行业、多种使用场景。\n\n### 三、功能列表\n\n| 优先级 | 功能 | 描述 |\n|-------|------|------|\n| P0 | 模板类型筛选 | 全部/评分/报告/会议四种分类，点击切换 |\n| P0 | 新建模板 | 支持评分模板/报告模板/综合分析三种类型 |\n| P0 | 模板预览 | 基于真实场景数据生成预览效果 |\n| P1 | 行业筛选 | 按7大行业筛选模板 |\n| P1 | 维度树编辑 | 多层级评分维度配置+权重分配 |\n| P1 | 章节预设 | 拜访报告/会议总结/销售复盘一键加载 |\n| P2 | 批量操作 | 批量启用/禁用/导出/导入 |\n| P2 | 克隆模板 | 一键复制现有模板 |\n\n### 四、页面结构\n1. 顶部统计卡片（全部/评分/报告/会议）\n2. 筛选栏（搜索+行业+场景+状态）\n3. 模板卡片网格（3列）\n4. 创建/编辑弹窗\n5. 模板详情抽屉\n\n### 五、验收标准\n- [ ] 4种分类统计数字正确\n- [ ] 新建评分模板可配置多层级维度\n- [ ] 新建报告模板可加载章节预设\n- [ ] 预览效果弹窗内容与实际行业场景匹配\n- [ ] 所有筛选条件联动正确\n\n> ⚠️ 这是模拟回复。配置真实API后可获得完整PRD。`
+  }
+  if(a.includes('审查')||a.includes('review')){
+    return `## 文档审查报告\n\n### 审查对象\nAI智能胸牌 SaaS管理平台 - 智能体配置模块\n\n### 完整性检查\n1. ✅ 模板类型定义完整（评分/报告/综合分析）\n2. ✅ 维度配置交互清晰（父子维度+权重）\n3. ⚠️ 缺少模板版本管理功能\n4. ⚠️ 缺少模板使用统计详细报表\n\n### 一致性检查\n1. ✅ 前端与后端API字段一致\n2. ⚠️ 评分区间(40-100)与策略配置(60-100)不一致\n3. ⚠️ 面包店等新增模板缺少独立预览组件\n\n### 可行性评估\n- 技术可行性：高，现有架构支持\n- 时间评估：P0功能可在1周内完成\n- 风险：场景预览依赖第三方数据生成器，需联调\n\n> ⚠️ 模拟回复。配置API后获得真实审查。`
+  }
+  if(a.includes('代码')||a.includes('coder')||msg.includes('写一个')||msg.includes('代码')||msg.includes('网页')||msg.includes('html')){
+    return '```html\n<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>AI生成页面</title>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\nbody{font-family:sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;align-items:center;justify-content:center}\n.card{background:#fff;border-radius:16px;padding:40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:400px}\nh1{color:#333;margin-bottom:12px}p{color:#666;line-height:1.6}\n.btn{display:inline-block;margin-top:16px;padding:10px 24px;background:#667eea;color:#fff;border-radius:8px;text-decoration:none}\n</style>\n</head>\n<body>\n<div class="card">\n<h1>🤖 AI 智能助手</h1>\n<p>这是一个AI生成的页面预览。配置真实API后可生成更复杂的功能页面。</p>\n<a href="#" class="btn">开始使用</a>\n</div>\n</body>\n</html>\n```\n\n> ⚠️ 模拟代码。配置API后生成真实可运行代码。点👁️预览查看效果。'
+  }
+  if(a.includes('项目')||a.includes('经理')||msg.includes('计划')||msg.includes('进度')||msg.includes('排期')){
+    return `## 项目计划\n\n### 任务拆解\n\n| 阶段 | 任务 | 负责人 | 时间 |\n|------|------|--------|------|\n| 第1周 | 需求确认+技术方案 | 产品+技术 | 5.26-5.30 |\n| 第2周 | 核心功能开发 | 开发 | 6.2-6.6 |\n| 第3周 | 联调+测试 | 测试 | 6.9-6.13 |\n| 第4周 | 修复+上线 | 全员 | 6.16-6.20 |\n\n### 风险识别\n1. 🔴 依赖第三方API，联调可能延期\n2. 🟡 测试人力不足，需增配\n3. 🟢 UI调整工作量可控\n\n### 资源需求\n- 开发：2人\n- 测试：1人\n- 设计：0.5人\n\n> ⚠️ 模拟回复。配置API后生成真实计划。`
+  }
+  return `好的，我理解你的需求。\n\n根据你的描述，我建议从以下几个方面来处理：\n\n1. **需求分析**：首先明确核心目标\n2. **方案设计**：基于现有架构设计最优方案\n3. **实施步骤**：拆解为可执行的步骤\n4. **风险评估**：识别潜在风险并制定预案\n\n> ⚠️ 这是模拟回复。点击左侧⚙️设置，填入公司API地址和Key后可获得真实AI生成内容。`
+}
+
+// 群聊模拟
+async function simulateGroupChat(topic, selectedAgents, rounds){
+  const agentMsgs = {
+    '_prd': ['从产品角度来看，这个需求需要更清晰的用户场景定义。我建议先梳理核心用户路径。','我补充一下，竞品分析这块也很重要，特别是银行和汽车行业的对标产品。','总结一下：产品侧建议聚焦3个核心场景，先做深再做广。'],
+    '_reviewer': ['我审查了一下目前的方案，有几个点需要补充：数据安全合规、异常流程处理、性能指标。','另外权限控制这块的方案不够细，需要区分管理员和普通用户的操作边界。'],
+    '_pm': ['从项目管理角度，建议分3个迭代：P0核心功能→P1增强→P2优化。每个迭代2周。','风险点：依赖设备端联调，建议提前预约联调时间窗口。','资源方面，目前前端1人+后端1人，测试需要增配。'],
+    '_coder': ['技术实现上，建议用微服务架构，前端Vue3+后端SpringBoot。数据库选MySQL+Redis。','API设计要RESTful，接口文档用Swagger自动生成。前端组件库继续用Element Plus。'],
+    '_assistant': ['这是一个很好的讨论方向。我建议先明确目标，再分解任务，最后评估资源。','团队协作方面，建议建立日报机制和周进度看板，确保信息同步。']
+  }
+  
+  const msgs = agentMsgs
+  let context = `群聊主题: ${topic}\n`
+  
+  for(let r=0; r<Math.min(rounds,3); r++){
+    for(const aid of selectedAgents){
+      const agent = getAgent(aid); if(!agent||!msgs[aid]) continue
+      const msg = msgs[aid][(r*selectedAgents.length + selectedAgents.indexOf(aid)) % msgs[aid].length]
+      curChat.msgs.push({role:'assistant',content:msg,time:ts(),agentId:agent.id,agentName:agent.name,agentColor:agent.color})
+      context += `[${agent.name}]: ${msg}\n`
+      renderMsgs(); await sleep(400)
+    }
+  }
+  
+  // 总结
+  const host = getAgent(selectedAgents[0])
+  curChat.msgs.push({role:'assistant',content:`## 📋 群聊总结\n\n经过${rounds}轮讨论，${selectedAgents.length}位Agent围绕"${topic}"达成以下共识：\n\n1. **产品侧**：聚焦3个核心场景，先做深再做广\n2. **技术侧**：Vue3+SpringBoot微服务架构\n3. **管理侧**：3迭代开发，每轮2周\n4. **风险**：设备联调是关键路径，需提前预约\n\n> ⚠️ 模拟群聊。配置API后Agent会进行真正的多轮讨论。`,time:ts(),agentId:host.id,agentName:host.name+' (总结)',agentColor:host.color,isSummary:true})
+  renderMsgs()
 }
 
 // ============ 渲染消息 ============
