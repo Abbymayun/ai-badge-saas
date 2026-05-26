@@ -24,7 +24,7 @@ body{font-family:sans-serif;background:#0d1117;color:#c9d1d9;height:100vh;displa
 <div style="margin-top:10px" id="modelArea"></div>
 <button class="go" onclick="newAgent()">➕ 新建 Agent</button>
 <button onclick="groupChat()">👥 发起群聊</button>
-<button onclick="clearAll()">🔄 清空对话</button>
+<button onclick="clearAll()">🔄 清空对话</button><button style="background:#1f6feb;border-color:#388bfd;color:#fff" onclick="showCfg()">⚙️ API设置 (已配置)</button>
 <div style="font-size:10px;color:#484f58;margin-top:12px" id="footer">5个Agent</div>
 </div>
 <div class="main">
@@ -33,7 +33,16 @@ body{font-family:sans-serif;background:#0d1117;color:#c9d1d9;height:100vh;displa
 <div class="inp"><textarea id="input" rows="2" placeholder="输入任务..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea><button id="sbtn" onclick="send()">➤</button></div>
 </div>
 
-<!-- Agent表单 -->
+
+<!-- API设置弹窗 -->
+<div class="modal-overlay" id="cfgModal"><div class="modal">
+<h3>⚙️ API 设置</h3>
+<label>API Key</label><input id="cfgKey" type="password" value="voVHB960PuPIgHnHK42wb7q84XnJgd6jhACq009RUSeLWRyQ">
+<label>OpenAI地址 (GPT/DeepSeek/Qwen)</label><input id="cfgOAI" value="http://10.16.11.195/v1">
+<label>Claude地址</label><input id="cfgClaude" value="http://10.16.11.195">
+<div style="font-size:11px;color:#8b949e;margin-top:6px">配置已预填。点击保存后即可调用真实API。</div>
+<div class="modal-acts"><button class="mc" onclick="hideM('cfgModal')">取消</button><button class="ms" onclick="saveCfg()">💾 保存并连接</button></div>
+</div></div>\n<!-- Agent表单 -->
 <div class="modal-overlay" id="agentModal"><div class="modal">
 <h3 id="amTitle">新建 Agent</h3>
 <label>名称</label><input id="amName" placeholder="如：PRD生成器">
@@ -107,7 +116,8 @@ function send(){
   
   // 用setTimeout模拟分析过程，确保UI先更新
   setTimeout(function(){
-    var r = mock(a.name, t)
+    var base = a.model.startsWith('claude-') ? CFG.apiClaude : CFG.apiOAI
+if(base && CFG.apiKey){try{var xhr=new XMLHttpRequest();xhr.open('POST',base.replace(/\/\$/,'')+'/chat/completions',false);xhr.setRequestHeader('Content-Type','application/json');xhr.setRequestHeader('Authorization','Bearer '+CFG.apiKey);xhr.send(JSON.stringify({model:a.model,messages:[{role:'system',content:a.prompt},{role:'user',content:t}],max_tokens:2500}));if(xhr.status===200){var d=JSON.parse(xhr.responseText);var r=d.choices[0].message.content}else{var r=mock(a.name,t)}}catch(e){var r=mock(a.name,t)}}else{var r=mock(a.name,t)}
     chat.msgs[aiIdx].content = r
     // 检测代码
     var m = r.match(/```(\w*)\n([\s\S]*?)```/)
@@ -224,6 +234,9 @@ function startGroup(){
   var topic = document.getElementById('gmTopic').value.trim()
   if(topic) document.getElementById('input').value = topic
 }
+var CFG = JSON.parse(localStorage.getItem('ai_cfg')||'{"apiKey":"voVHB960PuPIgHnHK42wb7q84XnJgd6jhACq009RUSeLWRyQ","apiOAI":"http://10.16.11.195/v1","apiClaude":"http://10.16.11.195"}')
+function showCfg(){document.getElementById('cfgKey').value=CFG.apiKey||'';document.getElementById('cfgOAI').value=CFG.apiOAI||'';document.getElementById('cfgClaude').value=CFG.apiClaude||'';document.getElementById('cfgModal').style.display='flex'}
+function saveCfg(){CFG.apiKey=document.getElementById('cfgKey').value.trim();CFG.apiOAI=document.getElementById('cfgOAI').value.trim();CFG.apiClaude=document.getElementById('cfgClaude').value.trim();localStorage.setItem('ai_cfg',JSON.stringify(CFG));hideM('cfgModal')}
 function clearAll(){chat.msgs=[];render()}
 function hideM(id){document.getElementById(id).style.display='none'}
 
