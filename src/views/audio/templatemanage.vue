@@ -424,7 +424,7 @@
         <!-- 客户购买力模板 → 客户购买力评估报告 -->
         <CustomerReport v-else-if="isCustomerScoring" :data="previewData.customer" :template="previewTpl" class="preview-focused" />
         <!-- 通用行业销售报告 → 通用报告 -->
-        <CustomerReport v-if="isGeneralReport" :data="previewData.customer" :template="previewTpl" class="preview-focused" />
+        <GeneralReportView v-if="isGeneralReport" :data="previewData" />
         <!-- 评分模板 → 仅显示销售能力总结 -->
         <SalesReport v-else-if="isScoringPreview" :data="previewData.sales" :template="previewTpl" class="preview-focused" />
         <!-- 销售复盘 → 复盘报告 -->
@@ -479,6 +479,7 @@ import EduView from './reports/EduView.vue'
 import RetailView from './reports/RetailView.vue'
 import BakeryView from './reports/BakeryView.vue'
 import SalesReviewView from './reports/SalesReviewView.vue'
+import GeneralReportView from './reports/GeneralReportView.vue'
 import { generatePreviewData } from './reportData.js'
 import { getScenarioPreviewData } from './scenarioData.js'
 
