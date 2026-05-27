@@ -1,106 +1,216 @@
 <template>
-  <div class="general-report">
-    <div class="gr-hero">
-      <h2>📋 {{ data.title || '销售拜访报告' }}</h2>
-      <div class="gr-meta">
-        <span>🕐 {{ data.date || '2026-05-27' }}</span>
-        <span>👤 {{ data.salesPerson || '销售代表' }}</span>
-        <span>🏢 {{ data.customer || '客户' }}</span>
-        <span>⏱ {{ data.duration || '35分钟' }}</span>
+  <div class="visit-report">
+    <h2 class="vr-title">📋 销售拜访报告</h2>
+    <p class="vr-sub">Sales Visit Report · AI自动生成</p>
+
+    <!-- 一、拜访基本信息 -->
+    <div class="vr-section">
+      <div class="vrs-header" style="background:#409EFF;">一、拜访基本信息</div>
+      <el-descriptions :column="3" border size="small">
+        <el-descriptions-item label="拜访日期">2026年5月27日</el-descriptions-item>
+        <el-descriptions-item label="拜访时间">14:30 - 15:05</el-descriptions-item>
+        <el-descriptions-item label="拜访方式">上门拜访</el-descriptions-item>
+        <el-descriptions-item label="销售人员">王志华</el-descriptions-item>
+        <el-descriptions-item label="所属部门">华东区销售一部</el-descriptions-item>
+        <el-descriptions-item label="联系电话">138****5678</el-descriptions-item>
+      </el-descriptions>
+    </div>
+
+    <!-- 二、客户信息 -->
+    <div class="vr-section">
+      <div class="vrs-header" style="background:#409EFF;">二、客户信息</div>
+      <el-descriptions :column="3" border size="small">
+        <el-descriptions-item label="客户单位">杭州智联金融科技有限公司</el-descriptions-item>
+        <el-descriptions-item label="客户行业">银行金融</el-descriptions-item>
+        <el-descriptions-item label="客户规模">200-500人</el-descriptions-item>
+        <el-descriptions-item label="对接人姓名">张总</el-descriptions-item>
+        <el-descriptions-item label="对接人职位">零售银行部总经理</el-descriptions-item>
+        <el-descriptions-item label="对接人电话">139****1234</el-descriptions-item>
+        <el-descriptions-item label="客户地址" :span="3">杭州市滨江区XX路188号</el-descriptions-item>
+      </el-descriptions>
+    </div>
+
+    <!-- 三、拜访主要内容 -->
+    <div class="vr-section">
+      <div class="vrs-header" style="background:#409EFF;">三、拜访主要内容</div>
+      <el-descriptions :column="1" border size="small">
+        <el-descriptions-item label="拜访目的">产品介绍与需求调研。向客户展示AI智能胸牌在银行客户经理外拓场景的应用方案，了解客户数字化转型中的痛点和具体需求。</el-descriptions-item>
+        <el-descriptions-item label="拜访过程记录">
+          <div class="vr-process">
+            <p><strong>14:30-14:40</strong> 开场破冰。通过行业数字化转型话题切入，了解客户目前外拓管理现状。客户表示客户经理外出拜访的过程管理一直是薄弱环节。</p>
+            <p><strong>14:40-14:55</strong> 产品演示。展示了AI智能胸牌的录音转写、AI分析报告生成和优秀话术提取功能。客户对自动生成客户画像和拜访报告的功能表示浓厚兴趣。</p>
+            <p><strong>14:55-15:00</strong> 交流答疑。客户询问了数据安全、系统对接、试用方案等问题。我方逐一解答并提供了招商银行的参考案例。</p>
+            <p><strong>15:00-15:05</strong> 总结与下一步。双方确认了后续沟通安排：发送详细方案，安排技术对接，推动试用方案。</p>
+          </div>
+        </el-descriptions-item>
+      </el-descriptions>
+    </div>
+
+    <!-- 四、客户需求与痛点分析 -->
+    <div class="vr-section">
+      <div class="vrs-header" style="background:#409EFF;">四、客户需求与痛点分析</div>
+      <el-descriptions :column="1" border size="small">
+        <el-descriptions-item label="客户核心需求">
+          <div class="vr-list">
+            <div v-for="n in needs" :key="n" class="vrl-item"><span class="vrl-dot" style="background:#409EFF;"></span>{{ n }}</div>
+          </div>
+        </el-descriptions-item>
+        <el-descriptions-item label="客户痛点/问题">
+          <div class="vr-list">
+            <div v-for="p in pains" :key="p" class="vrl-item"><span class="vrl-dot" style="background:#E6A23C;"></span>{{ p }}</div>
+          </div>
+        </el-descriptions-item>
+        <el-descriptions-item label="我方产品/方案匹配度">
+          <div class="vr-match">
+            <div v-for="m in matches" :key="m.need" class="vrm-row">
+              <span class="vrm-need">{{ m.need }}</span>
+              <el-icon color="#409EFF"><ArrowRight /></el-icon>
+              <span class="vrm-solution">{{ m.solution }}</span>
+              <el-tag size="small" type="success">✓ 匹配</el-tag>
+            </div>
+          </div>
+        </el-descriptions-item>
+      </el-descriptions>
+    </div>
+
+    <!-- 五、竞品情况 -->
+    <div class="vr-section">
+      <div class="vrs-header" style="background:#409EFF;">五、竞品情况</div>
+      <el-descriptions :column="1" border size="small">
+        <el-descriptions-item label="客户提及的竞品">
+          <div class="vr-compare">
+            <div v-for="c in competitors" :key="c.name" class="vrc-item">
+              <span class="vrc-name">{{ c.name }}</span>
+              <span class="vrc-detail">{{ c.detail }}</span>
+            </div>
+          </div>
+        </el-descriptions-item>
+        <el-descriptions-item label="我方竞争优势">
+          <div class="vr-advantage">
+            <div v-for="(a,idx) in advantages" :key="idx" class="vra-item">
+              <el-icon color="#67C23A"><CircleCheckFilled /></el-icon>
+              <span>{{ a }}</span>
+            </div>
+          </div>
+        </el-descriptions-item>
+      </el-descriptions>
+    </div>
+
+    <!-- 六、后续跟进计划 -->
+    <div class="vr-section">
+      <div class="vrs-header" style="background:#409EFF;">六、后续跟进计划</div>
+      <el-descriptions :column="1" border size="small">
+        <el-descriptions-item label="本次拜访成果总结">
+          双方就AI智能胸牌在银行外拓场景的应用达成初步共识。客户对产品功能认可度高，确认了数据安全合规方案和系统对接的可行性。客户提出先进行小范围试用验证效果。
+        </el-descriptions-item>
+        <el-descriptions-item label="下一步跟进措施">
+          <el-table :data="followUps" size="small" border>
+            <el-table-column type="index" label="#" width="40" />
+            <el-table-column prop="task" label="跟进措施" min-width="180" />
+            <el-table-column prop="owner" label="负责人" width="100" />
+            <el-table-column prop="deadline" label="预计完成时间" width="110" />
+          </el-table>
+        </el-descriptions-item>
+      </el-descriptions>
+      <el-row :gutter="16" style="margin-top:12px;">
+        <el-col :span="8">
+          <div class="vr-follow-card">
+            <div class="vrfc-label">预计成单时间</div>
+            <div class="vrfc-value">2026年6月下旬</div>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="vr-follow-card">
+            <div class="vrfc-label">预计成交金额</div>
+            <div class="vrfc-value" style="color:#F56C6C;">70万/年</div>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="vr-follow-card">
+            <div class="vrfc-label">客户合作意向</div>
+            <div class="vrfc-value" style="color:#67C23A;">高意向 ✓</div>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+
+    <!-- 七、备注 -->
+    <div class="vr-section">
+      <div class="vrs-header" style="background:#409EFF;">七、备注</div>
+      <el-descriptions :column="1" border size="small">
+        <el-descriptions-item label="其他说明">
+          客户对招商银行的参考案例特别感兴趣，建议后续重点准备类似银行的成功案例数据。另外客户提到信息科技部对数据安全要求较高，建议在技术对接时提前准备等保三级证书和ISO27001认证文件。
+        </el-descriptions-item>
+      </el-descriptions>
+    </div>
+
+    <!-- 签名区 -->
+    <div class="vr-signature">
+      <div class="vrsig-item">
+        <div class="vrsig-label">销售人员签字</div>
+        <div class="vrsig-line">王志华</div>
+        <div class="vrsig-date">日期：2026年5月27日</div>
+      </div>
+      <div class="vrsig-item">
+        <div class="vrsig-label">审批人签字</div>
+        <div class="vrsig-line">____________</div>
+        <div class="vrsig-date">日期：____________</div>
       </div>
     </div>
 
-    <el-row :gutter="16" class="gr-overview">
-      <el-col :span="6"><div class="gro-card"><span class="gro-num" style="color:#409EFF;">{{ data.topics?.length || 5 }}</span><span class="gro-label">讨论议题</span></div></el-col>
-      <el-col :span="6"><div class="gro-card"><span class="gro-num" style="color:#67C23A;">{{ data.conclusions?.length || 3 }}</span><span class="gro-label">达成结论</span></div></el-col>
-      <el-col :span="6"><div class="gro-card"><span class="gro-num" style="color:#E6A23C;">{{ data.risks?.length || 2 }}</span><span class="gro-label">关注风险</span></div></el-col>
-      <el-col :span="6"><div class="gro-card"><span class="gro-num" style="color:#F56C6C;">{{ data.nextSteps?.length || 3 }}</span><span class="gro-label">下一步行动</span></div></el-col>
-    </el-row>
-
-    <el-card shadow="never" class="gr-card"><template #header><span class="grc-title">💡 拜访摘要</span></template>
-      <div class="grc-summary">{{ data.summary || '本次拜访围绕客户需求和产品方案展开深入交流，双方就核心问题达成初步共识，明确了下一步推进计划。' }}</div>
-    </el-card>
-
-    <el-card shadow="never" class="gr-card"><template #header><span class="grc-title">💬 议题讨论</span></template>
-      <el-timeline>
-        <el-timeline-item v-for="(t,idx) in (data.topics || defaultTopics)" :key="idx" :timestamp="t.time||''" placement="top" :color="t.result?'#67C23A':'#409EFF'" :icon="t.result?'CircleCheckFilled':'MoreFilled'">
-          <div class="grt-topic-card">
-            <div class="grtt-header"><span class="grtt-num">{{ idx+1 }}</span><span class="grtt-title">{{ t.title }}</span><el-tag v-if="t.result" type="success" size="small" effect="plain">✓ 已达成</el-tag><el-tag v-else type="info" size="small" effect="plain">待跟进</el-tag></div>
-            <div class="grtt-detail">{{ t.detail }}</div>
-            <div v-if="t.result" class="grtt-result"><span class="grttr-label">📌 结论</span>{{ t.result }}</div>
-          </div>
-        </el-timeline-item>
-      </el-timeline>
-    </el-card>
-
-    <el-card shadow="never" class="gr-card"><template #header><span class="grc-title">🎯 核心结论</span></template>
-      <div class="grc-grid">
-        <div v-for="(c,idx) in (data.conclusions || defaultConclusions)" :key="idx" class="grcc-item">
-          <div class="grcc-num" style="background:#67C23A;">{{ idx+1 }}</div>
-          <div class="grcc-text">{{ c }}</div>
-        </div>
-      </div>
-    </el-card>
-
-    <el-card shadow="never" class="gr-card"><template #header><span class="grc-title">⚠️ 风险与关注点</span></template>
-      <div v-for="(r,idx) in (data.risks || defaultRisks)" :key="idx" class="gr-risk-item">
-        <el-icon style="color:#E6A23C;"><WarningFilled /></el-icon>
-        <div><span class="grri-title">{{ r.title }}</span><span class="grri-desc">{{ r.desc }}</span></div>
-      </div>
-    </el-card>
-
-    <el-card shadow="never" class="gr-card"><template #header><span class="grc-title">📋 下一步行动计划</span></template>
-      <div v-for="(s,idx) in (data.nextSteps || defaultSteps)" :key="idx" class="gr-step-item">
-        <span class="grsi-num" style="background:#409EFF;">{{ idx+1 }}</span>
-        <div class="grsi-body"><div class="grsi-title">{{ s.title }}</div><div class="grsi-meta">{{ s.deadline }} · {{ s.owner }}</div></div>
-      </div>
-    </el-card>
-
-    <div class="gr-footer">报告由 AI智能胸牌 自动生成</div>
+    <div class="vr-footer">报告由 AI智能胸牌 自动生成</div>
   </div>
 </template>
 
 <script setup>
 defineProps({ data: Object, template: Object })
 
-const defaultTopics = [
-  { time:'约10分钟', title:'客户需求了解', detail:'详细了解了客户当前的业务痛点、团队规模和核心诉求。客户主要关注提升销售效率和过程管理。', result:'明确了客户的三大核心需求：效率提升、数据管理、经验沉淀' },
-  { time:'约8分钟', title:'产品方案介绍', detail:'根据客户需求，重点介绍了AI智能胸牌的核心功能和典型应用场景，展示了录音转写、AI分析、话术提取等能力。', result:'客户对产品功能表示认可，尤其关注AI分析报告的实用性' },
-  { time:'约7分钟', title:'技术方案与对接', detail:'讨论了系统部署方式、数据安全方案和现有系统对接的可行性。', result:'确认私有化部署方案可行，系统对接需进一步评估' },
-  { time:'约5分钟', title:'商务条款沟通', detail:'初步沟通了合作模式、定价方案和实施周期。', result:'' },
-  { time:'约5分钟', title:'下一步计划确认', detail:'确认了后续的沟通安排和推进时间节点。', result:'约定下周安排技术团队对接，2周内提供正式方案' }
+const needs = [
+  '提升客户经理外拓拜访的效率管理',
+  '建立标准化销售流程，降低新人培训成本',
+  '实现销售经验（优秀话术）的沉淀和复制',
+  '增强客户拜访数据的可视化和管理决策支持'
 ]
-const defaultConclusions = [
-  '客户核心需求明确：提升销售效率、数据化过程管理、经验沉淀复制',
-  '产品功能满足客户核心需求，AI分析能力是差异化优势',
-  '私有化部署方案可行，需技术团队进一步对接确认细节'
+const pains = [
+  '客户经理外出拜访过程无法量化评估',
+  'Top Sales的优秀经验难以复制给新人',
+  '现有CRM系统与移动办公场景脱节',
+  '金融行业对数据安全合规有严格要求'
 ]
-const defaultRisks = [
-  { title:'竞争压力', desc:'客户同时考察2家竞品方案，需突出AI分析差异化优势' },
-  { title:'决策周期', desc:'客户内部审批流程可能较长，需提前推进关键决策人沟通' }
+const matches = [
+  { need:'拜访效率管理', solution:'AI自动记录+分析报告，全程数据化' },
+  { need:'新人培训', solution:'话术自动提取+案例库，新人上手周期缩短50%' },
+  { need:'经验沉淀', solution:'金牌销售画像+话术库，优秀经验可复制' },
+  { need:'数据安全', solution:'等保三级+私有化部署+数据加密传输' }
 ]
-const defaultSteps = [
-  { title:'发送产品方案和案例资料', deadline:'本周内', owner:'销售代表' },
-  { title:'安排技术团队对接会议', deadline:'下周', owner:'技术+销售' },
-  { title:'提供正式商务方案', deadline:'2周内', owner:'销售代表' }
+const competitors = [
+  { name:'某传统录音笔方案', detail:'价格较低但无AI分析能力，仅为基础录音功能' },
+  { name:'某SaaS销售管理工具', detail:'有过程管理但无硬件集成，缺乏真实对话数据' }
+]
+const advantages = [
+  'AI分析能力是核心差异化优势，竞品不具备',
+  '硬件+软件一体化方案，数据采集到分析全闭环',
+  '招商银行等头部客户案例背书',
+  '等保三级+私有化部署满足金融合规要求'
+]
+const followUps = [
+  { task:'发送详细产品方案+招商银行案例', owner:'王志华', deadline:'5月28日' },
+  { task:'安排技术团队对接，讨论系统集成方案', owner:'技术部', deadline:'6月2日' },
+  { task:'提供20人3个月免费试用方案', owner:'王志华', deadline:'6月5日' }
 ]
 </script>
 
 <style scoped>
-.general-report{max-width:900px;margin:0 auto;padding:8px}
-.gr-hero{background:linear-gradient(135deg,#f0f5ff,#e8f4fd);border-radius:16px;padding:28px;margin-bottom:20px}
-.gr-hero h2{font-size:20px;color:#1a1a2e;margin:0 0 10px}.gr-meta{display:flex;gap:20px;font-size:13px;color:#909399;flex-wrap:wrap}
-.gr-overview{margin-bottom:20px}.gro-card{background:#fff;border-radius:14px;padding:20px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.03)}.gro-num{font-size:32px;font-weight:700;display:block}.gro-label{font-size:13px;color:#909399;margin-top:4px}
-.gr-card{border-radius:14px;margin-bottom:14px;border:none;box-shadow:0 1px 6px rgba(0,0,0,.03)}
-.grc-title{font-size:15px;font-weight:700;color:#1a1a2e}.grc-summary{font-size:14px;color:#4a5568;line-height:1.9}
-
-.grt-topic-card{background:#fafbfc;border-radius:12px;padding:18px;border-left:3px solid #409EFF}
-.grtt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}.grtt-num{width:24px;height:24px;border-radius:8px;background:#409EFF;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}.grtt-title{font-size:15px;font-weight:700;color:#1a1a2e;flex:1}.grtt-detail{font-size:13px;color:#606266;line-height:1.8;padding-left:34px}.grtt-result{margin-top:10px;padding:10px 14px;background:#f0f9eb;border-radius:8px;font-size:13px;color:#303133;line-height:1.6}.grttr-label{font-weight:700;color:#67C23A;margin-right:6px}
-
-.grc-grid{display:flex;flex-direction:column;gap:10px}.grcc-item{display:flex;gap:12px;padding:14px;background:#f0f9eb;border-radius:12px;align-items:flex-start}.grcc-num{width:26px;height:26px;border-radius:50%;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}.grcc-text{font-size:14px;color:#1a1a2e;line-height:1.6}
-
-.gr-risk-item{display:flex;align-items:flex-start;gap:10px;padding:10px;margin-bottom:6px;background:#fef0f0;border-radius:10px}.grri-title{font-size:14px;font-weight:600;color:#303133;display:block}.grri-desc{font-size:12px;color:#909399;margin-top:2px;display:block}
-
-.gr-step-item{display:flex;gap:12px;padding:10px;align-items:center}.grsi-num{width:24px;height:24px;border-radius:50%;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}.grsi-title{font-size:14px;font-weight:600;color:#303133}.grsi-meta{font-size:12px;color:#909399;margin-top:2px}
-.gr-footer{text-align:center;padding:20px;color:#ccc;font-size:12px}
+.visit-report{max-width:960px;margin:0 auto;padding:8px;font-family:'PingFang SC','Microsoft YaHei',sans-serif}
+.vr-title{font-size:24px;text-align:center;color:#1a1a2e;margin:0 0 4px}.vr-sub{text-align:center;color:#909399;font-size:13px;margin:0 0 24px}
+.vr-section{margin-bottom:18px}
+.vrs-header{padding:10px 16px;color:#fff;font-size:15px;font-weight:700;border-radius:8px 8px 0 0}
+.vr-process p{font-size:13px;color:#606266;line-height:1.8;margin:4px 0}
+.vr-list{}.vrl-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;color:#303133;line-height:1.8}.vrl-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.vr-match{}.vrm-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;border-bottom:1px solid #f5f7fa}.vrm-need{color:#E6A23C;font-weight:600;width:120px;flex-shrink:0}.vrm-solution{flex:1;color:#303133}
+.vr-compare{}.vrc-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px}.vrc-name{font-weight:600;color:#E6A23C;width:140px;flex-shrink:0}.vrc-detail{color:#606266}
+.vr-advantage{}.vra-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;color:#303133}
+.vr-follow-card{background:#fafbfc;border-radius:10px;padding:16px;text-align:center}.vrfc-label{font-size:12px;color:#909399;margin-bottom:6px}.vrfc-value{font-size:18px;font-weight:700;color:#409EFF}
+.vr-signature{display:flex;justify-content:space-around;padding:20px 0;margin-top:16px;border-top:2px solid #409EFF}.vrsig-item{text-align:center}.vrsig-label{font-size:14px;color:#606266;margin-bottom:8px}.vrsig-line{font-size:16px;color:#303133;padding:4px 40px;border-bottom:1px solid #303133;min-width:120px}.vrsig-date{font-size:12px;color:#909399;margin-top:6px}
+.vr-footer{text-align:center;padding:20px;color:#ccc;font-size:12px}
 </style>
