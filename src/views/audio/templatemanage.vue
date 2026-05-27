@@ -6,7 +6,7 @@
     <el-row :gutter="16" style="margin-bottom:16px;">
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">
-          <div class="stat-val">14</div>
+          <div class="stat-val">15</div>
           <div class="stat-lbl">全部智能体</div>
         </el-card>
       </el-col>
@@ -18,7 +18,7 @@
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'report' }" @click="activeTab = 'report'">
-          <div class="stat-val" style="color:#67C23A;">7</div>
+          <div class="stat-val" style="color:#67C23A;">8</div>
           <div class="stat-lbl">📝 行业报告智能体</div>
         </el-card>
       </el-col>
@@ -423,6 +423,8 @@
         <ProductSceneView v-if="isProductScoring" :data="previewData" />
         <!-- 客户购买力模板 → 客户购买力评估报告 -->
         <CustomerReport v-else-if="isCustomerScoring" :data="previewData.customer" :template="previewTpl" class="preview-focused" />
+        <!-- 通用行业销售报告 → 销售分析报告 -->
+        <SalesGeneralView v-if="isSalesGeneral" :data="previewData" />
         <!-- 通用行业销售报告 → 通用报告 -->
         <GeneralReportView v-if="isGeneralReport" :data="previewData" />
         <!-- 评分模板 → 仅显示销售能力总结 -->
@@ -480,6 +482,7 @@ import RetailView from './reports/RetailView.vue'
 import BakeryView from './reports/BakeryView.vue'
 import SalesReviewView from './reports/SalesReviewView.vue'
 import GeneralReportView from './reports/GeneralReportView.vue'
+import SalesGeneralView from './reports/SalesGeneralView.vue'
 import { generatePreviewData } from './reportData.js'
 import { getScenarioPreviewData } from './scenarioData.js'
 
@@ -529,6 +532,24 @@ const templateList = ref([
       { title: '行动建议', type: 'suggestions', prompt: '给出具体的下一步行动方案和时间节点', icon: 'Connection' }
     ],
     aiPrompt: '你是一位专业销售顾问。请根据销售拜访对话生成结构化拜访报告...'
+  },
+  {
+    id: 15, name: '通用行业销售报告', icon: '📈', color: '#f0f9ff',
+    templateType: 'report', hasScore: false,
+    description: '通用行业销售分析报告，从销售全流程视角分析客户跟进状态、销售漏斗阶段、成单概率和推进策略',
+    industries: ['银行金融', '汽车销售', '医疗健康', '教育培训', '房地产', '零售消费', '保险'], scenes: ['客户拜访', '商务谈判', '售后跟进'],
+    totalDims: 0, totalWeight: 0, scoreRange: '-',
+    enterpriseCount: 10, useCount: 2800, avgScore: '-',
+    enabled: true,
+    dimensionConfig: [],
+    sections: [
+      { title: '销售概况', type: 'summary', prompt: '总结本次销售沟通的背景、目标和整体进展', icon: 'Document' },
+      { title: '客户分析', type: 'profile', prompt: '分析客户画像、购买意向、决策链', icon: 'User' },
+      { title: '需求匹配', type: 'needs', prompt: '分析客户需求与产品方案的匹配度', icon: 'Search' },
+      { title: '竞争分析', type: 'custom', prompt: '分析竞品情况和差异化优势', icon: 'TrendCharts' },
+      { title: '推进策略', type: 'suggestions', prompt: '给出销售推进策略和下一步具体行动', icon: 'Connection' }
+    ],
+    aiPrompt: '你是一位资深销售总监。请从销售推进角度分析销售沟通，生成结构化销售报告...'
   },
   {
     id: 1, name: '销售能力综合评分', icon: '📊', color: '#ecf5ff',
@@ -716,7 +737,7 @@ const filteredTemplates = computed(() => {
   else if (filterStatus.value === 'off') list = list.filter(t => !t.enabled)
 
   // 按指定顺序排列: 前3评分 → 会议 → 银行 → 其他场景
-  const order = [14, 1, 3, 7, 4, 6, 2, 5, 8, 9, 10, 11, 12, 13]
+  const order = [14, 15, 1, 3, 7, 4, 6, 2, 5, 8, 9, 10, 11, 12, 13]
   list.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
 
   return list
@@ -820,6 +841,7 @@ const isRetailPreview = computed(() => (previewTpl.value?.name || '').includes('
 const isBakeryPreview = computed(() => (previewTpl.value?.name || '').includes('面包店'))
 const isReviewPreview = computed(() => (previewTpl.value?.name || '').includes('复盘'))
 const isGeneralReport = computed(() => (previewTpl.value?.name || '').includes('行业通用拜访'))
+const isSalesGeneral = computed(() => (previewTpl.value?.name || '').includes('通用行业销售'))
 const previewDefaultTab = computed(() => isScoringPreview.value ? 'sales' : 'customer')
 const previewDefaultLabel = computed(() => {
   if (isScoringPreview.value) return '📊 销售能力总结'
