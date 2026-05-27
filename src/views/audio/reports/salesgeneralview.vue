@@ -3,16 +3,6 @@
     <h2 class="sr-title">📈 销售分析报告</h2>
     <p class="sr-sub">Sales Analysis Report · AI自动生成</p>
 
-    <!-- 销售漏斗概览 -->
-    <el-row :gutter="12" class="sr-funnel">
-      <el-col :span="4" v-for="f in funnel" :key="f.label">
-        <div class="srf-card" :style="{borderTopColor:f.color}">
-          <div class="srf-num" :style="{color:f.color}">{{ f.value }}</div>
-          <div class="srf-label">{{ f.label }}</div>
-        </div>
-      </el-col>
-    </el-row>
-
     <!-- 一、销售概况 -->
     <div class="sr-section">
       <div class="srs-header">一、销售概况</div>
