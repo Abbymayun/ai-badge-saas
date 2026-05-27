@@ -131,10 +131,14 @@ async function send(){
 
   try {
     const base = selected.value.startsWith('claude-') ? (cfg.apiClaude || cfg.apiBase) : cfg.apiBase
-    // 加10秒超时，避免一直挂住
+    // 本地HTTP环境 → 通过Vite代理避免CORS
+    const isLocal = window.location.hostname === 'localhost'
+    const url = isLocal 
+      ? (selected.value.startsWith('claude-') ? '/api/claude/chat/completions' : '/api/openai/chat/completions')
+      : (base.replace(/\/$/,'') + '/chat/completions')
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 10000)
-    const res = await fetch(base.replace(/\/$/,'') + '/chat/completions', {
+    const res = await fetch(url, {
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+cfg.apiKey},
       body: JSON.stringify({model: selected.value, messages: [{role:'user',content:t}], max_tokens: 2000}),

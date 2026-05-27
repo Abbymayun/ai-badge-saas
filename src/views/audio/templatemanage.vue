@@ -6,7 +6,7 @@
     <el-row :gutter="16" style="margin-bottom:16px;">
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">
-          <div class="stat-val">13</div>
+          <div class="stat-val">14</div>
           <div class="stat-lbl">全部智能体</div>
         </el-card>
       </el-col>
@@ -18,7 +18,7 @@
       </el-col>
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" :class="{ active: activeTab === 'report' }" @click="activeTab = 'report'">
-          <div class="stat-val" style="color:#67C23A;">6</div>
+          <div class="stat-val" style="color:#67C23A;">7</div>
           <div class="stat-lbl">📝 行业报告智能体</div>
         </el-card>
       </el-col>
@@ -423,6 +423,8 @@
         <ProductSceneView v-if="isProductScoring" :data="previewData" />
         <!-- 客户购买力模板 → 客户购买力评估报告 -->
         <CustomerReport v-else-if="isCustomerScoring" :data="previewData.customer" :template="previewTpl" class="preview-focused" />
+        <!-- 通用行业销售报告 → 通用报告 -->
+        <CustomerReport v-if="isGeneralReport" :data="previewData.customer" :template="previewTpl" class="preview-focused" />
         <!-- 评分模板 → 仅显示销售能力总结 -->
         <SalesReport v-else-if="isScoringPreview" :data="previewData.sales" :template="previewTpl" class="preview-focused" />
         <!-- 销售复盘 → 复盘报告 -->
@@ -509,6 +511,24 @@ const scenes = [
 
 // ============ 模板数据 ============
 const templateList = ref([
+  {
+    id: 14, name: '通用行业销售报告', icon: '📋', color: '#f6ffed',
+    templateType: 'report', hasScore: false,
+    description: '通用行业销售拜访报告模板，适用于各行业标准销售拜访场景，AI自动生成客户画像、需求分析、沟通评估和行动建议',
+    industries: ['银行金融', '汽车销售', '医疗健康', '教育培训', '房地产', '零售消费', '保险'], scenes: ['客户拜访', '商务谈判', '需求调研'],
+    totalDims: 0, totalWeight: 0, scoreRange: '-',
+    enterpriseCount: 12, useCount: 3200, avgScore: '-',
+    enabled: true,
+    dimensionConfig: [],
+    sections: [
+      { title: '拜访概况', type: 'summary', prompt: '总结拜访时间、地点、对象、目的和拜访类型', icon: 'Document' },
+      { title: '客户画像', type: 'profile', prompt: '分析客户基本信息、行业特征、决策角色和沟通风格', icon: 'User' },
+      { title: '需求洞察', type: 'needs', prompt: '识别客户已表达需求和潜在需求，按优先级排序', icon: 'Search' },
+      { title: '沟通评估', type: 'custom', prompt: '评估本次沟通的有效性、亮点和改进空间', icon: 'ChatDotRound' },
+      { title: '行动建议', type: 'suggestions', prompt: '给出具体的下一步行动方案和时间节点', icon: 'Connection' }
+    ],
+    aiPrompt: '你是一位专业销售顾问。请根据销售拜访对话生成结构化拜访报告...'
+  },
   {
     id: 1, name: '销售能力综合评分', icon: '📊', color: '#ecf5ff',
     templateType: 'scoring', hasScore: true,
@@ -695,7 +715,7 @@ const filteredTemplates = computed(() => {
   else if (filterStatus.value === 'off') list = list.filter(t => !t.enabled)
 
   // 按指定顺序排列: 前3评分 → 会议 → 银行 → 其他场景
-  const order = [1, 3, 7, 4, 6, 2, 5, 8, 9, 10, 11, 12, 13]
+  const order = [14, 1, 3, 7, 4, 6, 2, 5, 8, 9, 10, 11, 12, 13]
   list.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
 
   return list
@@ -798,6 +818,7 @@ const isEduPreview = computed(() => (previewTpl.value?.name || '').includes('教
 const isRetailPreview = computed(() => (previewTpl.value?.name || '').includes('零售') || (previewTpl.value?.name || '').includes('面包'))
 const isBakeryPreview = computed(() => (previewTpl.value?.name || '').includes('面包店'))
 const isReviewPreview = computed(() => (previewTpl.value?.name || '').includes('复盘'))
+const isGeneralReport = computed(() => (previewTpl.value?.name || '').includes('通用行业'))
 const previewDefaultTab = computed(() => isScoringPreview.value ? 'sales' : 'customer')
 const previewDefaultLabel = computed(() => {
   if (isScoringPreview.value) return '📊 销售能力总结'
