@@ -513,7 +513,7 @@ const scenes = [
 // ============ 模板数据 ============
 const templateList = ref([
   {
-    id: 14, name: '通用行业销售报告', icon: '📋', color: '#f6ffed',
+    id: 14, name: '行业通用拜访报告', icon: '📋', color: '#f6ffed',
     templateType: 'report', hasScore: false,
     description: '通用行业销售拜访报告模板，适用于各行业标准销售拜访场景，AI自动生成客户画像、需求分析、沟通评估和行动建议',
     industries: ['银行金融', '汽车销售', '医疗健康', '教育培训', '房地产', '零售消费', '保险'], scenes: ['客户拜访', '商务谈判', '需求调研'],
@@ -819,7 +819,7 @@ const isEduPreview = computed(() => (previewTpl.value?.name || '').includes('教
 const isRetailPreview = computed(() => (previewTpl.value?.name || '').includes('零售') || (previewTpl.value?.name || '').includes('面包'))
 const isBakeryPreview = computed(() => (previewTpl.value?.name || '').includes('面包店'))
 const isReviewPreview = computed(() => (previewTpl.value?.name || '').includes('复盘'))
-const isGeneralReport = computed(() => (previewTpl.value?.name || '').includes('通用行业'))
+const isGeneralReport = computed(() => (previewTpl.value?.name || '').includes('行业通用拜访'))
 const previewDefaultTab = computed(() => isScoringPreview.value ? 'sales' : 'customer')
 const previewDefaultLabel = computed(() => {
   if (isScoringPreview.value) return '📊 销售能力总结'
