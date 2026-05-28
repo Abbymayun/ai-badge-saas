@@ -95,12 +95,23 @@ const categoryTree = ref([
   ]}
 ])
 
-const handleNodeClick = (node) => {
-  if (node.children && node.children.length) return // 父节点不筛选
-  activeCategory.value = node.label
+const handleNodeClick = (data) => {
+  if (data.children && data.children.length > 0) {
+    // 父节点（行业）：按行业筛选
+    activeCategory.value = ''
+    activeIndustry.value = data.name
+  } else {
+    // 子节点（阶段）：按阶段筛选
+    activeCategory.value = data.name
+    activeIndustry.value = ''
+  }
 }
 
 const activeCategory = ref('')
+const activeIndustry = ref('')
+
+const INDUSTRY_MAP = { '⭐ 通用精品':'通用', '🏦 银行业':'银行', '🚗 汽车业':'汽车', '🏥 医疗业':'医疗', '📚 教育业':'教育', '🏠 地产业':'地产', '🛡️ 保险业':'保险', '🛒 零售业':'零售' }
+const STAGE_MAP = { '1分钟精准介绍':'1分钟介绍', '电梯演讲':'开场白', '首次拜访开场':'开场白' }
 
 const filteredScripts = computed(() => {
   let list = scripts.value
@@ -108,8 +119,13 @@ const filteredScripts = computed(() => {
     const kw = search.value.toLowerCase()
     list = list.filter(s => s.title.toLowerCase().includes(kw) || s.content.toLowerCase().includes(kw))
   }
+  if (activeIndustry.value) {
+    const industry = INDUSTRY_MAP[activeIndustry.value] || activeIndustry.value
+    list = list.filter(s => s.industry === industry)
+  }
   if (activeCategory.value) {
-    list = list.filter(s => s.stage === activeCategory.value)
+    const stage = STAGE_MAP[activeCategory.value] || activeCategory.value
+    list = list.filter(s => s.stage === stage)
   }
   if (sortMode.value === 'score') list.sort((a,b) => b.effectScore - a.effectScore)
   else if (sortMode.value === 'usage') list.sort((a,b) => b.usageCount - a.usageCount)
