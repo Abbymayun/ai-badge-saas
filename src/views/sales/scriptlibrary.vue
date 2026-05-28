@@ -17,7 +17,7 @@
           </el-row>
         </el-card>
         <el-card shadow="hover">
-          <div v-for="s in scripts" :key="s.id" class="script-item" @click="selectedScript = s">
+          <div v-for="s in filteredScripts" :key="s.id" class="script-item" @click="selectedScript = s">
             <div class="script-header">
               <div>
                 <span class="script-title">{{ s.title }}</span>
@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 const search = ref('')
 const sortMode = ref('score')
 const selectedScript = ref(null)
@@ -95,7 +95,26 @@ const categoryTree = ref([
   ]}
 ])
 
-const handleNodeClick = (node) => { console.log('Selected:', node.label) }
+const handleNodeClick = (node) => {
+  if (node.children && node.children.length) return // 父节点不筛选
+  activeCategory.value = node.label
+}
+
+const activeCategory = ref('')
+
+const filteredScripts = computed(() => {
+  let list = scripts.value
+  if (search.value) {
+    const kw = search.value.toLowerCase()
+    list = list.filter(s => s.title.toLowerCase().includes(kw) || s.content.toLowerCase().includes(kw))
+  }
+  if (activeCategory.value) {
+    list = list.filter(s => s.stage === activeCategory.value)
+  }
+  if (sortMode.value === 'score') list.sort((a,b) => b.effectScore - a.effectScore)
+  else if (sortMode.value === 'usage') list.sort((a,b) => b.usageCount - a.usageCount)
+  return list
+})
 
 const scripts = ref([
   // ===== 通用精品 =====
