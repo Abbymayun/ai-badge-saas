@@ -111,7 +111,7 @@ const activeCategory = ref('')
 const activeIndustry = ref('')
 
 const INDUSTRY_MAP = { '⭐ 通用精品':'通用', '🏦 银行业':'银行', '🚗 汽车业':'汽车', '🏥 医疗业':'医疗', '📚 教育业':'教育', '🏠 地产业':'地产', '🛡️ 保险业':'保险', '🛒 零售业':'零售' }
-const STAGE_MAP = { '1分钟精准介绍':'1分钟介绍', '电梯演讲':'开场白', '首次拜访开场':'开场白' }
+const STAGE_MAP = { '1分钟精准介绍':'1分钟介绍', '电梯演讲':'电梯', '首次拜访开场':'首次拜访' }
 
 const filteredScripts = computed(() => {
   let list = scripts.value
@@ -125,7 +125,12 @@ const filteredScripts = computed(() => {
   }
   if (activeCategory.value) {
     const stage = STAGE_MAP[activeCategory.value] || activeCategory.value
-    list = list.filter(s => s.stage === stage)
+    // 通用精品分类按标题关键词匹配，其他分类按阶段匹配
+    if (['1分钟介绍','电梯','首次拜访'].includes(stage)) {
+      list = list.filter(s => s.stage.includes(stage) || s.title.includes(stage))
+    } else {
+      list = list.filter(s => s.stage === stage)
+    }
   }
   if (sortMode.value === 'score') list.sort((a,b) => b.effectScore - a.effectScore)
   else if (sortMode.value === 'usage') list.sort((a,b) => b.usageCount - a.usageCount)
