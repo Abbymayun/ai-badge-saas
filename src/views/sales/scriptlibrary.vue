@@ -40,7 +40,7 @@
       </el-col>
     </el-row>
 
-    <el-dialog v-model="showDetail" :title="selectedScript?.title" width="700px" top="5vh">
+    <el-dialog :model-value="!!selectedScript" @update:model-value="onDialogClose" :title="selectedScript?.title" width="700px" top="5vh">
       <div v-if="selectedScript">
         <el-descriptions :column="2" border style="margin-bottom:16px;">
           <el-descriptions-item label="所属行业">{{ selectedScript.industry }}</el-descriptions-item>
@@ -62,11 +62,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 const search = ref('')
 const sortMode = ref('score')
 const selectedScript = ref(null)
-const showDetail = computed(() => !!selectedScript.value)
+const onDialogClose = (val) => { if (!val) selectedScript.value = null }
 
 const categoryTree = ref([
   { id: '0', name: '⭐ 通用精品', children: [
