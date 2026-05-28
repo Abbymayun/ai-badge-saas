@@ -12,7 +12,7 @@
         <el-card shadow="hover" style="margin-bottom:16px;">
           <el-row :gutter="12">
             <el-col :span="6"><el-input v-model="search" placeholder="搜索话术关键词" clearable prefix-icon="Search" /></el-col>
-            <el-col :span="3"><el-select v-model="sortMode" placeholder="排序"><el-option label="效果评分" value="score" /><el-option label="使用次数" value="usage" /><el-option label="最新" value="newest" /></el-select></el-col>
+            <el-col :span="3"><el-select v-model="sortMode" placeholder="默认排序" clearable><el-option label="效果评分" value="score" /><el-option label="使用次数" value="usage" /></el-select></el-col>
             <el-col :span="3"><el-button type="primary" icon="Plus">新增话术</el-button></el-col>
           </el-row>
         </el-card>
@@ -64,7 +64,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 const search = ref('')
-const sortMode = ref('score')
+const sortMode = ref('')
 const selectedScript = ref(null)
 const onDialogClose = (val) => { if (!val) selectedScript.value = null }
 
