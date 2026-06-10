@@ -42,6 +42,7 @@ const routes = [
       { path: 'model-chat', name: 'ModelChat', component: () => import('../views/legal/ModelChat.vue'), meta: { title: 'AI模型调用', icon: 'Connection' } },
       { path: 'billing/pricing', name: 'Pricing', component: () => import('../views/billing/pricing.vue'), meta: { title: '定价方案', icon: 'TrendCharts' } },
       { path: 'billing/subscription', name: 'Subscription', component: () => import('../views/billing/subscription.vue'), meta: { title: '订阅管理', icon: 'TrendCharts' } },
+      { path: 'billing/addon', name: 'AddonPricing', component: () => import('../views/billing/AddonPricing.vue'), meta: { title: '增值服务', icon: 'TrendCharts' } },
     ]
   }
 ]

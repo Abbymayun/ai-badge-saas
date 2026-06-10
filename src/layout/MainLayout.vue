@@ -84,6 +84,7 @@
           <template #title><el-icon><TrendCharts /></el-icon><span>费用中心</span></template>
           <el-menu-item index="/billing/pricing">定价方案</el-menu-item>
           <el-menu-item index="/billing/subscription">订阅管理</el-menu-item>
+          <el-menu-item index="/billing/addon">增值服务</el-menu-item>
         </el-sub-menu>
 
         <el-sub-menu index="legal">
