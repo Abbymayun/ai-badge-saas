@@ -16,11 +16,11 @@
       <div class="plan-info">
         <div>
           <h3>{{ currentPlan.name }}</h3>
-          <p>{{ currentPlan.deviceCount }} 台设备 · {{ currentPlan.period === 'yearly' ? '年付' : '月付' }}</p>
+          <p>{{ currentPlan.deviceCount }} 台设备 · 年付</p>
         </div>
         <div class="plan-price-info">
           <span class="price">¥{{ currentPlan.price.toLocaleString() }}</span>
-          <span>/{{ currentPlan.period === 'yearly' ? '年' : '月' }}</span>
+          <span>元/年/台</span>
         </div>
       </div>
       <el-divider />
@@ -68,7 +68,8 @@
             <el-tag :type="row.type === '续费' ? 'success' : 'primary'" size="small">{{ row.type }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="plan" label="套餐" width="120" />
+        <el-table-column prop="plan" label="套餐" width="100" />
+        <el-table-column prop="count" label="设备数量" width="100" />
         <el-table-column prop="amount" label="金额" width="120">
           <template #default="{ row }">¥{{ row.amount.toLocaleString() }}</template>
         </el-table-column>
@@ -92,8 +93,7 @@
       <el-form label-width="80px">
         <el-form-item label="续费周期">
           <el-radio-group v-model="renewForm.period">
-            <el-radio label="monthly">月付</el-radio>
-            <el-radio label="yearly">年付 (省20%)</el-radio>
+            <el-radio label="yearly">年付</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="续费时长">
@@ -147,10 +147,10 @@ const currentPlan = ref({
   name: '高级版',
   deviceCount: 10,
   usedDevices: 7,
-  price: 7990,
-  period: 'monthly',
+  price: 799,
+  period: 'yearly',
   startDate: '2026-03-15',
-  expireDate: '2026-07-15'
+  expireDate: '2027-03-15'
 })
 
 const remainingDays = computed(() => {
@@ -173,9 +173,9 @@ const usageStats = ref([
 ])
 
 const orders = ref([
-  { orderNo: 'ORD20260601001', type: '续费', plan: '高级版', amount: 7990, date: '2026-06-01 14:30', status: '已完成', invoice: true },
-  { orderNo: 'ORD20260501001', type: '续费', plan: '高级版', amount: 7990, date: '2026-05-01 10:15', status: '已完成', invoice: true },
-  { orderNo: 'ORD20260315001', type: '新购', plan: '高级版', amount: 7990, date: '2026-03-15 09:00', status: '已完成', invoice: true }
+  { orderNo: 'ORD20260601001', type: '续费', plan: '高级版', count: 10, amount: 7990, date: '2026-06-01 14:30', status: '已完成', invoice: true },
+  { orderNo: 'ORD20260501001', type: '续费', plan: '高级版', count: 8, amount: 6392, date: '2026-05-01 10:15', status: '已完成', invoice: true },
+  { orderNo: 'ORD20260315001', type: '新购', plan: '高级版', count: 10, amount: 7990, date: '2026-03-15 09:00', status: '已完成', invoice: true }
 ])
 
 const upgradePlans = ref([
