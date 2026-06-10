@@ -90,13 +90,13 @@ const buyForm = ref({ deviceCount: 1, period: 'monthly' })
 
 const plans = ref([
   {
-    id: 'basic', name: '基础版', desc: '适合小微团队，基础AI听记功能',
-    monthlyPrice: 29, yearlyPrice: 278,
+    id: 'basic', name: '标准版', desc: '适合小微团队，基础AI听记功能',
+    monthlyPrice: 499, yearlyPrice: 4790,
     features: [
       { label: 'AI听记分析', enabled: true },
       { label: '基础报告', enabled: true },
       { label: '设备管理', enabled: true },
-      { label: '5个智能体', enabled: true },
+      { label: '30个智能体', enabled: true },
       { label: '话术库', enabled: false },
       { label: '销售画像', enabled: false },
       { label: '自定义模板', enabled: false },
@@ -104,13 +104,13 @@ const plans = ref([
     ]
   },
   {
-    id: 'pro', name: '专业版', desc: '适合成长型企业，全功能AI赋能',
-    monthlyPrice: 79, yearlyPrice: 758, featured: true,
+    id: 'pro', name: '高级版', desc: '适合成长型企业，全功能AI赋能',
+    monthlyPrice: 799, yearlyPrice: 7670, featured: true,
     features: [
       { label: 'AI听记分析', enabled: true },
       { label: '高级报告', enabled: true },
       { label: '设备管理', enabled: true },
-      { label: '无限智能体', enabled: true },
+      { label: '100个智能体', enabled: true },
       { label: '话术库', enabled: true },
       { label: '销售画像', enabled: true },
       { label: '自定义模板', enabled: true },
@@ -118,8 +118,8 @@ const plans = ref([
     ]
   },
   {
-    id: 'enterprise', name: '企业版', desc: '适合大型企业，专属定制方案',
-    monthlyPrice: 199, yearlyPrice: 1910,
+    id: 'enterprise', name: '专业版', desc: '适合大型企业，专属定制方案',
+    monthlyPrice: 1099, yearlyPrice: 10550,
     features: [
       { label: 'AI听记分析', enabled: true },
       { label: '专属报告', enabled: true },
@@ -136,7 +136,7 @@ const plans = ref([
 const compareData = ref([
   { feature: 'AI听记分析', basic: true, pro: true, enterprise: true },
   { feature: '录音时长/月', basic: '100h', pro: '500h', enterprise: '无限' },
-  { feature: '智能体数量', basic: '5个', pro: '无限', enterprise: '无限' },
+  { feature: '智能体数量', basic: '30个', pro: '100个', enterprise: '无限' },
   { feature: '话术库', basic: false, pro: true, enterprise: true },
   { feature: '销售画像', basic: false, pro: true, enterprise: true },
   { feature: '自定义AI模板', basic: false, pro: true, enterprise: true },

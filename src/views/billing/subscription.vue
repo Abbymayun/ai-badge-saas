@@ -144,10 +144,10 @@ const selectedUpgrade = ref('')
 const renewForm = ref({ period: 'monthly', months: 1 })
 
 const currentPlan = ref({
-  name: '专业版',
+  name: '高级版',
   deviceCount: 10,
   usedDevices: 7,
-  price: 790,
+  price: 7990,
   period: 'monthly',
   startDate: '2026-03-15',
   expireDate: '2026-07-15'
@@ -163,7 +163,7 @@ const planStatusType = computed(() => remainingDays.value <= 7 ? 'danger' : rema
 const planStatusText = computed(() => remainingDays.value <= 0 ? '已过期' : `${remainingDays.value}天后到期`)
 
 const renewAmount = computed(() => {
-  const base = renewForm.value.period === 'yearly' ? 758 * (renewForm.value.months / 12) : 79 * renewForm.value.months
+  const base = renewForm.value.period === 'yearly' ? 7670 * (renewForm.value.months / 12) : 799 * renewForm.value.months
   return Math.round(base * currentPlan.value.deviceCount)
 })
 
@@ -174,14 +174,14 @@ const usageStats = ref([
 ])
 
 const orders = ref([
-  { orderNo: 'ORD20260601001', type: '续费', plan: '专业版', amount: 790, date: '2026-06-01 14:30', status: '已完成', invoice: true },
-  { orderNo: 'ORD20260501001', type: '续费', plan: '专业版', amount: 790, date: '2026-05-01 10:15', status: '已完成', invoice: true },
-  { orderNo: 'ORD20260315001', type: '新购', plan: '专业版', amount: 790, date: '2026-03-15 09:00', status: '已完成', invoice: true }
+  { orderNo: 'ORD20260601001', type: '续费', plan: '高级版', amount: 7990, date: '2026-06-01 14:30', status: '已完成', invoice: true },
+  { orderNo: 'ORD20260501001', type: '续费', plan: '高级版', amount: 7990, date: '2026-05-01 10:15', status: '已完成', invoice: true },
+  { orderNo: 'ORD20260315001', type: '新购', plan: '高级版', amount: 7990, date: '2026-03-15 09:00', status: '已完成', invoice: true }
 ])
 
 const upgradePlans = ref([
-  { id: 'pro', name: '专业版', price: 79, features: ['全功能AI赋能', '无限智能体', '话术库', '销售画像'] },
-  { id: 'enterprise', name: '企业版', price: 199, features: ['专属定制', 'API接口', '私有化部署', '7x24客服'] }
+  { id: 'pro', name: '高级版', price: 799, features: ['全功能AI赋能', '100个智能体', '话术库', '销售画像'] },
+  { id: 'enterprise', name: '专业版', price: 1099, features: ['专属定制', 'API接口', '私有化部署', '7x24客服'] }
 ])
 
 function confirmRenew() {
