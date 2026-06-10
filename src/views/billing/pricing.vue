@@ -96,11 +96,12 @@ const plans = ref([
       { label: 'AI听记分析', enabled: true },
       { label: '基础报告', enabled: true },
       { label: '设备管理', enabled: true },
-      { label: '30个智能体', enabled: true },
+      { label: '3个智能体', enabled: true },
       { label: '话术库', enabled: false },
       { label: '销售画像', enabled: false },
       { label: '自定义模板', enabled: false },
-      { label: 'API接口', enabled: false }
+      { label: 'API接口', enabled: false },
+      { label: '硬件设备 ¥500/台', enabled: true }
     ]
   },
   {
@@ -110,11 +111,12 @@ const plans = ref([
       { label: 'AI听记分析', enabled: true },
       { label: '高级报告', enabled: true },
       { label: '设备管理', enabled: true },
-      { label: '100个智能体', enabled: true },
+      { label: '3个智能体', enabled: true },
       { label: '话术库', enabled: true },
       { label: '销售画像', enabled: true },
       { label: '自定义模板', enabled: true },
-      { label: 'API接口', enabled: false }
+      { label: 'API接口', enabled: false },
+      { label: '硬件设备 ¥500/台', enabled: true }
     ]
   },
   {
@@ -124,11 +126,12 @@ const plans = ref([
       { label: 'AI听记分析', enabled: true },
       { label: '专属报告', enabled: true },
       { label: '设备管理', enabled: true },
-      { label: '无限智能体', enabled: true },
+      { label: '6个智能体', enabled: true },
       { label: '话术库', enabled: true },
       { label: '销售画像', enabled: true },
       { label: '自定义模板', enabled: true },
-      { label: 'API接口', enabled: true }
+      { label: 'API接口', enabled: true },
+      { label: '硬件设备 ¥500/台', enabled: true }
     ]
   }
 ])
@@ -136,11 +139,12 @@ const plans = ref([
 const compareData = ref([
   { feature: 'AI听记分析', basic: true, pro: true, enterprise: true },
   { feature: '录音时长/月', basic: '100h', pro: '500h', enterprise: '无限' },
-  { feature: '智能体数量', basic: '30个', pro: '100个', enterprise: '无限' },
+  { feature: '智能体数量', basic: '3个', pro: '3个', enterprise: '6个' },
   { feature: '话术库', basic: false, pro: true, enterprise: true },
   { feature: '销售画像', basic: false, pro: true, enterprise: true },
   { feature: '自定义AI模板', basic: false, pro: true, enterprise: true },
   { feature: 'API接口', basic: false, pro: false, enterprise: true },
+  { feature: '硬件设备', basic: '¥500/台', pro: '¥500/台', enterprise: '¥500/台' },
   { feature: '专属客服', basic: false, pro: false, enterprise: true },
   { feature: '数据导出', basic: false, pro: true, enterprise: true },
   { feature: '私有化部署', basic: false, pro: false, enterprise: true }
