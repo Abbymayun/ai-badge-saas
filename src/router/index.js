@@ -40,8 +40,8 @@ const routes = [
       { path: 'manual/miniapp', name: 'ManualMiniApp', component: () => import('../views/legal/ManualMiniApp.vue'), meta: { title: '小程序使用手册', icon: 'Document' } },
       { path: 'ai-assistant', name: 'AiAssistant', component: () => import('../views/legal/AiAssistant.vue'), meta: { title: 'AI智能助手', icon: 'MagicStick' } },
       { path: 'model-chat', name: 'ModelChat', component: () => import('../views/legal/ModelChat.vue'), meta: { title: 'AI模型调用', icon: 'Connection' } },
-      { path: 'billing/pricing', name: 'Pricing', component: () => import('../views/billing/Pricing.vue'), meta: { title: '定价方案', icon: 'Money' } },
-      { path: 'billing/subscription', name: 'Subscription', component: () => import('../views/billing/Subscription.vue'), meta: { title: '订阅管理', icon: 'Wallet' } },
+      { path: 'billing/pricing', name: 'Pricing', component: () => import('../views/billing/pricing.vue'), meta: { title: '定价方案', icon: 'TrendCharts' } },
+      { path: 'billing/subscription', name: 'Subscription', component: () => import('../views/billing/subscription.vue'), meta: { title: '订阅管理', icon: 'TrendCharts' } },
     ]
   }
 ]
