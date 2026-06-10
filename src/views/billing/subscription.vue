@@ -44,7 +44,7 @@
 
     <!-- 用量统计 -->
     <el-row :gutter="16" style="margin-top:16px">
-      <el-col :span="8" v-for="stat in usageStats" :key="stat.label">
+      <el-col :span="12" v-for="stat in usageStats" :key="stat.label">
         <el-card shadow="hover">
           <div class="stat-item">
             <div class="stat-icon" :style="{ background: stat.bg }">{{ stat.icon }}</div>
@@ -168,9 +168,8 @@ const renewAmount = computed(() => {
 })
 
 const usageStats = ref([
-  { label: '录音时长', value: '320', unit: '500h', percent: 64, color: '#409EFF', icon: '🎙️', bg: '#ecf5ff' },
-  { label: '智能体数量', value: '12', unit: '无限', percent: 100, color: '#67C23A', icon: '🤖', bg: '#f0f9eb' },
-  { label: '存储空间', value: '45', unit: '100GB', percent: 45, color: '#E6A23C', icon: '💾', bg: '#fdf6ec' }
+  { label: '录音时长', value: '856', unit: '1200h', percent: 71, color: '#409EFF', icon: '🎙️', bg: '#ecf5ff' },
+  { label: '智能体数量', value: '2', unit: '3个', percent: 67, color: '#67C23A', icon: '🤖', bg: '#f0f9eb' }
 ])
 
 const orders = ref([
