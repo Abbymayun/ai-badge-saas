@@ -31,7 +31,7 @@
             </div>
             <div class="hl-item">
               <span class="hl-val">{{ pkg.recording }}</span>
-              <span class="hl-lbl">录音时长</span>
+              <span class="hl-lbl">h/年/台</span>
             </div>
             <div class="hl-item">
               <span class="hl-val">{{ pkg.warranty }}</span>
@@ -87,7 +87,7 @@ const buyForm = ref({ qty: 1 })
 
 const packages = ref([
   {
-    id: 'starter', name: '入门套餐', desc: '适合小团队快速上手',
+    id: 'starter', name: '标准版', desc: '适合小团队快速上手',
     price: 9999, devices: 20, agents: 3, recording: '1200h', warranty: '1年',
     features: [
       '20台AI智能胸牌设备',
@@ -96,13 +96,13 @@ const packages = ref([
       'AI听记分析 · 基础报告',
       '设备远程管理 · OTA升级',
       '标准技术支持（工作日9:00-18:00）',
-      '1200h/月录音时长',
+      '1200h/年/台录音时长',
       '硬件保修1年',
       '1年免费软件更新'
     ]
   },
   {
-    id: 'growth', name: '成长套餐', desc: '适合中型团队规模部署',
+    id: 'growth', name: '专业版', desc: '适合中型团队规模部署',
     price: 24999, devices: 50, agents: 6, recording: '3000h', warranty: '2年', featured: true,
     features: [
       '50台AI智能胸牌设备',
@@ -112,14 +112,14 @@ const packages = ref([
       '话术库 · 销售画像',
       '自定义策略 · 数据导出',
       '设备远程管理 · OTA升级',
-      '3000h/月录音时长',
+      '3000h/年/台录音时长',
       '硬件保修2年',
       '优先技术支持（7×12小时）',
       '2年免费软件更新'
     ]
   },
   {
-    id: 'business', name: '商务套餐', desc: '适合大型企业全面部署',
+    id: 'business', name: '旗舰版', desc: '适合大型企业全面部署',
     price: 49999, devices: 100, agents: 10, recording: '6000h', warranty: '3年',
     features: [
       '100台AI智能胸牌设备',
@@ -129,7 +129,7 @@ const packages = ref([
       '话术库 · 销售画像 · 自定义策略',
       'API接口 · 数据导出',
       '设备远程管理 · OTA升级',
-      '6000h/月录音时长',
+      '6000h/年/台录音时长',
       '硬件保修3年',
       '专属技术支持（7×24小时）',
       '3年免费软件更新',
@@ -137,7 +137,7 @@ const packages = ref([
     ]
   },
   {
-    id: 'enterprise', name: '企业定制', desc: '量身定制，按需配置',
+    id: 'enterprise', name: '定制版', desc: '量身定制，按需配置',
     price: 99999, devices: '200+', agents: '不限', recording: '不限', warranty: '5年',
     features: [
       '200台以上AI智能胸牌设备',
