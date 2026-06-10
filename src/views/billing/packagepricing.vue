@@ -31,11 +31,7 @@
             </div>
             <div class="hl-item">
               <span class="hl-val">{{ pkg.recording }}</span>
-              <span class="hl-lbl">h/年/台</span>
-            </div>
-            <div class="hl-item">
-              <span class="hl-val">{{ pkg.warranty }}</span>
-              <span class="hl-lbl">硬件保修</span>
+              <span class="hl-lbl">录音时长</span>
             </div>
           </div>
           <ul class="pkg-features">
