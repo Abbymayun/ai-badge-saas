@@ -43,6 +43,8 @@
           <template #title><el-icon><Trophy /></el-icon><span>金牌销售</span></template>
           <el-menu-item index="/sales/profile">销售画像</el-menu-item>
           <el-menu-item index="/sales/script">话术库</el-menu-item>
+          <el-menu-item index="/sales/sop">销售SOP</el-menu-item>
+          <el-menu-item index="/sales/marketing">市场推广</el-menu-item>
         </el-sub-menu>
 
         <el-menu-item index="/enterprise/list">
@@ -77,6 +79,12 @@
           <el-icon><Connection /></el-icon>
           <template #title>AI 模型调用</template>
         </el-menu-item>
+
+        <el-sub-menu index="billing">
+          <template #title><el-icon><TrendCharts /></el-icon><span>费用中心</span></template>
+          <el-menu-item index="/billing/pricing">定价方案</el-menu-item>
+          <el-menu-item index="/billing/subscription">订阅管理</el-menu-item>
+        </el-sub-menu>
 
         <el-sub-menu index="legal">
           <template #title><el-icon><Document /></el-icon><span>法律声明</span></template>

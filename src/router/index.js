@@ -22,7 +22,10 @@ const routes = [
       { path: 'audio/product', name: 'ProductSelling', component: () => import('../views/audio/ProductSelling.vue'), meta: { title: '产品卖点配置', icon: 'Goods' } },
       { path: 'clue/list', name: 'ClueList', component: () => import('../views/clue/ClueList.vue'), meta: { title: '线索列表', icon: 'Connection' } },
       { path: 'sales/profile', name: 'SalesProfile', component: () => import('../views/sales/SalesProfile.vue'), meta: { title: '销售画像', icon: 'UserFilled' } },
+      { path: 'sales/profile/:id', name: 'SalesProfileDetail', component: () => import('../views/sales/SalesProfileDetail.vue'), meta: { title: '画像详情', icon: 'UserFilled' } },
       { path: 'sales/script', name: 'ScriptLibrary', component: () => import('../views/sales/ScriptLibrary.vue'), meta: { title: '话术库', icon: 'ChatDotRound' } },
+      { path: 'sales/sop', name: 'SalesSOP', component: () => import('../views/sales/SalesSOP.vue'), meta: { title: '销售SOP', icon: 'Tickets' } },
+      { path: 'sales/marketing', name: 'MarketingLaunch', component: () => import('../views/sales/MarketingLaunch.vue'), meta: { title: '市场推广', icon: 'Promotion' } },
       { path: 'enterprise/list', name: 'EnterpriseList', component: () => import('../views/enterprise/EnterpriseList.vue'), meta: { title: '企业列表', icon: 'OfficeBuilding' } },
       { path: 'enterprise/create', name: 'EnterpriseCreate', component: () => import('../views/enterprise/EnterpriseCreate.vue'), meta: { title: '创建企业', icon: 'Plus' } },
       { path: 'industry/list', name: 'IndustryList', component: () => import('../views/industry/IndustryList.vue'), meta: { title: '行业列表', icon: 'Grid' } },
@@ -37,6 +40,8 @@ const routes = [
       { path: 'manual/miniapp', name: 'ManualMiniApp', component: () => import('../views/legal/ManualMiniApp.vue'), meta: { title: '小程序使用手册', icon: 'Document' } },
       { path: 'ai-assistant', name: 'AiAssistant', component: () => import('../views/legal/AiAssistant.vue'), meta: { title: 'AI智能助手', icon: 'MagicStick' } },
       { path: 'model-chat', name: 'ModelChat', component: () => import('../views/legal/ModelChat.vue'), meta: { title: 'AI模型调用', icon: 'Connection' } },
+      { path: 'billing/pricing', name: 'Pricing', component: () => import('../views/billing/Pricing.vue'), meta: { title: '定价方案', icon: 'Money' } },
+      { path: 'billing/subscription', name: 'Subscription', component: () => import('../views/billing/Subscription.vue'), meta: { title: '订阅管理', icon: 'Wallet' } },
     ]
   }
 ]
