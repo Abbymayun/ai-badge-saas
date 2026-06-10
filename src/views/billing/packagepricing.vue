@@ -84,7 +84,7 @@ const buyForm = ref({ qty: 1 })
 const packages = ref([
   {
     id: 'starter', name: '标准版', desc: '适合小团队快速上手',
-    price: 9999, devices: 20, agents: 3, recording: '1200h', warranty: '1年',
+    price: 9999, devices: 20, agents: 3, recording: '1200h/年/台', warranty: '1年',
     features: [
       '20台AI智能胸牌设备',
       'SaaS管理后台完整功能',
@@ -99,7 +99,7 @@ const packages = ref([
   },
   {
     id: 'growth', name: '专业版', desc: '适合中型团队规模部署',
-    price: 24999, devices: 50, agents: 6, recording: '3000h', warranty: '2年', featured: true,
+    price: 24999, devices: 50, agents: 6, recording: '3000h/年/台', warranty: '2年', featured: true,
     features: [
       '50台AI智能胸牌设备',
       'SaaS管理后台完整功能',
@@ -116,7 +116,7 @@ const packages = ref([
   },
   {
     id: 'business', name: '旗舰版', desc: '适合大型企业全面部署',
-    price: 49999, devices: 100, agents: 10, recording: '6000h', warranty: '3年',
+    price: 49999, devices: 100, agents: 10, recording: '6000h/年/台', warranty: '3年',
     features: [
       '100台AI智能胸牌设备',
       'SaaS管理后台完整功能',
