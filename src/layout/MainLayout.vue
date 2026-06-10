@@ -86,6 +86,7 @@
           <el-menu-item index="/billing/subscription">订阅管理</el-menu-item>
           <el-menu-item index="/billing/addon">增值服务</el-menu-item>
           <el-menu-item index="/billing/package">按套餐定价</el-menu-item>
+          <el-menu-item index="/billing/compare">方案对比</el-menu-item>
         </el-sub-menu>
 
         <el-sub-menu index="legal">

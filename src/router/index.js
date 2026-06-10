@@ -44,6 +44,7 @@ const routes = [
       { path: 'billing/subscription', name: 'Subscription', component: () => import('../views/billing/subscription.vue'), meta: { title: '订阅管理', icon: 'TrendCharts' } },
       { path: 'billing/addon', name: 'AddonPricing', component: () => import('../views/billing/AddonPricing.vue'), meta: { title: '增值服务', icon: 'TrendCharts' } },
       { path: 'billing/package', name: 'PackagePricing', component: () => import('../views/billing/PackagePricing.vue'), meta: { title: '按套餐定价', icon: 'TrendCharts' } },
+      { path: 'billing/compare', name: 'Compare', component: () => import('../views/billing/Compare.vue'), meta: { title: '方案对比', icon: 'TrendCharts' } },
     ]
   }
 ]
