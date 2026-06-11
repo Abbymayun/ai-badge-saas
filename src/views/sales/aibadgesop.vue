@@ -102,17 +102,6 @@
     </el-dialog>
   </div>
 </template>
-            <div class="stc-footer">
-              <el-tag v-if="task._done" type="success" size="small">已标准化</el-tag>
-              <el-tag v-else type="warning" size="small">待完善</el-tag>
-              <span class="stc-owner">{{ task.owner }}</span>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </div>
-  </div>
-</template>
 
 <script setup>
 import { ref, computed } from 'vue'
