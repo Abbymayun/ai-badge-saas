@@ -44,6 +44,7 @@
           <el-menu-item index="/sales/profile">销售画像</el-menu-item>
           <el-menu-item index="/sales/script">话术库</el-menu-item>
           <el-menu-item index="/sales/sop">销售SOP</el-menu-item>
+          <el-menu-item index="/sales/sop-execute">销售执行SOP</el-menu-item>
           <el-menu-item index="/sales/marketing">市场推广</el-menu-item>
         </el-sub-menu>
 
