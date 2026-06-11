@@ -33,7 +33,7 @@
                 <div class="ps-item"><span class="ps-val">{{ s.rate }}%</span><span class="ps-lbl">转化率</span></div>
                 <div class="ps-item"><span class="ps-val">{{ s.audioCount }}</span><span class="ps-lbl">听记数</span></div>
               </div>
-              <el-button type="primary" style="width:100%;margin-top:12px;" size="small">查看画像详情</el-button>
+              <el-button type="primary" style="width:100%;margin-top:12px;" size="small" @click="$router.push('/sales/profile/'+s.id)">查看画像详情</el-button>
             </el-card>
           </el-col>
         </el-row>
@@ -50,10 +50,10 @@ const filterDept = ref('')
 const sortBy = ref('score')
 const depts = ['华东区', '华南区', '华北区', '西南区']
 const salesProfiles = ref([
-  { name: '王志华', dept: '华东区', industry: '银行', score: 92, gold: true, color: '#409EFF', tags: ['顾问型', '银行专家', '高风险客户', '需求深挖'], deals: 45, rate: 32, audioCount: 186 },
-  { name: '朱炫', dept: '华南区', industry: '汽车', score: 88, gold: true, color: '#67C23A', tags: ['专业型', '汽车专家', '产品演示', '试驾促成'], deals: 38, rate: 28, audioCount: 152 },
-  { name: '李飞', dept: '华北区', industry: '保险', score: 85, gold: false, color: '#E6A23C', tags: ['亲和型', '保险顾问', '信任建立', '方案匹配'], deals: 32, rate: 25, audioCount: 128 },
-  { name: '张锐', dept: '西南区', industry: '地产', score: 82, gold: false, color: '#F56C6C', tags: ['效率型', '地产专家', '预算匹配', '逼单促成'], deals: 28, rate: 22, audioCount: 96 }
+  { id:1, name: '王志华', dept: '华东区', industry: '银行', score: 92, gold: true, color: '#409EFF', tags: ['顾问型', '银行专家', '高风险客户', '需求深挖'], deals: 45, rate: 32, audioCount: 186 },
+  { id:2, name: '朱炫', dept: '华南区', industry: '汽车', score: 88, gold: true, color: '#67C23A', tags: ['专业型', '汽车专家', '产品演示', '试驾促成'], deals: 38, rate: 28, audioCount: 152 },
+  { id:3, name: '李飞', dept: '华北区', industry: '保险', score: 85, gold: false, color: '#E6A23C', tags: ['亲和型', '保险顾问', '信任建立', '方案匹配'], deals: 32, rate: 25, audioCount: 128 },
+  { id:4, name: '张锐', dept: '西南区', industry: '地产', score: 82, gold: false, color: '#F56C6C', tags: ['效率型', '地产专家', '预算匹配', '逼单促成'], deals: 28, rate: 22, audioCount: 96 }
 ])
 </script>
 
