@@ -103,7 +103,7 @@
   </div>
 </template>
             <div class="stc-footer">
-              <el-tag v-if="task.done" type="success" size="small">已标准化</el-tag>
+              <el-tag v-if="task._done" type="success" size="small">已标准化</el-tag>
               <el-tag v-else type="warning" size="small">待完善</el-tag>
               <span class="stc-owner">{{ task.owner }}</span>
             </div>
