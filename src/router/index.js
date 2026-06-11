@@ -25,6 +25,7 @@ const routes = [
       { path: 'sales/profile/:id', name: 'SalesProfileDetail', component: () => import('../views/sales/SalesProfileDetail.vue'), meta: { title: '画像详情', icon: 'UserFilled' } },
       { path: 'sales/script', name: 'ScriptLibrary', component: () => import('../views/sales/ScriptLibrary.vue'), meta: { title: '话术库', icon: 'ChatDotRound' } },
       { path: 'sales/sop', name: 'SalesSOP', component: () => import('../views/sales/SalesSOP.vue'), meta: { title: '销售SOP', icon: 'Tickets' } },
+      { path: 'sales/ai-sop', name: 'AIBadgeSOP', component: () => import('../views/sales/AIBadgeSOP.vue'), meta: { title: 'AI胸牌SOP', icon: 'Tickets' } },
       { path: 'sales/sop-execute', name: 'SOPExecute', component: () => import('../views/sales/SOPExecute.vue'), meta: { title: '销售执行SOP', icon: 'Tickets' } },
       { path: 'sales/marketing', name: 'MarketingLaunch', component: () => import('../views/sales/MarketingLaunch.vue'), meta: { title: '市场推广', icon: 'Promotion' } },
       { path: 'enterprise/list', name: 'EnterpriseList', component: () => import('../views/enterprise/EnterpriseList.vue'), meta: { title: '企业列表', icon: 'OfficeBuilding' } },
