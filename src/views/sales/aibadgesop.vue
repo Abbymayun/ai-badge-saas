@@ -34,44 +34,16 @@
               <el-checkbox v-if="editMode" v-model="task._done" size="small" />
             </div>
             <div class="stc-body">
-              <div class="stc-script"><strong>💬 话术：</strong>
-                <el-input v-if="editMode" v-model="task.script" type="textarea" :rows="2" size="small" style="margin-top:4px" />
-                <template v-else>
-                  <span v-if="!task._expanded">{{ task.script?.substring(0, 80) }}{{ task.script?.length > 80 ? '...' : '' }}</span>
-                  <span v-else>{{ task.script }}</span>
-                  <el-button v-if="task.script?.length > 80" link type="primary" size="small" @click="task._expanded=!task._expanded">
-                    {{ task._expanded ? '收起' : '展开详情' }}
-                  </el-button>
-                </template>
+              <div class="stc-script"><strong>💬 标准话术</strong>
+                <el-input v-if="editMode" v-model="task.script" type="textarea" :rows="3" size="small" style="margin-top:4px" />
+                <div v-else class="stc-script-text">{{ task.script }}</div>
               </div>
-              <div v-if="task.hardware" class="stc-hardware"><strong>🔧 硬件价值：</strong>
-                <el-input v-if="editMode" v-model="task.hardware" type="textarea" :rows="2" size="small" style="margin-top:4px" />
-                <template v-else>
-                  <span v-if="!task._hwExpanded">{{ task.hardware?.substring(0, 60) }}{{ task.hardware?.length > 60 ? '...' : '' }}</span>
-                  <span v-else>{{ task.hardware }}</span>
-                  <el-button v-if="task.hardware?.length > 60" link type="primary" size="small" @click="task._hwExpanded=!task._hwExpanded">
-                    {{ task._hwExpanded ? '收起' : '硬件详情' }}
-                  </el-button>
-                </template>
+              <div v-if="task.hardware" class="stc-hw-row">
+                <div class="stc-hw"><strong>🔧 硬件</strong><div class="stc-hw-text">{{ task.hardware }}</div></div>
+                <div class="stc-sw"><strong>💻 软件</strong><div class="stc-sw-text">{{ task.software }}</div></div>
               </div>
-              <div v-if="task.software" class="stc-software"><strong>💻 软件价值：</strong>
-                <el-input v-if="editMode" v-model="task.software" type="textarea" :rows="2" size="small" style="margin-top:4px" />
-                <template v-else>
-                  <span v-if="!task._swExpanded">{{ task.software?.substring(0, 60) }}{{ task.software?.length > 60 ? '...' : '' }}</span>
-                  <span v-else>{{ task.software }}</span>
-                  <el-button v-if="task.software?.length > 60" link type="primary" size="small" @click="task._swExpanded=!task._swExpanded">
-                    {{ task._swExpanded ? '收起' : '软件详情' }}
-                  </el-button>
-                </template>
-              </div>
-              <div class="stc-check"><strong>✅ 检查点：</strong>
-                <el-input v-if="editMode" v-model="task.checkpoint" type="textarea" :rows="2" size="small" style="margin-top:4px" />
-                <span v-else>{{ task.checkpoint }}</span>
-              </div>
-              <div class="stc-duration"><strong>⏱ 时长：</strong>
-                <el-input v-if="editMode" v-model="task.duration" size="small" style="width:120px" />
-                <span v-else>{{ task.duration }}</span>
-              </div>
+              <div class="stc-check"><strong>✅ 检查点</strong><span>{{ task.checkpoint }}</span></div>
+              <div class="stc-duration"><strong>⏱ {{ task.duration }}</strong></div>
             </div>
             <div class="stc-footer">
               <el-tag v-if="task._done" type="success" size="small">已标准化</el-tag>
@@ -277,12 +249,16 @@ loadData()
 .page-title{font-size:24px;font-weight:700;color:#303133}
 .page-subtitle{font-size:14px;color:#909399;margin-top:4px}
 .sop-stats{margin-bottom:24px}.sop-stat-card{text-align:center;padding:8px 0}.ssc-val{font-size:28px;font-weight:700}.ssc-lbl{font-size:13px;color:#909399;margin-top:4px}
-.sop-phase{margin-bottom:24px}.sop-phase-header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-left:4px solid #409EFF;background:#fafbfc;border-radius:0 8px 8px 0;margin-bottom:10px}.spph-num{width:26px;height:26px;border-radius:50%;background:#409EFF;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}.spph-title{font-size:16px;font-weight:700;color:#303133}.spph-input{max-width:400px}
-.sop-task-card{margin-bottom:12px;transition:.2s}.sop-task-card:hover{transform:translateY(-2px)}
-.stc-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}.stc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.stc-name{font-size:14px;font-weight:700;color:#303133}.stc-input{max-width:200px}
-.stc-body{font-size:12px;color:#606266;line-height:1.8}.stc-body>div{margin:4px 0}
-.stc-hardware{background:#f0f5ff;padding:6px 8px;border-radius:4px;border-left:3px solid #409EFF;margin:4px 0}
-.stc-software{background:#f0fff4;padding:6px 8px;border-radius:4px;border-left:3px solid #67C23A;margin:4px 0}
-.stc-footer{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid #ebeef5}.stc-owner{font-size:11px;color:#c0c4cc;margin-left:auto}
-.value-detail{margin-bottom:16px}.value-detail h4{font-size:15px;color:#303133;margin-bottom:6px}.value-detail p{font-size:13px;color:#606266;line-height:1.7}
+.sop-phase{margin-bottom:20px}.sop-phase-header{display:flex;align-items:center;gap:10px;padding:8px 14px;border-left:4px solid #409EFF;background:#fafbfc;border-radius:0 8px 8px 0;margin-bottom:8px}.spph-num{width:24px;height:24px;border-radius:50%;background:#409EFF;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}.spph-title{font-size:15px;font-weight:700;color:#303133}
+.sop-task-card{margin-bottom:10px;transition:.2s;border-top:2px solid #409EFF}.sop-task-card:hover{transform:translateY(-2px)}
+.stc-header{display:flex;align-items:center;gap:6px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px dashed #e8e8e8}.stc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.stc-name{font-size:13px;font-weight:700;color:#303133}
+.stc-body{font-size:12px;color:#555;line-height:1.7}
+.stc-script{margin-bottom:8px}.stc-script strong{display:block;font-size:11px;color:#909399;margin-bottom:2px}.stc-script-text{font-size:12px;color:#333;padding:8px 10px;background:#fafafa;border-radius:4px;border:1px solid #efefef}
+.stc-hw-row{display:flex;gap:8px;margin-bottom:8px}
+.stc-hw,.stc-sw{flex:1;padding:8px;border-radius:4px;font-size:11px}
+.stc-hw{background:#f0f5ff;border-left:2px solid #409EFF}.stc-hw strong{display:block;margin-bottom:2px;color:#409EFF;font-size:11px}.stc-hw-text{color:#555;line-height:1.5}
+.stc-sw{background:#f0fff4;border-left:2px solid #67C23A}.stc-sw strong{display:block;margin-bottom:2px;color:#67C23A;font-size:11px}.stc-sw-text{color:#555;line-height:1.5}
+.stc-check{margin-bottom:6px}.stc-check strong{color:#909399;margin-right:4px;font-size:11px}.stc-check span{color:#666;font-size:11px}
+.stc-duration{text-align:right;font-size:11px;color:#c0c4cc}
+.stc-footer{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:6px;border-top:1px solid #ebeef5}.stc-owner{font-size:10px;color:#c0c4cc;margin-left:auto}
 </style>
