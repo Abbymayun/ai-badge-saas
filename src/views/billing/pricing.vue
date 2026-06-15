@@ -106,8 +106,7 @@ const plans = ref([
       { label: '话术库', enabled: true },
       { label: '销售画像', enabled: true },
       { label: '自定义策略', enabled: true },
-      { label: 'API接口', enabled: false },
-      { label: '首年含设备：1249（黑白版）、1299（多色版）', enabled: true, special: true }
+      { label: 'API接口', enabled: false }
     ]
   },
   {
@@ -122,8 +121,7 @@ const plans = ref([
       { label: '话术库', enabled: true },
       { label: '销售画像', enabled: true },
       { label: '自定义策略', enabled: true },
-      { label: 'API接口', enabled: true },
-      { label: '首年含设备：1549（黑白版）、1599（多色版）', enabled: true, special: true }
+      { label: 'API接口', enabled: true }
     ]
   }
 ])
