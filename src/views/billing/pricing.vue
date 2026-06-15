@@ -16,7 +16,7 @@
         <div class="plan-price">
           <span class="currency">¥</span>
           <span class="amount">{{ plan.yearlyPrice }}</span>
-          <span class="period">元/年/台</span>
+          <span class="period"></span>
         </div>
         <el-divider />
         <ul class="plan-features">
