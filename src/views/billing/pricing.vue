@@ -28,9 +28,7 @@
             <span :style="{ color: feat.enabled ? '#333' : '#C0C4CC' }">{{ feat.label }}</span>
           </li>
         </ul>
-        <el-button :type="plan.featured ? 'primary' : 'default'" size="large" style="width:100%;margin-top:20px" @click="handleBuy(plan)">
-          {{ plan.featured ? '立即购买' : '免费试用' }}
-        </el-button>
+        <el-button type="primary" size="large" style="width:100%;margin-top:20px" @click="$router.push('/billing/payment?plan='+plan.id)">立即购买</el-button>
       </div>
     </div>
 

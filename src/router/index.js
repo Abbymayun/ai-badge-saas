@@ -43,6 +43,7 @@ const routes = [
       { path: 'ai-assistant', name: 'AiAssistant', component: () => import('../views/legal/AiAssistant.vue'), meta: { title: 'AI智能助手', icon: 'MagicStick' } },
       { path: 'model-chat', name: 'ModelChat', component: () => import('../views/legal/ModelChat.vue'), meta: { title: 'AI模型调用', icon: 'Connection' } },
       { path: 'billing/pricing', name: 'Pricing', component: () => import('../views/billing/pricing.vue'), meta: { title: '定价方案', icon: 'TrendCharts' } },
+      { path: 'billing/payment', name: 'Payment', component: () => import('../views/billing/Payment.vue'), meta: { title: '确认订单', icon: 'TrendCharts' } },
       { path: 'billing/subscription', name: 'Subscription', component: () => import('../views/billing/subscription.vue'), meta: { title: '订阅管理', icon: 'TrendCharts' } },
       { path: 'billing/addon', name: 'AddonPricing', component: () => import('../views/billing/AddonPricing.vue'), meta: { title: '增值服务', icon: 'TrendCharts' } },
       { path: 'billing/package', name: 'PackagePricing', component: () => import('../views/billing/PackagePricing.vue'), meta: { title: '按套餐定价', icon: 'TrendCharts' } },
