@@ -17,6 +17,7 @@
           <span class="currency">¥</span>
           <span class="amount">{{ plan.yearlyPrice }}</span>
           <span class="period"></span>
+          <div class="device-price" v-if="plan.deviceInfo">{{ plan.deviceInfo }}</div>
         </div>
         <el-divider />
         <ul class="plan-features">
@@ -82,7 +83,7 @@ const billingCycle = ref('yearly')
 const plans = ref([
   {
     id: 'basic', name: '标准版', desc: '适合小微团队，基础AI听记功能',
-    yearlyPrice: 499,
+    yearlyPrice: 499, deviceInfo:'首年含设备：949（黑白版）、999（多色版）',
     features: [
       { label: 'AI听记分析', enabled: true },
       { label: '基础报告', enabled: true },
@@ -92,13 +93,12 @@ const plans = ref([
       { label: '话术库', enabled: false },
       { label: '销售画像', enabled: false },
       { label: '自定义策略', enabled: false },
-      { label: 'API接口', enabled: false },
-      { label: '首年含设备：949（黑白版）、999（多色版）', enabled: true, special: true }
+      { label: 'API接口', enabled: false }
     ]
   },
   {
     id: 'pro', name: '高级版', desc: '适合成长型企业，全功能AI赋能',
-    yearlyPrice: 799, featured: true,
+    yearlyPrice: 799, featured: true, deviceInfo:'首年含设备：1249（黑白版）、1299（多色版）',
     features: [
       { label: 'AI听记分析', enabled: true },
       { label: '基础报告', enabled: true },
@@ -114,7 +114,7 @@ const plans = ref([
   },
   {
     id: 'enterprise', name: '专业版', desc: '适合大型企业，专属定制方案',
-    yearlyPrice: 1099,
+    yearlyPrice: 1099, deviceInfo:'首年含设备：1549（黑白版）、1599（多色版）',
     features: [
       { label: 'AI听记分析', enabled: true },
       { label: '基础报告', enabled: true },
