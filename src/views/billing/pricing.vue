@@ -158,6 +158,7 @@ const compareData = ref([
   position: relative; box-shadow: 0 2px 12px rgba(0,0,0,.06); transition: transform .2s
 }
 .plan-card:hover { transform: translateY(-4px) }
+.device-price{font-size:11px;color:#909399;margin-top:4px;line-height:1.4}
 .plan-card.featured { border: 2px solid #409EFF; box-shadow: 0 4px 20px rgba(64,158,255,.15) }
 .plan-badge {
   position: absolute; top: 16px; right: 16px; background: #409EFF; color: #fff;
