@@ -43,18 +43,24 @@
       <el-col :span="8">
         <el-card shadow="hover" style="margin-bottom:16px">
           <template #header><b>💳 支付方式</b></template>
-          <el-radio-group v-model="payMethod" style="display:flex;flex-direction:column;gap:12px">
-            <el-radio label="b2b" border style="margin:0;padding:12px">
-              <div style="font-weight:600">🏦 对公转账</div>
-              <div style="font-size:11px;color:#909399;margin-top:4px">支持企业网银、柜台转账，1-3个工作日到账</div>
+          <el-radio-group v-model="payMethod" style="width:100%">
+            <el-radio label="b2b" size="large" style="display:flex;align-items:flex-start;padding:10px 0;width:100%;border-bottom:1px solid #f0f0f0">
+              <div>
+                <div style="font-weight:600">🏦 对公转账</div>
+                <div style="font-size:12px;color:#909399">支持企业网银、柜台转账，1-3个工作日到账</div>
+              </div>
             </el-radio>
-            <el-radio label="wechat" border style="margin:0;padding:12px">
-              <div style="font-weight:600">💬 微信支付</div>
-              <div style="font-size:11px;color:#909399;margin-top:4px">扫码支付，即时到账</div>
+            <el-radio label="wechat" size="large" style="display:flex;align-items:flex-start;padding:10px 0;width:100%;border-bottom:1px solid #f0f0f0">
+              <div>
+                <div style="font-weight:600">💬 微信支付</div>
+                <div style="font-size:12px;color:#909399">扫码支付，即时到账</div>
+              </div>
             </el-radio>
-            <el-radio label="alipay" border style="margin:0;padding:12px">
-              <div style="font-weight:600">💙 支付宝</div>
-              <div style="font-size:11px;color:#909399;margin-top:4px">扫码支付，即时到账</div>
+            <el-radio label="alipay" size="large" style="display:flex;align-items:flex-start;padding:10px 0;width:100%">
+              <div>
+                <div style="font-weight:600">💙 支付宝</div>
+                <div style="font-size:12px;color:#909399">扫码支付，即时到账</div>
+              </div>
             </el-radio>
           </el-radio-group>
         </el-card>
