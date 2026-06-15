@@ -120,6 +120,7 @@ const plans = ref([
       { label: '基础报告', enabled: true },
       { label: '设备管理', enabled: true },
       { label: '6个智能体', enabled: true },
+      { label: '不限录音时长', enabled: true },
       { label: '话术库', enabled: true },
       { label: '销售画像', enabled: true },
       { label: '自定义策略', enabled: true },
@@ -132,7 +133,7 @@ const plans = ref([
 const compareData = ref([
   { feature: 'AI听记分析', basic: true, pro: true, enterprise: true },
   { feature: '基础报告', basic: true, pro: true, enterprise: true },
-  { feature: '录音时长/月', basic: '100h', pro: '1200h', enterprise: '无限' },
+  { feature: '录音时长/月', basic: '600h', pro: '1200h', enterprise: '不限' },
   { feature: '智能体数量', basic: '3个', pro: '3个', enterprise: '6个' },
   { feature: '话术库', basic: false, pro: true, enterprise: true },
   { feature: '销售画像', basic: false, pro: true, enterprise: true },
